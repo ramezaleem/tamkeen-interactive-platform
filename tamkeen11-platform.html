@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تمكين 11 — المنصة التفاعلية</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#f4f0ff;--ink:#1a0e35;--p:#7c3aed;--pl:#a78bfa;--pp:#ede9fe;
+  --pp2:#ddd6fe;--gray:#6d5a8a;--white:#fff;--success:#059669;
+  --warn:#d97706;--rose:#be185d;--card:#fff;
+  --shadow:0 4px 24px rgba(124,58,237,.10);
+}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+
+/* ════ SCREENS ════ */
+.screen{display:none;min-height:100vh;}
+.screen.on{display:block;}
+#s-admin.on{display:block !important;}
+#s-emp.on{display:block !important;}
+
+/* ════ LOGIN ════ */
+#s-login{
+  background:linear-gradient(135deg,#1a0e35 0%,#3b1f8c 55%,#6d28d9 100%);
+  display:flex;align-items:center;justify-content:center;padding:2rem 1rem;
+}
+#s-login.on{display:flex;}
+.login-box{
+  background:rgba(255,255,255,.07);border:1px solid rgba(167,139,250,.25);
+  border-radius:28px;padding:2.5rem 2rem;width:100%;max-width:420px;
+  backdrop-filter:blur(12px);
+}
+.login-logo{text-align:center;margin-bottom:1.8rem;}
+.login-logo h1{font-size:2.2rem;font-weight:900;color:#fff;}
+.login-logo h1 span{color:var(--pl);}
+.login-logo p{font-size:.82rem;color:rgba(255,255,255,.55);margin-top:.3rem;}
+.form-grp{margin-bottom:1rem;}
+.form-grp label{display:block;font-size:.8rem;font-weight:700;color:rgba(255,255,255,.7);margin-bottom:.4rem;}
+.form-grp input,.form-grp select{
+  width:100%;background:rgba(255,255,255,.1);border:1.5px solid rgba(167,139,250,.3);
+  border-radius:12px;padding:.75rem 1rem;font-size:.9rem;color:#fff;
+  font-family:'Cairo',sans-serif;outline:none;transition:border .2s;
+}
+.form-grp input::placeholder{color:rgba(255,255,255,.35);}
+.form-grp input:focus,.form-grp select:focus{border-color:var(--pl);}
+.form-grp select option{color:#000;}
+.login-btn{
+  width:100%;background:var(--p);color:#fff;border:none;border-radius:14px;
+  padding:.9rem;font-size:1rem;font-weight:800;cursor:pointer;
+  font-family:'Cairo',sans-serif;transition:all .25s;margin-top:.5rem;
+}
+.login-btn:hover{background:#6d28d9;transform:translateY(-2px);box-shadow:0 8px 24px rgba(109,40,217,.4);}
+.login-switch{text-align:center;margin-top:1.2rem;}
+.login-switch a{color:var(--pl);font-size:.85rem;cursor:pointer;font-weight:700;text-decoration:none;}
+.login-err{
+  background:rgba(190,24,93,.15);border:1px solid rgba(190,24,93,.4);
+  color:#fca5a5;border-radius:10px;padding:.6rem 1rem;font-size:.82rem;
+  margin-bottom:.8rem;display:none;
+}
+.login-err.show{display:block;}
+.pending-badge{
+  background:rgba(217,119,6,.15);border:1px solid rgba(217,119,6,.4);
+  color:#fcd34d;border-radius:10px;padding:.8rem 1rem;font-size:.85rem;
+  text-align:center;margin-top:.8rem;display:none;
+}
+.pending-badge.show{display:block;}
+
+/* ════ TOP BAR ════ */
+.topbar{
+  background:var(--ink);color:#fff;padding:.9rem 1.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:90;
+}
+.topbar-brand{font-size:1.1rem;font-weight:900;}
+.topbar-brand span{color:var(--pl);}
+.topbar-right{display:flex;align-items:center;gap:.8rem;}
+.topbar-user{font-size:.82rem;color:rgba(255,255,255,.7);}
+.topbar-user strong{color:#fff;}
+.logout-btn{
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  color:#fff;border-radius:8px;padding:.35rem .8rem;font-size:.78rem;
+  cursor:pointer;font-family:'Cairo',sans-serif;transition:all .2s;
+}
+.logout-btn:hover{background:rgba(255,255,255,.18);}
+
+/* ════ NAV ════ */
+.nav-wrap{background:var(--white);box-shadow:0 2px 12px rgba(124,58,237,.08);overflow-x:auto;}
+.nav-tabs{display:flex;min-width:max-content;padding:0 1rem;}
+.ntab{
+  padding:.85rem 1.2rem;font-size:.83rem;font-weight:700;color:var(--gray);
+  cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;
+  transition:all .2s;background:none;border-top:none;border-left:none;border-right:none;
+  font-family:'Cairo',sans-serif;
+}
+.ntab:hover{color:var(--p);}
+.ntab.on{color:var(--p);border-bottom-color:var(--p);}
+
+/* ════ PAGES ════ */
+.page{display:none;padding:1.8rem 1.2rem;max-width:960px;margin:0 auto;}
+.page.on{display:block;animation:fadeUp .3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* labels */
+.lbl{font-size:.7rem;font-weight:700;letter-spacing:.16em;color:var(--p);text-transform:uppercase;margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem;}
+.lbl::after{content:'';flex:1;height:1px;background:linear-gradient(to left,transparent,var(--pl));max-width:50px;}
+.ptitle{font-size:clamp(1.4rem,4vw,2rem);font-weight:900;margin-bottom:.4rem;}
+.pdesc{font-size:.9rem;color:var(--gray);font-weight:300;margin-bottom:1.8rem;max-width:620px;}
+
+/* cards */
+.card{background:var(--card);border-radius:18px;border:1px solid #e8e0ff;box-shadow:var(--shadow);}
+
+/* stat row */
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.9rem;margin-bottom:1.8rem;}
+.stat-c{background:var(--card);border:1px solid #e8e0ff;border-radius:14px;padding:1.1rem;text-align:center;box-shadow:var(--shadow);}
+.stat-n{font-size:1.8rem;font-weight:900;color:var(--p);}
+.stat-l{font-size:.75rem;color:var(--gray);}
+
+/* progress */
+.prog-wrap{background:var(--pp2);border-radius:100px;height:8px;overflow:hidden;}
+.prog-bar{height:100%;background:linear-gradient(to left,var(--p),var(--pl));border-radius:100px;transition:width .5s;}
+
+/* level pills */
+.level-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+.ltab{
+  padding:.45rem 1.1rem;border-radius:100px;font-size:.8rem;font-weight:700;
+  cursor:pointer;border:2px solid transparent;transition:all .2s;
+  font-family:'Cairo',sans-serif;
+}
+.ltab.beg{background:#e0f2fe;color:#0369a1;}
+.ltab.mid{background:#fef3c7;color:#92400e;}
+.ltab.adv{background:#ede9fe;color:var(--p);}
+.ltab.on{border-color:currentColor;box-shadow:0 2px 10px rgba(0,0,0,.1);}
+
+/* track grid */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;}
+.tcard{
+  background:var(--card);border:2px solid var(--pp2);border-radius:18px;
+  padding:1.4rem;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;
+  font-family:'Cairo',sans-serif;text-align:right;width:100%;
+}
+.tcard::after{content:'';position:absolute;bottom:-16px;left:-16px;width:64px;height:64px;border-radius:50%;background:var(--pp);transition:all .3s;}
+.tcard:hover{border-color:var(--p);transform:translateY(-4px);box-shadow:0 10px 32px rgba(124,58,237,.15);}
+.tcard:hover::after{transform:scale(3);}
+.tc-icon{font-size:1.9rem;display:block;margin-bottom:.7rem;position:relative;z-index:1;}
+.tcard h3{font-size:1rem;font-weight:800;margin-bottom:.2rem;position:relative;z-index:1;}
+.tcard p{font-size:.8rem;color:var(--gray);font-weight:300;position:relative;z-index:1;}
+.tc-prog{margin-top:.8rem;position:relative;z-index:1;}
+.tc-prog-label{font-size:.7rem;color:var(--p);font-weight:700;margin-bottom:.3rem;}
+.tc-badge{
+  display:inline-block;margin-top:.6rem;font-size:.7rem;font-weight:700;
+  padding:.2rem .7rem;border-radius:100px;position:relative;z-index:1;
+}
+.tc-badge.beg{background:#e0f2fe;color:#0369a1;}
+.tc-badge.mid{background:#fef3c7;color:#92400e;}
+.tc-badge.adv{background:#ede9fe;color:var(--p);}
+
+/* modal */
+.moverlay{
+  display:none;position:fixed;inset:0;background:rgba(26,14,53,.6);
+  backdrop-filter:blur(5px);z-index:200;overflow-y:auto;padding:1rem;
+  align-items:flex-start;justify-content:center;
+}
+.moverlay.on{display:flex;}
+.mbox{
+  background:var(--white);border-radius:24px;width:100%;max-width:700px;
+  overflow:hidden;animation:mIn .35s cubic-bezier(.2,.8,.3,1) both;margin:auto;
+}
+@keyframes mIn{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:none}}
+.mhead{
+  background:linear-gradient(135deg,#1a0e35,#6d28d9);
+  padding:1.6rem 1.8rem;color:#fff;position:relative;
+}
+.mhead h2{font-size:1.3rem;font-weight:900;margin-bottom:.2rem;}
+.mhead p{font-size:.82rem;opacity:.75;font-weight:300;}
+.mclose{
+  position:absolute;top:.9rem;left:.9rem;background:rgba(255,255,255,.15);
+  border:none;color:#fff;width:34px;height:34px;border-radius:50%;
+  font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-family:'Cairo',sans-serif;transition:background .2s;
+}
+.mclose:hover{background:rgba(255,255,255,.25);}
+.itabs{display:flex;background:#faf7ff;border-bottom:1px solid #ede9fe;overflow-x:auto;}
+.itab{
+  padding:.75rem 1.1rem;font-size:.8rem;font-weight:700;color:var(--gray);
+  cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;
+  font-family:'Cairo',sans-serif;background:none;border-top:none;border-left:none;border-right:none;
+  transition:all .2s;
+}
+.itab.on{color:var(--p);border-bottom-color:var(--p);}
+.ipage{display:none;padding:1.5rem 1.8rem;}
+.ipage.on{display:block;animation:fadeUp .25s ease;}
+
+/* content blocks */
+.cblock{background:var(--pp);border-radius:14px;padding:1.2rem 1.4rem;margin-bottom:.9rem;border-right:4px solid var(--p);}
+.cblock h4{font-size:.95rem;font-weight:800;margin-bottom:.4rem;}
+.cblock p,.cblock li{font-size:.87rem;color:#3b2a6e;line-height:1.85;}
+.cblock ul{padding-right:1.2rem;}
+.cblock li{margin-bottom:.25rem;}
+.steps{display:flex;flex-direction:column;gap:.7rem;}
+.step{display:flex;gap:.9rem;align-items:flex-start;background:var(--white);border:1px solid var(--pp2);border-radius:12px;padding:.9rem 1.1rem;}
+.snum{width:30px;height:30px;border-radius:50%;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:900;flex-shrink:0;}
+.step h5{font-size:.88rem;font-weight:800;margin-bottom:.15rem;}
+.step p{font-size:.8rem;color:var(--gray);font-weight:300;}
+
+/* level badge in modal */
+.level-badge{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.3rem .9rem;border-radius:100px;font-size:.75rem;font-weight:700;
+  margin-bottom:1rem;
+}
+.level-badge.beg{background:#e0f2fe;color:#0369a1;}
+.level-badge.mid{background:#fef3c7;color:#92400e;}
+.level-badge.adv{background:#ede9fe;color:var(--p);}
+
+/* activities */
+.acts{display:flex;flex-direction:column;gap:.8rem;}
+.act-item{background:var(--white);border:1px solid var(--pp2);border-radius:12px;padding:1rem 1.2rem;display:flex;align-items:flex-start;gap:.9rem;}
+.act-chk{width:26px;height:26px;border-radius:7px;border:2px solid var(--pl);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.9rem;transition:all .2s;}
+.act-chk.done{background:var(--p);border-color:var(--p);color:#fff;}
+.act-h5{font-size:.88rem;font-weight:800;margin-bottom:.15rem;}
+.act-p{font-size:.79rem;color:var(--gray);font-weight:300;}
+.act-tag{display:inline-block;margin-top:.4rem;font-size:.7rem;font-weight:700;background:var(--pp);color:var(--p);padding:.18rem .6rem;border-radius:100px;}
+
+/* quiz */
+.quiz-q{background:var(--white);border:1px solid var(--pp2);border-radius:14px;padding:1.1rem 1.3rem;margin-bottom:.9rem;}
+.qq{font-size:.92rem;font-weight:700;margin-bottom:.7rem;}
+.qopts{display:flex;flex-direction:column;gap:.45rem;}
+.qopt{
+  background:var(--pp);border:2px solid transparent;border-radius:10px;
+  padding:.55rem .95rem;font-size:.83rem;font-weight:600;cursor:pointer;
+  text-align:right;transition:all .2s;font-family:'Cairo',sans-serif;color:var(--ink);
+}
+.qopt:hover{border-color:var(--p);background:var(--pp2);}
+.qopt.correct{background:#d1fae5;border-color:var(--success);color:#065f46;}
+.qopt.wrong{background:#fee2e2;border-color:#ef4444;color:#991b1b;}
+.qfb{margin-top:.6rem;font-size:.82rem;font-weight:700;padding:.4rem .9rem;border-radius:8px;display:none;}
+.qfb.on{display:block;}
+.qfb.ok{background:#d1fae5;color:#065f46;}
+.qfb.no{background:#fee2e2;color:#991b1b;}
+.score-box{
+  background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;
+  border-radius:16px;padding:1.4rem;text-align:center;margin-top:1rem;display:none;
+}
+.score-box.on{display:block;animation:fadeUp .4s;}
+.score-n{font-size:2.8rem;font-weight:900;}
+
+/* cta btn */
+.cbtn{
+  display:inline-flex;align-items:center;gap:.5rem;background:var(--p);color:#fff;
+  border:none;border-radius:12px;padding:.75rem 1.5rem;font-size:.88rem;font-weight:700;
+  cursor:pointer;font-family:'Cairo',sans-serif;transition:all .25s;margin-top:.9rem;
+}
+.cbtn:hover{background:#6d28d9;transform:translateY(-2px);box-shadow:0 6px 20px rgba(109,40,217,.3);}
+.cbtn.sec{background:var(--pp);color:var(--p);}
+.cbtn.sec:hover{background:var(--pp2);}
+
+/* cert preview */
+.cert-preview{
+  border:3px solid var(--pl);border-radius:20px;padding:2rem;text-align:center;
+  background:linear-gradient(135deg,#faf7ff,#ede9fe);margin-bottom:1.2rem;
+  position:relative;overflow:hidden;
+}
+.cert-preview::before{
+  content:'تمكين 11';position:absolute;font-size:8rem;font-weight:900;
+  color:rgba(124,58,237,.05);top:50%;left:50%;transform:translate(-50%,-50%);
+  white-space:nowrap;pointer-events:none;
+}
+.cert-name{font-size:1.6rem;font-weight:900;color:var(--p);margin:1rem 0 .3rem;}
+.cert-track{font-size:1rem;color:var(--ink);margin-bottom:.3rem;}
+.cert-level{font-size:.85rem;color:var(--gray);}
+.cert-date{font-size:.78rem;color:var(--gray);margin-top:.8rem;}
+.cert-stars{font-size:1.5rem;margin:.5rem 0;}
+
+/* ══ ADMIN SCREEN ══ */
+#s-admin{background:var(--bg);}
+.admin-wrap{max-width:1000px;margin:0 auto;padding:1.5rem 1.2rem;}
+.admin-title{font-size:1.6rem;font-weight:900;margin-bottom:.3rem;}
+.admin-sub{font-size:.88rem;color:var(--gray);margin-bottom:1.5rem;}
+
+.req-table{width:100%;border-collapse:collapse;}
+.req-table th{background:var(--pp);color:var(--p);padding:.7rem .9rem;font-size:.78rem;font-weight:800;text-align:right;border-bottom:2px solid var(--pp2);}
+.req-table td{padding:.75rem .9rem;font-size:.83rem;border-bottom:1px solid #f0eaff;vertical-align:middle;}
+.req-table tr:hover td{background:#faf7ff;}
+.status-pill{display:inline-block;padding:.22rem .75rem;border-radius:100px;font-size:.72rem;font-weight:700;}
+.sp-pend{background:#fef3c7;color:#92400e;}
+.sp-ok{background:#d1fae5;color:#065f46;}
+.sp-rej{background:#fee2e2;color:#991b1b;}
+.action-btn{
+  padding:.3rem .8rem;border-radius:8px;font-size:.75rem;font-weight:700;
+  cursor:pointer;border:none;font-family:'Cairo',sans-serif;transition:all .2s;margin:0 .2rem;
+}
+.ab-ok{background:#d1fae5;color:#065f46;}
+.ab-ok:hover{background:var(--success);color:#fff;}
+.ab-rej{background:#fee2e2;color:#991b1b;}
+.ab-rej:hover{background:#ef4444;color:#fff;}
+
+.admin-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.9rem;margin-bottom:1.5rem;}
+.astat{background:var(--white);border:1px solid #e8e0ff;border-radius:14px;padding:1rem;text-align:center;box-shadow:var(--shadow);}
+.astat-n{font-size:1.8rem;font-weight:900;color:var(--p);}
+.astat-l{font-size:.72rem;color:var(--gray);}
+
+/* search */
+.search-bar{
+  background:var(--white);border:1.5px solid var(--pp2);border-radius:12px;
+  padding:.6rem 1rem;font-size:.88rem;width:100%;max-width:320px;
+  font-family:'Cairo',sans-serif;outline:none;margin-bottom:1rem;
+  transition:border .2s;
+}
+.search-bar:focus{border-color:var(--p);}
+
+/* ════ MOBILE RESPONSIVE ════ */
+@media(max-width:600px){
+  #s-login{padding:1rem .8rem;align-items:flex-start;padding-top:2rem;}
+  .login-box{padding:1.6rem 1.2rem;border-radius:20px;}
+  .login-logo h1{font-size:1.8rem;}
+  .login-logo p{font-size:.75rem;}
+  .form-grp input,.form-grp select{font-size:1rem;padding:.7rem .9rem;}
+  .login-btn{font-size:.95rem;padding:.85rem;}
+  .topbar{padding:.7rem 1rem;}
+  .topbar-brand{font-size:.95rem;}
+  .topbar-user{font-size:.72rem;}
+  .logout-btn{padding:.28rem .6rem;font-size:.72rem;}
+  .nav-wrap{-webkit-overflow-scrolling:touch;}
+  .ntab{padding:.7rem .9rem;font-size:.75rem;}
+  .page{padding:1rem .9rem;}
+  .ptitle{font-size:1.4rem;}
+  .pdesc{font-size:.83rem;margin-bottom:1.2rem;}
+  .lbl{font-size:.65rem;}
+  .stat-row{grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1.2rem;}
+  .stat-c{padding:.8rem .6rem;}
+  .stat-n{font-size:1.5rem;}
+  .stat-l{font-size:.68rem;}
+  .tgrid{grid-template-columns:1fr;gap:.8rem;}
+  .tcard{padding:1.1rem;}
+  .tc-icon{font-size:1.6rem;margin-bottom:.5rem;}
+  .tcard h3{font-size:.92rem;}
+  .tcard p{font-size:.76rem;}
+  .level-tabs{gap:.4rem;margin-bottom:1.1rem;}
+  .ltab{padding:.38rem .85rem;font-size:.74rem;}
+  .moverlay{padding:.4rem;}
+  .mbox{border-radius:18px;max-height:94vh;overflow-y:auto;}
+  .mhead{padding:1.1rem 1rem 1rem;}
+  .mhead h2{font-size:1.1rem;}
+  .mhead p{font-size:.76rem;}
+  .mclose{top:.7rem;left:.7rem;width:30px;height:30px;font-size:.9rem;}
+  .itabs{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .itab{padding:.65rem .85rem;font-size:.74rem;min-width:max-content;}
+  .ipage{padding:1rem;}
+  .cblock{padding:1rem 1.1rem;}
+  .cblock h4{font-size:.88rem;}
+  .cblock p,.cblock li{font-size:.82rem;}
+  .steps{gap:.55rem;}
+  .step{padding:.75rem .9rem;gap:.7rem;}
+  .snum{width:26px;height:26px;font-size:.75rem;}
+  .step h5{font-size:.82rem;}
+  .step p{font-size:.76rem;}
+  .act-item{padding:.85rem 1rem;gap:.7rem;}
+  .act-chk{width:24px;height:24px;border-radius:6px;}
+  .act-h5{font-size:.82rem;}
+  .act-p{font-size:.75rem;}
+  .quiz-q{padding:.9rem 1rem;}
+  .qq{font-size:.85rem;}
+  .qopt{padding:.5rem .85rem;font-size:.8rem;}
+  .score-n{font-size:2.2rem;}
+  .cert-preview{padding:1.3rem 1rem;}
+  .cert-preview::before{font-size:5rem;}
+  .cbtn{padding:.65rem 1.2rem;font-size:.82rem;}
+  .admin-wrap{padding:1rem .9rem;}
+  .admin-title{font-size:1.2rem;}
+  .admin-sub{font-size:.78rem;}
+  .admin-stats{grid-template-columns:1fr 1fr;gap:.6rem;}
+  .astat{padding:.8rem .6rem;}
+  .astat-n{font-size:1.5rem;}
+  .astat-l{font-size:.65rem;}
+  .search-bar{max-width:100%;font-size:.85rem;}
+  .card{overflow-x:auto;}
+  .req-table{min-width:520px;}
+  .req-table th,.req-table td{padding:.55rem .65rem;font-size:.75rem;}
+  .action-btn{padding:.25rem .6rem;font-size:.7rem;}
+  .status-pill{font-size:.66rem;padding:.18rem .6rem;}
+  .level-badge{font-size:.7rem;}
+  .m-level-badge{display:block;margin-bottom:.5rem;}
+}
+
+/* activity link button */
+.act-link-btn{
+  display:inline-flex;align-items:center;gap:.4rem;
+  background:var(--p);color:#fff;text-decoration:none;
+  border-radius:10px;padding:.45rem 1rem;font-size:.8rem;font-weight:700;
+  font-family:'Cairo',sans-serif;transition:all .25s;
+  box-shadow:0 2px 10px rgba(124,58,237,.25);
+}
+.act-link-btn:hover{background:#6d28d9;transform:translateY(-2px);box-shadow:0 4px 16px rgba(109,40,217,.35);}
+.act-done-note{font-size:.72rem;color:var(--success);font-weight:700;margin-top:.3rem;}
+@media(max-width:600px){
+  .act-link-btn{font-size:.76rem;padding:.4rem .85rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ LOGIN SCREEN ══════════════ -->
+<div id="s-login" class="screen on">
+  <div class="login-box">
+    <div class="login-logo">
+      <h1>تمكين <span>11</span></h1>
+      <p>مدرسة الابتدائية الحادية عشر · الخبر</p>
+    </div>
+
+    <!-- toggle -->
+    <div style="display:flex;gap:.5rem;margin-bottom:1.5rem;">
+      <button id="tab-emp" onclick="setLoginTab('emp')" style="flex:1;padding:.55rem;border-radius:10px;border:none;font-family:'Cairo',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;background:var(--p);color:#fff;transition:all .2s;">دخول الموظفة</button>
+      <button id="tab-adm" onclick="setLoginTab('adm')" style="flex:1;padding:.55rem;border-radius:10px;border:none;font-family:'Cairo',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;background:rgba(255,255,255,.12);color:rgba(255,255,255,.7);transition:all .2s;">لوحة الإدارة</button>
+    </div>
+
+    <!-- employee form -->
+    <div id="form-emp">
+      <div id="err-emp" class="login-err"></div>
+      <div class="form-grp">
+        <label>الاسم الكامل</label>
+        <input type="text" id="emp-name" placeholder="أدخلي اسمك الكامل">
+      </div>
+      <div class="form-grp">
+        <label>البريد الإلكتروني</label>
+        <input type="email" id="emp-email" placeholder="example@edu.sa">
+      </div>
+      <div class="form-grp">
+        <label>الدور الوظيفي</label>
+        <select id="emp-role">
+          <option value="">— اختاري —</option>
+          <option>معلمة</option>
+          <option>مساعد إداري</option>
+          <option>مرشدة طلابية</option>
+          <option>منسقة نشاط</option>
+          <option>أخرى</option>
+        </select>
+      </div>
+      <button class="login-btn" onclick="empLogin()">دخول / تسجيل ←</button>
+      <div id="pending-msg" class="pending-badge">⏳ طلبك قيد المراجعة من فريق الإدارة. سيتم الموافقة قريباً.</div>
+    </div>
+
+    <!-- admin form -->
+    <div id="form-adm" style="display:none;">
+      <div id="err-adm" class="login-err"></div>
+      <div class="form-grp">
+        <label>كلمة مرور الإدارة</label>
+        <input type="password" id="adm-pass" placeholder="••••••••" onkeypress="if(event.key==='Enter')admLogin()">
+      </div>
+      <button class="login-btn" onclick="admLogin()">دخول الإدارة ←</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ EMPLOYEE SCREEN ══════════════ -->
+<div id="s-emp" class="screen">
+  <div class="topbar">
+    <div class="topbar-brand">تمكين <span>11</span></div>
+    <div class="topbar-right">
+      <div class="topbar-user">مرحباً، <strong id="tb-name">—</strong></div>
+      <button class="logout-btn" onclick="logout()">خروج</button>
+    </div>
+  </div>
+
+  <div class="nav-wrap">
+    <div class="nav-tabs">
+      <button class="ntab on" onclick="showPage('home',this)">🏠 الرئيسية</button>
+      <button class="ntab" onclick="showPage('tracks',this)">🎯 المسارات</button>
+      <button class="ntab" onclick="showPage('cert',this)">📜 شهادتي</button>
+      <button class="ntab" onclick="showPage('profile',this)">👤 ملفي</button>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <div class="page on" id="page-home">
+    <div class="lbl">📊 لوحتي</div>
+    <h2 class="ptitle" id="home-greeting">مرحباً!</h2>
+    <p class="pdesc">منصتك الشخصية للتعلم والتطوير في مبادرة تمكين 11</p>
+
+    <div class="stat-row">
+      <div class="stat-c"><div class="stat-n" id="st-tracks">0</div><div class="stat-l">مسارات بدأت</div></div>
+      <div class="stat-c"><div class="stat-n" id="st-acts">0</div><div class="stat-l">أنشطة مكتملة</div></div>
+      <div class="stat-c"><div class="stat-n" id="st-score">0%</div><div class="stat-l">متوسط التقويم</div></div>
+      <div class="stat-c"><div class="stat-n" id="st-level">—</div><div class="stat-l">مستواك الحالي</div></div>
+    </div>
+
+    <div class="lbl">🚀 ابدئي الآن</div>
+    <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem;">اختاري مسارك وابدئي رحلتك</h3>
+    <div class="tgrid" id="home-tracks"></div>
+  </div>
+
+  <!-- TRACKS -->
+  <div class="page" id="page-tracks">
+    <div class="lbl">🎯 المسارات التخصصية</div>
+    <h2 class="ptitle">خمسة مسارات — ثلاثة مستويات</h2>
+    <p class="pdesc">اختاري مسارك ثم مستواك: مبتدئ → متوسط → متقدم</p>
+    <div class="level-tabs">
+      <button class="ltab beg on" onclick="filterLevel('all',this)">🌟 الكل</button>
+      <button class="ltab beg" onclick="filterLevel('beg',this)">🌱 مبتدئ</button>
+      <button class="ltab mid" onclick="filterLevel('mid',this)">📈 متوسط</button>
+      <button class="ltab adv" onclick="filterLevel('adv',this)">🚀 متقدم</button>
+    </div>
+    <div class="tgrid" id="all-tracks"></div>
+  </div>
+
+  <!-- CERT -->
+  <div class="page" id="page-cert">
+    <div class="lbl">📜 شهادة الإنجاز</div>
+    <h2 class="ptitle">شهادتي الرقمية</h2>
+    <p class="pdesc">شهادة تُوثّق إنجازاتك في مبادرة تمكين 11 — قابلة للتصدير بصيغة PDF</p>
+
+    <div class="cert-preview" id="cert-preview-box">
+      <div style="font-size:.8rem;color:var(--gray);margin-bottom:.5rem;">مدرسة الابتدائية الحادية عشر · الخبر</div>
+      <div style="font-size:1rem;color:var(--gray);">شهادة إتمام</div>
+      <div style="font-size:.85rem;color:var(--gray);">مبادرة</div>
+      <div style="font-size:2rem;font-weight:900;color:var(--p);">تمكين 11</div>
+      <div style="font-size:.9rem;color:var(--gray);margin:.3rem 0;">تُشهد بأن</div>
+      <div class="cert-name" id="c-name">—</div>
+      <div class="cert-track" id="c-track">قد أتمّت متطلبات المسار</div>
+      <div class="cert-level" id="c-level">المستوى: —</div>
+      <div class="cert-stars" id="c-stars">⭐⭐⭐</div>
+      <div style="display:flex;justify-content:space-around;margin-top:1.2rem;font-size:.75rem;color:var(--gray);">
+        <div><div style="font-weight:700;">عفاف عبدالرحمن الحويل</div><div>مديرة المدرسة</div></div>
+        <div><div style="font-weight:700;">منال العمير</div><div>الوكيلة المدرسية</div></div>
+      </div>
+      <div class="cert-date" id="c-date"></div>
+    </div>
+
+    <div style="display:flex;gap:.8rem;flex-wrap:wrap;">
+      <button class="cbtn" onclick="exportPDF()">⬇️ تصدير PDF</button>
+      <button class="cbtn sec" onclick="showPage('tracks',document.querySelectorAll('.ntab')[1])">🎯 العودة للمسارات</button>
+    </div>
+    <p style="font-size:.78rem;color:var(--gray);margin-top:.8rem;">* تظهر الشهادة بعد إكمال أنشطة ومسار واحد على الأقل</p>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="page" id="page-profile">
+    <div class="lbl">👤 ملفي الشخصي</div>
+    <h2 class="ptitle" id="prof-name">—</h2>
+    <p class="pdesc" id="prof-role">—</p>
+    <div class="card" style="padding:1.4rem;margin-bottom:1.2rem;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;">
+        <div><div style="font-size:.72rem;color:var(--gray);font-weight:700;">البريد</div><div id="prof-email" style="font-size:.88rem;font-weight:600;">—</div></div>
+        <div><div style="font-size:.72rem;color:var(--gray);font-weight:700;">تاريخ التسجيل</div><div id="prof-date" style="font-size:.88rem;font-weight:600;">—</div></div>
+        <div><div style="font-size:.72rem;color:var(--gray);font-weight:700;">المسارات المكتملة</div><div id="prof-tracks" style="font-size:.88rem;font-weight:600;color:var(--p);">—</div></div>
+        <div><div style="font-size:.72rem;color:var(--gray);font-weight:700;">المستوى الحالي</div><div id="prof-level" style="font-size:.88rem;font-weight:600;color:var(--p);">—</div></div>
+      </div>
+    </div>
+    <div class="lbl">🏅 الشارات المكتسبة</div>
+    <div id="prof-badges" style="display:flex;gap:.8rem;flex-wrap:wrap;margin-top:.8rem;"></div>
+  </div>
+</div>
+
+<!-- ══════════════ ADMIN SCREEN ══════════════ -->
+<div id="s-admin" class="screen">
+  <div class="topbar">
+    <div class="topbar-brand">تمكين <span>11</span> · الإدارة</div>
+    <div class="topbar-right">
+      <div class="topbar-user"><strong>لوحة التحكم</strong></div>
+      <button class="logout-btn" onclick="logout()">خروج</button>
+    </div>
+  </div>
+
+  <div class="admin-wrap">
+    <div class="lbl">📊 إحصائيات عامة</div>
+    <h2 class="admin-title">لوحة تحكم فريق العمل</h2>
+    <p class="admin-sub">مدرسة الابتدائية الحادية عشر · الخبر — إدارة طلبات الانضمام ومتابعة التقدم</p>
+
+    <div class="admin-stats">
+      <div class="astat"><div class="astat-n" id="a-total">0</div><div class="astat-l">إجمالي الطلبات</div></div>
+      <div class="astat"><div class="astat-n" id="a-pend">0</div><div class="astat-l">قيد المراجعة</div></div>
+      <div class="astat"><div class="astat-n" id="a-appr">0</div><div class="astat-l">مقبولات</div></div>
+      <div class="astat"><div class="astat-n" id="a-rej">0</div><div class="astat-l">مرفوضات</div></div>
+    </div>
+
+    <div class="nav-wrap" style="margin-bottom:1.2rem;border-radius:12px;">
+      <div class="nav-tabs">
+        <button class="ntab on" onclick="showAdminTab('all',this)">📋 الكل</button>
+        <button class="ntab" onclick="showAdminTab('pending',this)">⏳ قيد المراجعة</button>
+        <button class="ntab" onclick="showAdminTab('approved',this)">✅ مقبولات</button>
+        <button class="ntab" onclick="showAdminTab('rejected',this)">❌ مرفوضات</button>
+      </div>
+    </div>
+
+    <input class="search-bar" placeholder="🔍 ابحثي بالاسم أو البريد..." oninput="searchUsers(this.value)" id="search-inp">
+
+    <div class="card" style="overflow:hidden;">
+      <table class="req-table" id="req-table">
+        <thead>
+          <tr>
+            <th>الاسم</th>
+            <th>البريد الإلكتروني</th>
+            <th>الدور</th>
+            <th>تاريخ التسجيل</th>
+            <th>الحالة</th>
+            <th>إجراء</th>
+          </tr>
+        </thead>
+        <tbody id="req-body"></tbody>
+      </table>
+    </div>
+
+    <div style="margin-top:1.5rem;padding:1rem;background:var(--white);border-radius:14px;border:1px solid #e8e0ff;">
+      <div style="font-size:.78rem;color:var(--gray);font-weight:700;margin-bottom:.4rem;">📌 فريق القيادة</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.6rem;font-size:.82rem;">
+        <span style="background:var(--pp);padding:.3rem .8rem;border-radius:100px;color:var(--p);font-weight:700;">🏫 عفاف عبدالرحمن الحويل · مديرة</span>
+        <span style="background:var(--pp);padding:.3rem .8rem;border-radius:100px;color:var(--p);font-weight:700;">📋 منال العمير · وكيلة</span>
+        <span style="background:var(--pp);padding:.3rem .8rem;border-radius:100px;color:var(--p);font-weight:700;">💼 نورة المبارك · مساعد إداري</span>
+        <span style="background:var(--pp);padding:.3rem .8rem;border-radius:100px;color:var(--p);font-weight:700;">💼 آلاء الكباسي · مساعد إداري</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ TRACK MODAL ══════════════ -->
+<div class="moverlay" id="moverlay" onclick="closeMOverlay(event)">
+  <div class="mbox">
+    <div class="mhead">
+      <button class="mclose" onclick="closeModal()">✕</button>
+      <div id="m-level-badge" class="level-badge beg">🌱 مبتدئ</div>
+      <h2 id="m-title">المسار</h2>
+      <p id="m-desc">وصف</p>
+    </div>
+    <div class="itabs">
+      <button class="itab on" onclick="showITab('learn',this)">📚 التعلم</button>
+      <button class="itab" onclick="showITab('apply',this)">⚙️ التطبيق</button>
+      <button class="itab" onclick="showITab('assess',this)">✅ التقويم</button>
+    </div>
+    <div class="ipage on" id="it-learn"><div id="learn-body"></div></div>
+    <div class="ipage" id="it-apply">
+      <div class="lbl" style="margin-bottom:.6rem;">⚙️ الأنشطة التطبيقية</div>
+      <div class="prog-wrap" style="margin-bottom:.5rem;"><div class="prog-bar" id="act-prog" style="width:0%"></div></div>
+      <p id="act-label" style="font-size:.72rem;color:var(--p);font-weight:700;margin-bottom:.9rem;"></p>
+      <div class="acts" id="act-body"></div>
+    </div>
+    <div class="ipage" id="it-assess">
+      <div class="lbl" style="margin-bottom:.6rem;">✅ التقويم الذاتي</div>
+      <div id="quiz-body"></div>
+      <button class="cbtn" id="quiz-sub-btn" onclick="submitQuiz()">📊 عرض النتيجة</button>
+      <div class="score-box" id="score-box">
+        <div class="score-n" id="score-n">0/3</div>
+        <p id="score-msg"></p>
+        <button class="cbtn sec" style="margin-top:.8rem;" onclick="exportPDF()">📜 احصلي على شهادتك</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══ DATA ══
+const ADMIN_PASS = 'admin123';
+let users = JSON.parse(localStorage.getItem('t11_users') || '[]');
+let curUser = null;
+let curTrack = null;
+let quizAns = {};
+let actDone = {};
+let scores = {};
+let adminFilter = 'all';
+
+const TRACKS = {
+  auto:{id:'auto',icon:'🤖',name:'الأتمتة الذكية',desc:'أتمتة المهام التكرارية ووفّري وقتك للعمل الاستراتيجي',
+    levels:{
+      beg:{label:'مبتدئ',cls:'beg',
+        learn:`<div class="cblock"><h4>🎯 ما ستتعلمينه</h4><ul><li>مفهوم الأتمتة ولماذا هي مهمة اليوم</li><li>تحديد المهام التي يمكن أتمتتها</li><li>أول خطوة مع Power Automate</li></ul></div>
+        <div class="lbl" style="margin:.9rem 0 .5rem;">📖 خطوات التعلم</div>
+        <div class="steps">
+          <div class="step"><div class="snum">١</div><div><h5>ما هي الأتمتة؟</h5><p>شاهدي فيديو 5 دق عن كيف تُوفّر الأتمتة ساعات عمل يومية في المدارس</p></div></div>
+          <div class="step"><div class="snum">٢</div><div><h5>حدّدي مهامك التكرارية</h5><p>اكتبي كل مهمة تكررينها أكثر من مرة في الأسبوع (بريد، تقارير، جداول)</p></div></div>
+          <div class="step"><div class="snum">٣</div><div><h5>جرّبي Power Automate</h5><p>أنشئي حساباً مجانياً وشاهدي أول قالب جاهز للاستخدام</p></div></div>
+        </div>`,
+        acts:[{t:'سجّلي ٣ مهام تكرارية في عملك',d:'افتحي Notion واكتبي جدولاً بالمهام التي تتكررين فيها أسبوعياً',g:'📋 Notion',u:'https://www.notion.so',btn:'افتحي Notion'},
+              {t:'افتحي Power Automate وجوّلي فيه',d:'سجّلي دخولاً وجرّبي أول قالب جاهز — اختاري "وصف إشعار تلقائي"',g:'⚡ Power Automate',u:'https://make.powerautomate.com',btn:'افتحي Power Automate'}],
+        quiz:[{q:'ما الهدف الأساسي من الأتمتة؟',o:['استبدال الموظفات','تحرير الوقت للمهام ذات القيمة الأعلى','تقليل الراتب','تعقيد الإجراءات'],a:1},
+              {q:'ما أولى خطوات أتمتة مهمة؟',o:['شراء برنامج مدفوع','تحديد المهمة التكرارية المناسبة','تدريب الجميع فوراً','الانتظار لأمر الإدارة'],a:1}]},
+      mid:{label:'متوسط',cls:'mid',
+        learn:`<div class="cblock"><h4>🎯 المستوى المتوسط</h4><ul><li>بناء تدفقات آلية متكاملة في Power Automate</li><li>ربط التطبيقات ببعضها (Forms → Email → Excel)</li><li>أتمتة التقارير الأسبوعية</li></ul></div>
+        <div class="steps">
+          <div class="step"><div class="snum">١</div><div><h5>بناء أول تدفق كامل</h5><p>اربطي نموذج Microsoft Forms بإرسال بريد تلقائي عند الاستجابة</p></div></div>
+          <div class="step"><div class="snum">٢</div><div><h5>Excel الذكي</h5><p>ابني جدول Excel يتحدّث تلقائياً من مصدر بيانات خارجي</p></div></div>
+          <div class="step"><div class="snum">٣</div><div><h5>أتمتة التقرير الأسبوعي</h5><p>أنشئي تدفقاً يجمع البيانات ويرسل تقريراً كل أحد صباحاً</p></div></div>
+        </div>`,
+        acts:[{t:'بناء تدفق Forms → Email',d:'افتحي Power Automate وأنشئي تدفقاً: عند تعبئة نموذج Microsoft Forms يُرسل بريد تلقائي',g:'⚙️ Power Automate',u:'https://make.powerautomate.com/galleries',btn:'افتحي القوالب'},
+              {t:'أنشئي نموذج Microsoft Forms',d:'ابني نموذجاً بسيطاً لجمع بيانات من زميلاتك',g:'📝 Microsoft Forms',u:'https://forms.microsoft.com',btn:'افتحي Forms'}],
+        quiz:[{q:'ما معنى "تدفق آلي" في Power Automate؟',o:['ملف PDF','سلسلة إجراءات تُنفَّذ تلقائياً عند حدث معين','رسالة بريد عادية','جدول Excel'],a:1},
+              {q:'كيف تربطين Forms بـ Excel تلقائياً؟',o:['نسخ ولصق يدوي','باستخدام تدفق Power Automate أو Power Query','استيراد يدوي يومياً','لا يمكن ربطهما'],a:1}]},
+      adv:{label:'متقدم',cls:'adv',
+        learn:`<div class="cblock"><h4>🎯 المستوى المتقدم</h4><ul><li>بناء حلول أتمتة شاملة للقسم كاملاً</li><li>استخدام AI Builder داخل Power Automate</li><li>قيادة مشروع أتمتة وتدريب الزميلات عليه</li></ul></div>
+        <div class="steps">
+          <div class="step"><div class="snum">١</div><div><h5>AI Builder في Power Automate</h5><p>استخدمي نماذج الذكاء الاصطناعي لاستخراج البيانات من المستندات تلقائياً</p></div></div>
+          <div class="step"><div class="snum">٢</div><div><h5>مشروع أتمتة شامل</h5><p>صمّمي حلاً يُؤتمت عملية كاملة (من الإدخال حتى التقرير النهائي)</p></div></div>
+          <div class="step"><div class="snum">٣</div><div><h5>التوثيق والتدريب</h5><p>وثّقي الحل وقودي ورشة 30 دق لتعليم زميلاتك استخدامه</p></div></div>
+        </div>`,
+        acts:[{t:'بناء حل أتمتة شامل بـ AI Builder',d:'استخدمي AI Builder داخل Power Automate لاستخراج بيانات من مستندات تلقائياً',g:'🤖 AI Builder',u:'https://make.powerautomate.com',btn:'افتحي Power Automate'},
+              {t:'وثّقي الحل في Notion',d:'أنشئي صفحة في Notion توثّق خطوات الحل ليتمكن فريقك من استخدامه',g:'📄 Notion',u:'https://www.notion.so',btn:'افتحي Notion'}],
+        quiz:[{q:'ما الذي يميز AI Builder عن الأتمتة العادية؟',o:['السرعة فقط','قدرته على فهم المحتوى غير المهيكل كالصور والمستندات','توفير التكاليف','لا فرق بينهما'],a:1},
+              {q:'لماذا يهم التوثيق في مشاريع الأتمتة؟',o:['للزخرفة فقط','لضمان استمرارية الحل وسهولة تعليمه للآخرين','لأن الإدارة تطلبه','ليس ضرورياً'],a:0}]}
+  }},
+  data:{id:'data',icon:'📊',name:'تحليل البيانات',desc:'اقرئي الأرقام واتخذي قرارات ذكية مبنية على البيانات',
+    levels:{
+      beg:{label:'مبتدئ',cls:'beg',
+        learn:`<div class="cblock"><h4>🎯 ما ستتعلمينه</h4><ul><li>الفرق بين البيانات والمعلومات</li><li>قراءة التقارير والجداول البسيطة</li><li>دوال Excel الأساسية</li></ul></div>
+        <div class="steps">
+          <div class="step"><div class="snum">١</div><div><h5>لماذا البيانات مهمة؟</h5><p>مثال عملي: كيف ساعدت البيانات مدرسة في رفع معدل الحضور</p></div></div>
+          <div class="step"><div class="snum">٢</div><div><h5>Excel الأساسي</h5><p>تعلّمي SUM وAVERAGE وCOUNT وكيف تبنين جدولاً منظماً</p></div></div>
+          <div class="step"><div class="snum">٣</div><div><h5>أول رسم بياني</h5><p>حوّلي جدول بيانات بسيط إلى رسم بياني يروي قصة واضحة</p></div></div>
+        </div>`,
+        acts:[{t:'سجّلي بياناتك في Google Sheets',d:'افتحي Google Sheets وأنشئي جدولاً تسجّلين فيه مؤشراً يومياً لأسبوع كامل',g:'📊 Google Sheets',u:'https://sheets.new',btn:'افتحي Google Sheets'},
+              {t:'أنشئي رسماً بيانياً تلقائياً',d:'في Google Sheets: حدّدي بياناتك ← Insert ← Chart — اختاري النوع المناسب',g:'📈 Google Sheets',u:'https://sheets.new',btn:'افتحي Google Sheets'}],
+        quiz:[{q:'ما الفرق بين البيانات والمعلومات؟',o:['لا فرق','البيانات خام والمعلومات نتاج تحليلها لإضافة معنى','المعلومات أرقام والبيانات نصوص','البيانات أحدث دائماً'],a:1},
+              {q:'ما دالة حساب المتوسط في Excel؟',o:['=SUM()','=COUNT()','=AVERAGE()','=MEDIAN()'],a:2}]},
+      mid:{label:'متوسط',cls:'mid',
+        learn:`<div class="cblock"><h4>🎯 المستوى المتوسط</h4><ul><li>بناء لوحات تحكم Dashboard في Excel</li><li>استخدام Pivot Tables لتحليل البيانات</li><li>ربط مصادر بيانات متعددة</li></ul></div>
+        <div class="steps">
+          <div class="step"><div class="snum">١</div><div><h5>Pivot Tables من الصفر</h5><p>تعلّمي كيف تحلّلين مئات السجلات في ثوانٍ بجدول محوري</p></div></div>
+          <div class="step"><div class="snum">٢</div><div><h5>لوحة تحكم بسيطة</h5><p>ابني لوحة بمؤشرين أو ثلاثة تُعطي صورة سريعة عن وضع القسم</p></div></div>
+          <div class="step"><div class="snum">٣</div><div><h5>التحليل المقارن</h5><p>قارني أداء شهر بشهر أو فصل بفصل وحدّدي الأنماط</p></div></div>
+        </div>`,
+        acts:[{t:'بناء Pivot Table في Google Sheets',d:'افتحي جدولك ← Data ← Pivot Table — حلّلي بيانات شهر كامل',g:'📊 Google Sheets',u:'https://sheets.new',btn:'افتحي Google Sheets'},
+              {t:'جرّبي لوحة تحكم جاهزة في Looker Studio',d:'Looker Studio مجاني من Google — صلّيه ببياناتك وأنشئي لوحتك',g:'📊 Looker Studio',u:'https://lookerstudio.google.com',btn:'افتحي Looker Studio'}],
+        quiz:[{q:'ما الوظيفة الرئيسية للـ Pivot Table؟',o:['التصميم الجرافيكي','تلخيص وتحليل كميات كبيرة من البيانات بسرعة','حفظ الملفات','إرسال البيانات'],a:1},
+              {q:'لماذا نبني لوحة تحكم بدل الجداول العادية؟',o:['للزخرفة فقط','لتقديم صورة فورية واضحة لصانعي القرار دون تعمق في التفاصيل','لأنها أسهل في البناء','لا فائدة منها'],a:1}]},
+      adv:{label:'متقدم',cls:'adv',
+        learn:`<div class="cblock"><h4>🎯 المستوى المتقدم</h4><ul><li>استخدام AI لتحليل البيانات وتوليد رؤى</li><li>Power BI للتصورات المتقدمة</li><li>تقديم توصيات استراتيجية مبنية على البيانات</li></ul></div>
+        <div class="steps">
+          <div class="step"><div class="snum">١</div><div><h5>AI وتحليل البيانات</h5><p>استخدمي ChatGPT أو Copilot لتحليل جدول Excel وتلخيص النتائج</p></div></div>
+          <div class="step"><div class="snum">٢</div><div><h5>Power BI الأساسي</h5><p>أنشئي تقريراً تفاعلياً في Power BI يمكن لأي شخص استكشافه</p></div></div>
+          <div class="step"><div class="snum">٣</div><div><h5>التوصية الاستراتيجية</h5><p>قدّمي توصيتين مدعومتين ببيانات لمديرتك في عرض من 3 شرائح</p></div></div>
+        </div>`,
+        acts:[{t:'تحليل بياناتك مع ChatGPT',d:'افتحي ChatGPT وألصقي بياناتك واطلبي: "حللي هذه البيانات وأعطيني أهم 3 رؤى"',g:'🤖 ChatGPT',u:'https://chatgpt.com',btn:'افتحي ChatGPT'},
+              {t:'ابني تقريرك في Looker Studio',d:'صمّمي تقريراً تفاعلياً بمؤشراتك وشاركيه مع الإدارة برابط مباشر',g:'📊 Looker Studio',u:'https://lookerstudio.google.com',btn:'افتحي Looker Studio'}],
+        quiz:[{q:'كيف يُساعد AI في تحليل البيانات؟',o:['لا يفيد في شيء','يكتشف الأنماط، يلخّص، ويقترح رؤى بسرعة تفوق القدرة اليدوية','يستبدل المحلل البشري كلياً','يجمع البيانات فقط'],a:1},
+              {q:'ما الفرق بين Excel و Power BI في التحليل؟',o:['لا فرق','Power BI أقوى في التصورات التفاعلية وتحديث البيانات الحي','Excel أحدث دائماً','Power BI للأرقام فقط'],a:1}]}
+  }},
+  content:{id:'content',icon:'✍️',name:'الإنتاجية الإبداعية',desc:'وظّفي AI في الكتابة والتواصل الاحترافي',
+    levels:{
+      beg:{label:'مبتدئ',cls:'beg',
+        learn:`<div class="cblock"><h4>🎯 ما ستتعلمينه</h4><ul><li>ما هو ChatGPT وكيف تتحدثين معه</li><li>كتابة أول مطالبة (Prompt) بسيطة</li><li>استخدامه في الرسائل اليومية</li></ul></div>
+        <div class="steps">
+          <div class="step"><div class="snum">١</div><div><h5>تعرّفي على ChatGPT</h5><p>سجّلي دخولاً وجرّبي محادثة حرة — اسأليه عن أي شيء تريدين</p></div></div>
+          <div class="step"><div class="snum">٢</div><div><h5>أول مطالبة عملية</h5><p>اطلبي منه صياغة رسالة لوليّ أمر عن موعد اجتماع — قارني النتيجة بما كنتِ ستكتبينه</p></div></div>
+          <div class="step"><div class="snum">٣</div><div><h5>التعديل والتحسين</h5><p>اطلبي منه تعديل النص (أقصر، أرسمى، أبسط) وشاهدي كيف يستجيب</p></div></div>
+        </div>`,
+        acts:[{t:'صيغي رسالة مع ChatGPT',d:'افتحي ChatGPT واطلبي: "اكتبي إشعاراً رسمياً لأولياء الأمور عن اجتماع يوم الأحد الساعة 5م"',g:'✍️ ChatGPT',u:'https://chatgpt.com',btn:'افتحي ChatGPT'},
+              {t:'جرّبي Claude لمقارنة النتائج',d:'اطلبي نفس الطلب في Claude وقارني النتيجة — أي النموذجين أفضل لك؟',g:'🤖 Claude',u:'https://claude.ai',btn:'افتحي Claude'}],
+        quiz:[{q:'ما المقصود بـ "Prompt"؟',o:['برنامج حاسوبي','التعليمة أو الطلب الذي تكتبينه لنموذج AI','رسالة بريد عادية','نوع من الجداول'],a:1},
+              {q:'كيف تحصلين على نتيجة أفضل من ChatGPT؟',o:['اكتبي كلمة واحدة فقط','كوني محددة وأعطي السياق والنتيجة المطلوبة','اكتبي بالإنجليزية فقط','لا يهم ما تكتبين'],a:1}]},
+      mid:{label:'متوسط',cls:'mid',
+        learn:`<div class="cblock"><h4>🎯 المستوى المتوسط</h4><ul><li>بناء مطالبات احترافية متعددة الخطوات</li><li>استخدام AI في تلخيص التقارير والوثائق</li><li>توليد محتوى للفعاليات والنشرات</li></ul></div>
+        <div class="steps">
+          <div class="step"><div class="snum">١</div><div><h5>مطالبات متقدمة</h5><p>تعلّمي تقنية "دوري" (Role Prompting): "تصرّفي كـ مديرة مدرسة وأكتبي..."</p></div></div>
+          <div class="step"><div class="snum">٢</div><div><h5>تلخيص الوثائق</h5><p>ألصقي تقريراً طويلاً واطلبي ملخصاً في 5 نقاط</p></div></div>
+          <div class="step"><div class="snum">٣</div><div><h5>محتوى الفعاليات</h5><p>اطلبي كلمة ترحيب، برنامج احتفالية، أو نشرة للطالبات</p></div></div>
+        </div>`,
+        acts:[{t:'أنشئي محتوى فعالية مع Claude',d:'افتحي Claude واطلبي كلمة افتتاحية ليوم المعلم مع برنامج الحفل',g:'🎉 Claude',u:'https://claude.ai',btn:'افتحي Claude'},
+              {t:'لخّصي وثيقة في NotebookLM',d:'NotebookLM من Google — ارفعي فيه ملف PDF وهو يلخّصه ويجيب على أسئلتك',g:'📖 NotebookLM',u:'https://notebooklm.google.com',btn:'افتحي NotebookLM'}],
+        quiz:[{q:'ما تقنية "Role Prompting"؟',o:['اختيار دور في لعبة فيديو','طلب من AI التصرف بدور معين لتحسين جودة الإخراج','نوع من أنواع البرمجة','تقنية لتصميم المواقع'],a:1},
+              {q:'ما أفضل طريقة لتلخيص وثيقة طويلة بـ AI؟',o:['اكتبي ملخصك أولاً ثم أعطيه للـ AI','ألصقي النص وحدّدي عدد النقاط والأسلوب المطلوب','دعيه يختار بنفسه','لا يمكن تلخيص الوثائق بـ AI'],a:1}]},
+      adv:{label:'متقدم',cls:'adv',
+        learn:`<div class="cblock"><h4>🎯 المستوى المتقدم</h4><ul><li>بناء نظام مطالبات (Prompt Library) للمدرسة</li><li>دمج AI مع أدوات التصميم (Canva AI, Gamma)</li><li>قيادة ورشة لتعليم زميلاتك</li></ul></div>
+        <div class="steps">
+          <div class="step"><div class="snum">١</div><div><h5>مكتبة المطالبات</h5><p>اجمعي أفضل 10 مطالبات في ملف مشترك — هذا سيوفّر ساعات لكل الفريق</p></div></div>
+          <div class="step"><div class="snum">٢</div><div><h5>Canva AI + Gamma</h5><p>استخدمي Gamma لإنشاء عروض تقديمية من نص فقط، وCanva AI للتصاميم</p></div></div>
+          <div class="step"><div class="snum">٣</div><div><h5>ورشة الإنتاجية</h5><p>علّمي ٣ زميلات كيف يستخدمن AI في عملهن اليومي</p></div></div>
+        </div>`,
+        acts:[{t:'ابني مكتبة مطالبات في Notion',d:'أنشئي قاعدة بيانات في Notion تجمعين فيها أفضل مطالباتك لتشاركيها مع الفريق',g:'📚 Notion',u:'https://www.notion.so',btn:'افتحي Notion'},
+              {t:'أنشئي عرضاً تقديمياً بـ Gamma',d:'افتحي Gamma واكتبي موضوعك — سيُنشئ لك العرض كاملاً خلال ثوانٍ',g:'🎨 Gamma AI',u:'https://gamma.app',btn:'افتحي Gamma'}],
+        quiz:[{q:'ما فائدة مكتبة المطالبات المشتركة؟',o:['لا فائدة منها','توفير الوقت وضمان جودة موحّدة لإخراج الفريق كله',  'تُعقّد العمل','للأرشفة فقط'],a:1},
+              {q:'ما ميزة Gamma عن PowerPoint؟',o:['Gamma أقدم وأكثر استقراراً','Gamma يُنشئ العروض تلقائياً من نص بمساعدة AI','PowerPoint لا يمكن استخدامه على الإنترنت','لا فرق بينهما'],a:1}]}
+  }},
+  leadership:{id:'leadership',icon:'🌐',name:'قيادة التحول',desc:'قودي مشاريع AI وابني ثقافة الابتكار في فريقك',
+    levels:{
+      beg:{label:'مبتدئ',cls:'beg',
+        learn:`<div class="cblock"><h4>🎯 ما ستتعلمينه</h4><ul><li>مفهوم التحول الرقمي في التعليم</li><li>دور القائد في التغيير</li><li>كيف تبدئين بخطوة صغيرة مؤثرة</li></ul></div>
+        <div class="steps">
+          <div class="step"><div class="snum">١</div><div><h5>ما هو التحول الرقمي؟</h5><p>ليس مجرد شراء تقنية — بل تغيير طريقة التفكير والعمل</p></div></div>
+          <div class="step"><div class="snum">٢</div><div><h5>دورك كقائدة للتغيير</h5><p>اقرئي عن نموذج Kotter للتغيير وكيف تُطبّقينه في المدرسة</p></div></div>
+          <div class="step"><div class="snum">٣</div><div><h5>حدّدي فرصة تغيير واحدة</h5><p>فرصة صغيرة وقابلة للقياس في بيئة عملك اليومية</p></div></div>
+        </div>`,
+        acts:[{t:'اكتبي تعريفك في Notion',d:'افتحي Notion وأنشئي صفحة جديدة — اكتبي: ما التحول الرقمي في مدرستي؟ وما الفرصة التي أريد استغلالها؟',g:'✍️ Notion',u:'https://www.notion.so',btn:'افتحي Notion'},
+              {t:'ابحثي عن مبادرات مدارس رائدة',d:'ابحثي في Google عن "مدارس رائدة في التحول الرقمي السعودية" واجمعي 3 أفكار ملهمة',g:'🔍 بحث',u:'https://www.google.com/search?q=مدارس+رائدة+التحول+الرقمي+السعودية',btn:'ابحثي الآن'}],
+        quiz:[{q:'ما الفرق بين التحول الرقمي ومجرد استخدام التقنية؟',o:['لا فرق','التحول الرقمي يغيّر طريقة التفكير والعمل وليس فقط الأدوات','التحول الرقمي أغلى','التقنية أهم من التحول'],a:1},
+              {q:'ما أهم صفة في قائدة التغيير؟',o:['السلطة الإدارية العالية','القدرة على التواصل وبناء الثقة وإلهام الآخرين','المعرفة التقنية المتعمقة فقط','العمر والخبرة الطويلة'],a:1}]},
+      mid:{label:'متوسط',cls:'mid',
+        learn:`<div class="cblock"><h4>🎯 المستوى المتوسط</h4><ul><li>بناء خطة تحول بمؤشرات قابلة للقياس</li><li>إدارة مقاومة التغيير في الفريق</li><li>قيادة ورشة تحسين داخلية</li></ul></div>
+        <div class="steps">
+          <div class="step"><div class="snum">١</div><div><h5>خطة التحول الذكية</h5><p>استخدمي إطار OKR لبناء خطة: هدف واحد وثلاثة نتائج قابلة للقياس</p></div></div>
+          <div class="step"><div class="snum">٢</div><div><h5>إدارة المقاومة</h5><p>تعلّمي لماذا يقاوم الناس التغيير وكيف تحوّلين المتشككات إلى داعمات</p></div></div>
+          <div class="step"><div class="snum">٣</div><div><h5>ورشة تحسين داخلية</h5><p>قودي اجتماع 45 دقيقة لتحديد عملية واحدة للتحسين مع فريقك</p></div></div>
+        </div>`,
+        acts:[{t:'ابني خطة OKR في Notion',d:'افتحي Notion وأنشئي جدولاً: عمود الهدف + 3 أعمدة للنتائج القابلة للقياس',g:'🎯 Notion',u:'https://www.notion.so/templates/okrs',btn:'افتحي قالب OKR'},
+              {t:'أنشئي أجندة الاجتماع في Google Docs',d:'افتحي Google Docs وأنشئي أجندة اجتماع التحسين: المشكلة، الحلول المقترحة، الخطوات',g:'📝 Google Docs',u:'https://docs.new',btn:'افتحي Google Docs'}],
+        quiz:[{q:'ما إطار OKR؟',o:['نوع من البرامج','إطار لتحديد الأهداف والنتائج القابلة للقياس',  'نظام مكافآت','برنامج تدريبي'],a:1},
+              {q:'لماذا يقاوم الناس التغيير في الغالب؟',o:['لأنهم كسولون','بسبب الخوف من المجهول وفقدان الأمان والمهارات المكتسبة','لأنهم لا يريدون النجاح','بسبب قلة الراتب'],a:1}]},
+      adv:{label:'متقدم',cls:'adv',
+        learn:`<div class="cblock"><h4>🎯 المستوى المتقدم</h4><ul><li>إطلاق مبادرة تحول مؤسسية</li><li>بناء مجتمع تعلم مستدام</li><li>قياس الأثر وتقديم تقرير للإدارة العليا</li></ul></div>
+        <div class="steps">
+          <div class="step"><div class="snum">١</div><div><h5>تصميم المبادرة المؤسسية</h5><p>ضعي رؤية وخارطة طريق واضحة لمبادرة تحول تمسّ المدرسة كاملاً</p></div></div>
+          <div class="step"><div class="snum">٢</div><div><h5>مجتمع التعلم</h5><p>أسّسي مجموعة تعلم شهرية — شارِكي قصص نجاح وتحديات</p></div></div>
+          <div class="step"><div class="snum">٣</div><div><h5>تقرير الأثر</h5><p>قدّمي تقريراً ربعياً للإدارة بالأرقام والإنجازات والخطوات القادمة</p></div></div>
+        </div>`,
+        acts:[{t:'اكتبي وثيقة المبادرة في Google Docs',d:'افتحي Google Docs وأنشئي وثيقتك: رؤية، أهداف، جدول زمني، مؤشرات نجاح',g:'📄 Google Docs',u:'https://docs.new',btn:'افتحي Google Docs'},
+              {t:'أنشئي عرض تقرير الأثر بـ Gamma',d:'افتحي Gamma وأنشئي عرضاً من 3 شرائح: ما فعلناه، ما حققناه، الخطوات القادمة',g:'📊 Gamma AI',u:'https://gamma.app',btn:'افتحي Gamma'}],
+        quiz:[{q:'ما أهم عنصر في تقرير الأثر؟',o:['الطول والتفصيل','الأرقام والشواهد الملموسة التي تُثبت القيمة المُحققة','التصميم الجميل فقط','ذكر المشكلات فقط'],a:1},
+              {q:'لماذا نبني مجتمع تعلم وليس ندوة واحدة؟',o:['الندوة الواحدة كافية','الاستدامة — التعلم المنتظم يُرسّخ التغيير ويبني شبكة دعم مستمرة','لأن الندوات مكلفة','مجتمعات التعلم ليست فعّالة'],a:1}]}
+  }},
+  innovation:{id:'innovation',icon:'🔬',name:'الابتكار والتجريب',desc:'اختبري أدوات AI جديدة وقيّميها لاحتياجات مدرستك',
+    levels:{
+      beg:{label:'مبتدئ',cls:'beg',
+        learn:`<div class="cblock"><h4>🎯 ما ستتعلمينه</h4><ul><li>عقلية المبتكرة وكيف تبنينها</li><li>كيف تقيّمين أداة جديدة بشكل سريع</li><li>تجربة أداة AI جديدة خلال أسبوع</li></ul></div>
+        <div class="steps">
+          <div class="step"><div class="snum">١</div><div><h5>عقلية التجريب</h5><p>الفشل السريع والتعلم منه ليس إخفاقاً — بل طريق أسرع للنجاح</p></div></div>
+          <div class="step"><div class="snum">٢</div><div><h5>معايير تقييم الأداة</h5><p>سهولة الاستخدام، الوقت الموفّر، الملاءمة، التكلفة</p></div></div>
+          <div class="step"><div class="snum">٣</div><div><h5>اختاري أداة وجرّبيها</h5><p>من: Gamma, Notion AI, Canva AI, Otter.ai — أسبوع تجريب حقيقي</p></div></div>
+        </div>`,
+        acts:[{t:'جرّبي Gamma لإنشاء عرض تقديمي',d:'افتحي Gamma واكتبي موضوع درس أو فعالية — شاهدي كيف يبني العرض تلقائياً',g:'🎨 Gamma AI',u:'https://gamma.app',btn:'افتحي Gamma'},
+              {t:'جرّبي Canva AI للتصميم',d:'افتحي Canva وجرّبي ميزة "Magic Design" — أدخلي نصاً واحصلي على تصميم جاهز',g:'🎨 Canva AI',u:'https://www.canva.com/ai-image-generator/',btn:'افتحي Canva AI'}],
+        quiz:[{q:'ما معنى "التجريب السريع" Rapid Experimentation؟',o:['الاستعجال في كل شيء','اختبار فكرة بأدنى تكلفة وأسرع وقت للتعلم قبل الاستثمار الكبير','تجربة برامج بدون إذن','العمل بدون خطة'],a:1},
+              {q:'ما أهم معيار عند اختيار أداة AI جديدة للمدرسة؟',o:['شعبيتها على YouTube','ملاءمتها للاحتياج الفعلي وسهولة تبنّيها من الفريق','أنها مجانية تماماً','أنها من شركة أمريكية'],a:1}]},
+      mid:{label:'متوسط',cls:'mid',
+        learn:`<div class="cblock"><h4>🎯 المستوى المتوسط</h4><ul><li>بناء نموذج أولي (Prototype) بدون برمجة</li><li>إجراء تجربة مصغّرة وقياس نتائجها</li><li>كتابة تقرير تقييم موجّه للإدارة</li></ul></div>
+        <div class="steps">
+          <div class="step"><div class="snum">١</div><div><h5>Prototype بدون كود</h5><p>استخدمي أدوات No-Code مثل Notion أو Airtable لبناء حل بسيط</p></div></div>
+          <div class="step"><div class="snum">٢</div><div><h5>تجربة مصغّرة</h5><p>طبّقي الحل على مجموعة صغيرة (٣-٥ أشخاص) لمدة أسبوعين</p></div></div>
+          <div class="step"><div class="snum">٣</div><div><h5>تقرير التقييم</h5><p>وثّقي النتائج: ماذا نجح؟ ماذا فشل؟ ما التوصية؟</p></div></div>
+        </div>`,
+        acts:[{t:'ابني نموذجاً أولياً في Notion',d:'افتحي Notion وأنشئي صفحة تمثّل الحل المقترح — أضيفي قوائم، جداول، وخطوات',g:'🛠️ Notion',u:'https://www.notion.so',btn:'افتحي Notion'},
+              {t:'وثّقي نتائج تجربتك في Google Docs',d:'افتحي Google Docs واكتبي: المشكلة، الحل المجرَّب، ماذا نجح، التوصية',g:'📝 Google Docs',u:'https://docs.new',btn:'افتحي Google Docs'}],
+        quiz:[{q:'ما الهدف من التجربة المصغّرة؟',o:['إضاعة الوقت','تقليل المخاطر والتعلم قبل الانتشار الكامل','إثبات الفشل','إرضاء الإدارة'],a:1},
+              {q:'ما أهم ما يجب توثيقه بعد التجربة؟',o:['عدد ساعات العمل فقط','ما نجح وما فشل والدروس المستفادة والتوصية',  'اسم الأداة فقط','التكلفة فقط'],a:1}]},
+      adv:{label:'متقدم',cls:'adv',
+        learn:`<div class="cblock"><h4>🎯 المستوى المتقدم</h4><ul><li>بناء خارطة أدوات AI للمدرسة</li><li>تقييم عروض الموردين التقنيين</li><li>تقديم توصية شراء للإدارة</li></ul></div>
+        <div class="steps">
+          <div class="step"><div class="snum">١</div><div><h5>خارطة الأدوات</h5><p>وثّقي جميع الأدوات المستخدمة في المدرسة وفجوات الاحتياج</p></div></div>
+          <div class="step"><div class="snum">٢</div><div><h5>تقييم العروض التقنية</h5><p>تعلّمي كيف تقرئين عرضاً تقنياً وتسألين الأسئلة الصحيحة للموردين</p></div></div>
+          <div class="step"><div class="snum">٣</div><div><h5>توصية الاستثمار</h5><p>قدّمي تحليل ROI بسيطاً: تكلفة الأداة مقابل الوقت الموفّر والقيمة المضافة</p></div></div>
+        </div>`,
+        acts:[{t:'وثّقي خارطة الأدوات في Notion',d:'افتحي Notion وأنشئي جدولاً: اسم الأداة، الغرض، التقييم، الفجوة',g:'🗺️ Notion',u:'https://www.notion.so',btn:'افتحي Notion'},
+              {t:'احسبي ROI في Google Sheets',d:'افتحي Google Sheets وأنشئي جدولاً: تكلفة الأداة، الوقت الموفّر، القيمة المضافة',g:'💰 Google Sheets',u:'https://sheets.new',btn:'افتحي Google Sheets'}],
+        quiz:[{q:'ما ROI في سياق أدوات AI؟',o:['نوع من الشبكات الاجتماعية','نسبة العائد على الاستثمار: ما تكسبينه مقارنة بما تصرفينه','برنامج حاسوبي','مؤشر رضا المستخدم'],a:1},
+              {q:'ما أهم سؤال تسأله للمورّد التقني؟',o:['كم عمر الشركة؟','كيف سيُدرَّب فريقي وما دعم ما بعد البيع؟','هل الأداة جميلة؟','هل توجد نسخة مجانية؟'],a:1}]}
+  }}
+};
+
+function saveUsers(){localStorage.setItem('t11_users',JSON.stringify(users));}
+
+function empLogin(){
+  const name=document.getElementById('emp-name').value.trim();
+  const email=document.getElementById('emp-email').value.trim();
+  const role=document.getElementById('emp-role').value;
+  const err=document.getElementById('err-emp');
+  const pend=document.getElementById('pending-msg');
+  if(!name||!email||!role){err.textContent='⚠️ يرجى ملء جميع الحقول';err.classList.add('show');return;}
+  if(!email.includes('@')){err.textContent='⚠️ البريد الإلكتروني غير صحيح';err.classList.add('show');return;}
+  err.classList.remove('show'); pend.classList.remove('show');
+  let u=users.find(x=>x.email===email);
+  if(!u){
+    u={name,email,role,status:'pending',date:new Date().toLocaleDateString('ar-SA'),
+       progress:{},scores:{},acts:{}};
+    users.push(u); saveUsers();
+    pend.classList.add('show'); return;
+  }
+  if(u.status==='pending'){pend.classList.add('show');return;}
+  if(u.status==='rejected'){err.textContent='❌ عذراً، طلبك لم يُقبل. تواصلي مع الإدارة.';err.classList.add('show');return;}
+  u.name=name; u.role=role; saveUsers();
+  enterEmp(u);
+}
+
+function admLogin(){
+  const pass=document.getElementById('adm-pass').value;
+  const err=document.getElementById('err-adm');
+  if(!pass||pass!==ADMIN_PASS){
+    err.textContent='❌ كلمة المرور غير صحيحة';
+    err.classList.add('show');
+    return;
+  }
+  err.classList.remove('show');
+  // hide all screens
+  document.querySelectorAll('.screen').forEach(s=>{s.style.display='none';s.classList.remove('on');});
+  // show admin
+  const adm=document.getElementById('s-admin');
+  adm.style.display='block';
+  adm.classList.add('on');
+  renderAdminTable('all');
+}
+
+function enterEmp(u){
+  curUser=u;
+  document.querySelectorAll('.screen').forEach(s=>{s.style.display='none';s.classList.remove('on');});
+  const emp=document.getElementById('s-emp');
+  emp.style.display='block'; emp.classList.add('on');
+  document.getElementById('tb-name').textContent=u.name;
+  document.getElementById('home-greeting').textContent='مرحباً، '+u.name+' 👋';
+  document.getElementById('prof-name').textContent=u.name;
+  document.getElementById('prof-role').textContent=u.role+' · '+u.email;
+  document.getElementById('prof-email').textContent=u.email;
+  document.getElementById('prof-date').textContent=u.date||'—';
+  renderHomeTracks(); renderAllTracks(); updateStats(); renderCert(); renderBadges();
+}
+
+function logout(){
+  curUser=null;
+  document.querySelectorAll('.screen').forEach(s=>{s.style.display='none';s.classList.remove('on');});
+  const login=document.getElementById('s-login');
+  login.style.display='flex'; login.classList.add('on');
+  document.getElementById('emp-name').value='';
+  document.getElementById('emp-email').value='';
+  document.getElementById('emp-role').value='';
+  document.getElementById('adm-pass').value='';
+  document.getElementById('pending-msg').classList.remove('show');
+  document.getElementById('err-emp').classList.remove('show');
+}
+
+function setLoginTab(t){
+  document.getElementById('form-emp').style.display=t==='emp'?'block':'none';
+  document.getElementById('form-adm').style.display=t==='adm'?'block':'none';
+  document.getElementById('tab-emp').style.background=t==='emp'?'var(--p)':'rgba(255,255,255,.12)';
+  document.getElementById('tab-emp').style.color=t==='emp'?'#fff':'rgba(255,255,255,.7)';
+  document.getElementById('tab-adm').style.background=t==='adm'?'var(--p)':'rgba(255,255,255,.12)';
+  document.getElementById('tab-adm').style.color=t==='adm'?'#fff':'rgba(255,255,255,.7)';
+}
+
+// ── PAGES ──
+function showPage(id,btn){
+  document.querySelectorAll('#s-emp .page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('page-'+id).classList.add('on');
+  if(btn)btn.classList.add('on');
+  if(id==='cert')renderCert();
+}
+
+// ── TRACKS RENDER ──
+function trackCardHTML(tid,lvl,compact){
+  const t=TRACKS[tid]; const l=t.levels[lvl];
+  const prog=getTrackProg(tid,lvl);
+  return `<button class="tcard" onclick="openTrack('${tid}','${lvl}')">
+    <span class="tc-icon">${t.icon}</span>
+    <h3>${t.name}</h3>
+    <p>${t.desc}</p>
+    <span class="tc-badge ${lvl}">${lvl==='beg'?'🌱 مبتدئ':lvl==='mid'?'📈 متوسط':'🚀 متقدم'}</span>
+    <div class="tc-prog"><div class="tc-prog-label">${prog}% مكتمل</div>
+    <div class="prog-wrap"><div class="prog-bar" style="width:${prog}%"></div></div></div>
+  </button>`;
+}
+
+function renderHomeTracks(){
+  const w=document.getElementById('home-tracks');
+  w.innerHTML=['auto','data','content'].map(id=>trackCardHTML(id,'beg')).join('');
+}
+function renderAllTracks(){
+  const w=document.getElementById('all-tracks');
+  w.innerHTML=Object.keys(TRACKS).flatMap(id=>['beg','mid','adv'].map(l=>trackCardHTML(id,l))).join('');
+}
+
+function filterLevel(lvl,btn){
+  document.querySelectorAll('.ltab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  const cards=document.querySelectorAll('#all-tracks .tcard');
+  cards.forEach(c=>{
+    if(lvl==='all')c.style.display='';
+    else c.style.display=c.querySelector('.tc-badge').classList.contains(lvl)?'':'none';
+  });
+}
+
+function getTrackProg(tid,lvl){
+  if(!curUser)return 0;
+  const key=tid+'_'+lvl;
+  const acts=TRACKS[tid].levels[lvl].acts;
+  const done=curUser.acts&&curUser.acts[key]?Object.values(curUser.acts[key]).filter(Boolean).length:0;
+  return Math.round((done/acts.length)*100);
+}
+
+function updateStats(){
+  if(!curUser)return;
+  let started=0,totalActs=0,totalScore=0,scoreCount=0;
+  Object.keys(TRACKS).forEach(tid=>{
+    ['beg','mid','adv'].forEach(lvl=>{
+      const key=tid+'_'+lvl;
+      const prog=getTrackProg(tid,lvl);
+      if(prog>0)started++;
+      if(curUser.acts&&curUser.acts[key])
+        totalActs+=Object.values(curUser.acts[key]).filter(Boolean).length;
+      if(curUser.scores&&curUser.scores[key]!==undefined){
+        totalScore+=curUser.scores[key]; scoreCount++;
+      }
+    });
+  });
+  document.getElementById('st-tracks').textContent=started;
+  document.getElementById('st-acts').textContent=totalActs;
+  document.getElementById('st-score').textContent=scoreCount?Math.round(totalScore/scoreCount)+'%':'0%';
+  // level
+  const avgScore=scoreCount?totalScore/scoreCount:0;
+  const lvlTxt=avgScore>=80?'متقدم 🚀':avgScore>=50?'متوسط 📈':'مبتدئ 🌱';
+  document.getElementById('st-level').textContent=lvlTxt;
+  document.getElementById('prof-tracks').textContent=started+' مسار';
+  document.getElementById('prof-level').textContent=lvlTxt;
+}
+
+// ── MODAL ──
+let curModalTrack=null,curModalLvl=null;
+function openTrack(tid,lvl){
+  curModalTrack=tid; curModalLvl=lvl;
+  const t=TRACKS[tid]; const l=t.levels[lvl];
+  const lblTxt=lvl==='beg'?'🌱 مبتدئ':lvl==='mid'?'📈 متوسط':'🚀 متقدم';
+  const lbl=document.getElementById('m-level-badge');
+  lbl.textContent=lblTxt; lbl.className='level-badge '+lvl;
+  document.getElementById('m-title').textContent=t.icon+' '+t.name;
+  document.getElementById('m-desc').textContent=t.desc;
+  document.getElementById('learn-body').innerHTML=l.learn;
+  // activities
+  renderModalActs(tid,lvl);
+  // quiz
+  quizAns={};
+  renderModalQuiz(tid,lvl);
+  document.getElementById('score-box').classList.remove('on');
+  document.getElementById('quiz-sub-btn').style.display='inline-flex';
+  showITab('learn',document.querySelector('.itab'));
+  document.getElementById('moverlay').classList.add('on');
+}
+
+function renderModalActs(tid,lvl){
+  const key=tid+'_'+lvl;
+  const acts=TRACKS[tid].levels[lvl].acts;
+  const w=document.getElementById('act-body');
+  w.innerHTML='';
+  if(!curUser.acts)curUser.acts={};
+  if(!curUser.acts[key])curUser.acts[key]={};
+  acts.forEach((a,i)=>{
+    const done=curUser.acts[key][i]||false;
+    const d=document.createElement('div');
+    d.className='act-item';
+    const linkBtn=a.u?`<a href="${a.u}" target="_blank" rel="noopener" class="act-link-btn">🔗 ${a.btn||'افتحي الأداة'}</a>`:'';
+    d.innerHTML=`<div class="act-chk ${done?'done':''}" id="ach-${i}" onclick="toggleAct(${i})">${done?'✓':''}</div>
+      <div style="flex:1">
+        <div class="act-h5">${a.t}</div>
+        <div class="act-p">${a.d}</div>
+        <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-top:.5rem;">
+          <span class="act-tag">${a.g}</span>
+          ${linkBtn}
+        </div>
+        ${done?'<div class="act-done-note">✅ تم الإنجاز — ضعي علامة ✓ عند إكمالك فعلاً على الموقع</div>':''}
+      </div>`;
+    w.appendChild(d);
+  });
+  updateActProg(tid,lvl);
+}
+
+function toggleAct(i){
+  const key=curModalTrack+'_'+curModalLvl;
+  if(!curUser.acts)curUser.acts={};
+  if(!curUser.acts[key])curUser.acts[key]={};
+  curUser.acts[key][i]=!curUser.acts[key][i];
+  saveUsers();
+  const el=document.getElementById('ach-'+i);
+  el.classList.toggle('done');
+  el.textContent=curUser.acts[key][i]?'✓':'';
+  updateActProg(curModalTrack,curModalLvl);
+  updateStats(); renderAllTracks(); renderHomeTracks();
+}
+
+function updateActProg(tid,lvl){
+  const key=tid+'_'+lvl;
+  const acts=TRACKS[tid].levels[lvl].acts;
+  const done=curUser.acts&&curUser.acts[key]?Object.values(curUser.acts[key]).filter(Boolean).length:0;
+  const pct=Math.round((done/acts.length)*100);
+  document.getElementById('act-prog').style.width=pct+'%';
+  document.getElementById('act-label').textContent=done+' من '+acts.length+' أنشطة مكتملة ('+pct+'%)';
+}
+
+function renderModalQuiz(tid,lvl){
+  const quiz=TRACKS[tid].levels[lvl].quiz;
+  const w=document.getElementById('quiz-body');
+  w.innerHTML='';
+  quiz.forEach((q,qi)=>{
+    const d=document.createElement('div');
+    d.className='quiz-q';
+    d.innerHTML=`<div class="qq">${qi+1}. ${q.q}</div>
+      <div class="qopts">${q.o.map((o,oi)=>`<div class="qopt" id="qo-${qi}-${oi}" onclick="selOpt(${qi},${oi})">${o}</div>`).join('')}</div>
+      <div class="qfb" id="qfb-${qi}"></div>`;
+    w.appendChild(d);
+  });
+}
+
+function selOpt(qi,oi){
+  quizAns[qi]=oi;
+  const quiz=TRACKS[curModalTrack].levels[curModalLvl].quiz;
+  document.querySelectorAll(`[id^="qo-${qi}-"]`).forEach(e=>{e.style.borderColor='';e.style.background='';});
+  const s=document.getElementById(`qo-${qi}-${oi}`);
+  s.style.borderColor='var(--p)'; s.style.background='var(--pp2)';
+}
+
+function submitQuiz(){
+  const quiz=TRACKS[curModalTrack].levels[curModalLvl].quiz;
+  let correct=0;
+  quiz.forEach((q,qi)=>{
+    const chosen=quizAns[qi];
+    const fb=document.getElementById(`qfb-${qi}`);
+    document.querySelectorAll(`[id^="qo-${qi}-"]`).forEach(e=>{e.classList.remove('correct','wrong');});
+    if(chosen===undefined){fb.textContent='⚠️ لم تختاري إجابة';fb.className='qfb on no';return;}
+    const cEl=document.getElementById(`qo-${qi}-${q.a}`);
+    if(chosen===q.a){correct++;cEl.classList.add('correct');fb.textContent='✅ صحيح!';fb.className='qfb on ok';}
+    else{document.getElementById(`qo-${qi}-${chosen}`).classList.add('wrong');cEl.classList.add('correct');fb.textContent='❌ الصحيح: '+q.o[q.a];fb.className='qfb on no';}
+  });
+  const total=quiz.length;
+  const pct=Math.round((correct/total)*100);
+  const key=curModalTrack+'_'+curModalLvl;
+  if(!curUser.scores)curUser.scores={};
+  curUser.scores[key]=pct; saveUsers(); updateStats();
+  document.getElementById('score-n').textContent=correct+'/'+total;
+  const msgs=['استمري، أنتِ تتعلمين! 💪','جيد! راجعي الإجابات 📚','ممتاز! أنتِ في المسار الصحيح 🌟','رائع! جاهزة للمستوى التالي 🚀'];
+  document.getElementById('score-msg').textContent=msgs[correct]||msgs[3];
+  document.getElementById('score-box').classList.add('on');
+  document.getElementById('quiz-sub-btn').style.display='none';
+  renderCert();
+}
+
+function showITab(id,btn){
+  document.querySelectorAll('.ipage').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.itab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('it-'+id).classList.add('on');
+  if(btn)btn.classList.add('on');
+}
+
+function closeMOverlay(e){if(e.target===document.getElementById('moverlay'))closeModal();}
+function closeModal(){document.getElementById('moverlay').classList.remove('on');}
+
+// ── CERT ──
+function renderCert(){
+  if(!curUser)return;
+  document.getElementById('c-name').textContent=curUser.name||'—';
+  let bestTrack='',bestScore=0,bestLvl='';
+  Object.keys(TRACKS).forEach(tid=>{['beg','mid','adv'].forEach(lvl=>{
+    const key=tid+'_'+lvl;
+    const sc=curUser.scores&&curUser.scores[key]!==undefined?curUser.scores[key]:0;
+    if(sc>bestScore){bestScore=sc;bestTrack=TRACKS[tid].name;bestLvl=lvl==='beg'?'مبتدئ':lvl==='mid'?'متوسط':'متقدم';}
+  });});
+  document.getElementById('c-track').textContent=bestTrack?'قد أتمّت متطلبات مسار '+bestTrack:'أكملي مسارًا للحصول على شهادتك';
+  document.getElementById('c-level').textContent=bestLvl?'المستوى: '+bestLvl:'—';
+  document.getElementById('c-stars').textContent=bestScore>=80?'⭐⭐⭐':bestScore>=50?'⭐⭐':'⭐';
+  document.getElementById('c-date').textContent='بتاريخ: '+new Date().toLocaleDateString('ar-SA');
+}
+
+function renderBadges(){
+  if(!curUser)return;
+  const w=document.getElementById('prof-badges');
+  w.innerHTML='';
+  let total=0,scores=0,count=0;
+  Object.keys(TRACKS).forEach(tid=>{['beg','mid','adv'].forEach(lvl=>{
+    const key=tid+'_'+lvl;
+    const prog=getTrackProg(tid,lvl);
+    if(prog>0)total++;
+    if(curUser.scores&&curUser.scores[key]!==undefined){scores+=curUser.scores[key];count++;}
+  });});
+  const avg=count?scores/count:0;
+  if(total>=1){w.innerHTML+=`<span style="background:var(--pp);color:var(--p);padding:.4rem 1rem;border-radius:100px;font-size:.82rem;font-weight:700;">🥉 AI Explorer</span>`;}
+  if(avg>=60&&total>=3){w.innerHTML+=`<span style="background:#fef3c7;color:#92400e;padding:.4rem 1rem;border-radius:100px;font-size:.82rem;font-weight:700;">🥈 AI Champion</span>`;}
+  if(avg>=80&&total>=6){w.innerHTML+=`<span style="background:#d1fae5;color:#065f46;padding:.4rem 1rem;border-radius:100px;font-size:.82rem;font-weight:700;">🥇 Innovation Leader</span>`;}
+  if(!w.innerHTML)w.innerHTML=`<span style="color:var(--gray);font-size:.85rem;font-weight:300;">أكملي مسارات للحصول على شارات الإنجاز ✨</span>`;
+}
+
+// ── PDF ──
+async function exportPDF(){
+  if(!curUser){alert('يرجى تسجيل الدخول أولاً');return;}
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+  const W=297,H=210;
+  // background
+  doc.setFillColor(244,240,255);doc.rect(0,0,W,H,'F');
+  doc.setFillColor(26,14,53);doc.rect(0,0,W,18,'F');
+  doc.setFillColor(26,14,53);doc.rect(0,H-18,W,18,'F');
+  // border
+  doc.setDrawColor(124,58,237);doc.setLineWidth(1.5);doc.rect(8,8,W-16,H-16);
+  doc.setDrawColor(167,139,250);doc.setLineWidth(0.5);doc.rect(11,11,W-22,H-22);
+  // header
+  doc.setTextColor(255,255,255);doc.setFontSize(13);doc.setFont('helvetica','bold');
+  doc.text('مدرسة الابتدائية الحادية عشر - الخبر',W/2,12,{align:'center'});
+  // title
+  doc.setTextColor(26,14,53);doc.setFontSize(11);doc.setFont('helvetica','normal');
+  doc.text('Certificate of Achievement',W/2,35,{align:'center'});
+  doc.setFontSize(22);doc.setFont('helvetica','bold');doc.setTextColor(124,58,237);
+  doc.text('Tamkeen 11 Initiative',W/2,48,{align:'center'});
+  // body
+  doc.setFontSize(10);doc.setTextColor(100,100,100);doc.setFont('helvetica','normal');
+  doc.text('This certificate is awarded to',W/2,62,{align:'center'});
+  doc.setFontSize(20);doc.setFont('helvetica','bold');doc.setTextColor(26,14,53);
+  doc.text(curUser.name,W/2,75,{align:'center'});
+  doc.setDrawColor(167,139,250);doc.setLineWidth(0.7);doc.line(80,78,W-80,78);
+  // track & level
+  let bestTrack='',bestScore=0,bestLvl='';
+  Object.keys(TRACKS).forEach(tid=>{['beg','mid','adv'].forEach(lvl=>{
+    const key=tid+'_'+lvl;
+    const sc=curUser.scores&&curUser.scores[key]!==undefined?curUser.scores[key]:0;
+    if(sc>bestScore){bestScore=sc;bestTrack=TRACKS[tid].name;bestLvl=lvl==='beg'?'Beginner':lvl==='mid'?'Intermediate':'Advanced';}
+  });});
+  doc.setFontSize(10);doc.setTextColor(100,100,100);doc.setFont('helvetica','normal');
+  doc.text('for successfully completing the track',W/2,88,{align:'center'});
+  doc.setFontSize(14);doc.setFont('helvetica','bold');doc.setTextColor(124,58,237);
+  doc.text(bestTrack||'—',W/2,98,{align:'center'});
+  doc.setFontSize(11);doc.setTextColor(100,100,100);doc.setFont('helvetica','normal');
+  doc.text('Level: '+(bestLvl||'—')+'    |    Score: '+(bestScore||0)+'%',W/2,108,{align:'center'});
+  // stars
+  const stars=bestScore>=80?'★★★':bestScore>=50?'★★':'★';
+  doc.setFontSize(20);doc.setTextColor(124,58,237);doc.text(stars,W/2,120,{align:'center'});
+  // signatures
+  doc.setDrawColor(200,200,220);doc.setLineWidth(0.4);
+  doc.line(40,148,100,148);doc.line(W-100,148,W-40,148);
+  doc.setFontSize(9);doc.setTextColor(60,60,80);doc.setFont('helvetica','bold');
+  doc.text('Afaf Al-Huwayl',70,154,{align:'center'});
+  doc.text('Manal Al-Umayr',W-70,154,{align:'center'});
+  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(130,130,150);
+  doc.text('School Principal',70,159,{align:'center'});
+  doc.text('Vice Principal',W-70,159,{align:'center'});
+  // date & footer
+  doc.setFontSize(8);doc.setTextColor(130,130,150);
+  doc.text('Date: '+new Date().toLocaleDateString('en-GB'),W/2,170,{align:'center'});
+  doc.setTextColor(255,255,255);doc.setFontSize(9);
+  doc.text('Tamkeen 11 Initiative - Al-Ibtidaiyah 11 School, Al-Khobar - 2025',W/2,H-8,{align:'center'});
+  doc.save('Tamkeen11_Certificate_'+curUser.name+'.pdf');
+}
+
+// ── ADMIN ──
+function renderAdminTable(filter){
+  adminFilter=filter;
+  const body=document.getElementById('req-body');
+  const search=document.getElementById('search-inp')?.value?.toLowerCase()||'';
+  let list=users.filter(u=>{
+    if(filter!=='all'&&u.status!==filter)return false;
+    if(search&&!u.name?.toLowerCase().includes(search)&&!u.email?.toLowerCase().includes(search))return false;
+    return true;
+  });
+  document.getElementById('a-total').textContent=users.length;
+  document.getElementById('a-pend').textContent=users.filter(u=>u.status==='pending').length;
+  document.getElementById('a-appr').textContent=users.filter(u=>u.status==='approved').length;
+  document.getElementById('a-rej').textContent=users.filter(u=>u.status==='rejected').length;
+  if(!list.length){body.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--gray);">لا توجد سجلات</td></tr>`;return;}
+  body.innerHTML=list.map((u,i)=>{
+    const si=users.indexOf(u);
+    const sp=u.status==='pending'?'sp-pend':u.status==='approved'?'sp-ok':'sp-rej';
+    const sl=u.status==='pending'?'قيد المراجعة':u.status==='approved'?'مقبولة':'مرفوضة';
+    const actions=u.status==='pending'?
+      `<button class="action-btn ab-ok" onclick="changeStatus(${si},'approved')">✅ قبول</button>
+       <button class="action-btn ab-rej" onclick="changeStatus(${si},'rejected')">❌ رفض</button>`:
+      `<button class="action-btn" style="background:#f3f4f6;color:#374151;" onclick="changeStatus(${si},'pending')">↩️ إعادة</button>`;
+    return `<tr>
+      <td><strong>${u.name||'—'}</strong></td>
+      <td style="font-size:.8rem;color:var(--gray);">${u.email||'—'}</td>
+      <td style="font-size:.8rem;">${u.role||'—'}</td>
+      <td style="font-size:.78rem;color:var(--gray);">${u.date||'—'}</td>
+      <td><span class="status-pill ${sp}">${sl}</span></td>
+      <td>${actions}</td>
+    </tr>`;
+  }).join('');
+}
+
+function changeStatus(i,status){
+  users[i].status=status; saveUsers(); renderAdminTable(adminFilter);
+}
+function showAdminTab(f,btn){
+  document.querySelectorAll('#s-admin .ntab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  renderAdminTable(f);
+}
+function searchUsers(v){renderAdminTable(adminFilter);}
+
+// init demo users
+if(!users.length){
+  users=[
+    {name:'سارة الأحمد',email:'sara@edu.sa',role:'معلمة',status:'pending',date:'09/05/2025',progress:{},scores:{},acts:{}},
+    {name:'منيرة القحطاني',email:'munira@edu.sa',role:'مرشدة طلابية',status:'approved',date:'08/05/2025',progress:{},scores:{},acts:{}},
+    {name:'ريم الزهراني',email:'reem@edu.sa',role:'معلمة',status:'approved',date:'07/05/2025',progress:{},scores:{},acts:{}},
+  ];
+  saveUsers();
+}
+</script>
+</body>
+</html>
