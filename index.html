@@ -1,1277 +1,2778 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تمكين 11 — المنصة التفاعلية</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-:root{
-  --bg:#f4f0ff;--ink:#1a0e35;--p:#7c3aed;--pl:#a78bfa;--pp:#ede9fe;
-  --pp2:#ddd6fe;--gray:#6d5a8a;--white:#fff;--success:#059669;
-  --warn:#d97706;--rose:#be185d;--card:#fff;
-  --shadow:0 4px 24px rgba(124,58,237,.10);
-}
-body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تمكين 11</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-/* ════ SCREENS ════ */
-.screen{display:none;min-height:100vh;}
-.screen.on{display:block;}
-#s-admin.on{display:block !important;}
-#s-emp.on{display:block !important;}
+    :root {
+      --bg: #f8f5ff;
+      --ink: #170f2e;
+      --p: #6d28d9;
+      --p2: #8b5cf6;
+      --pp: #ede9fe;
+      --pp2: #ddd6fe;
+      --gray: #64748b;
+      --white: #fff;
+      --green: #059669;
+      --amber: #d97706;
+      --font: 'Tajawal', sans-serif;
+    }
 
-/* ════ LOGIN ════ */
-#s-login{
-  background:linear-gradient(135deg,#1a0e35 0%,#3b1f8c 55%,#6d28d9 100%);
-  display:flex;align-items:center;justify-content:center;padding:2rem 1rem;
-}
-#s-login.on{display:flex;}
-.login-box{
-  background:rgba(255,255,255,.07);border:1px solid rgba(167,139,250,.25);
-  border-radius:28px;padding:2.5rem 2rem;width:100%;max-width:420px;
-  backdrop-filter:blur(12px);
-}
-.login-logo{text-align:center;margin-bottom:1.8rem;}
-.login-logo h1{font-size:2.2rem;font-weight:900;color:#fff;}
-.login-logo h1 span{color:var(--pl);}
-.login-logo p{font-size:.82rem;color:rgba(255,255,255,.55);margin-top:.3rem;}
-.form-grp{margin-bottom:1rem;}
-.form-grp label{display:block;font-size:.8rem;font-weight:700;color:rgba(255,255,255,.7);margin-bottom:.4rem;}
-.form-grp input,.form-grp select{
-  width:100%;background:rgba(255,255,255,.1);border:1.5px solid rgba(167,139,250,.3);
-  border-radius:12px;padding:.75rem 1rem;font-size:.9rem;color:#fff;
-  font-family:'Cairo',sans-serif;outline:none;transition:border .2s;
-}
-.form-grp input::placeholder{color:rgba(255,255,255,.35);}
-.form-grp input:focus,.form-grp select:focus{border-color:var(--pl);}
-.form-grp select option{color:#000;}
-.login-btn{
-  width:100%;background:var(--p);color:#fff;border:none;border-radius:14px;
-  padding:.9rem;font-size:1rem;font-weight:800;cursor:pointer;
-  font-family:'Cairo',sans-serif;transition:all .25s;margin-top:.5rem;
-}
-.login-btn:hover{background:#6d28d9;transform:translateY(-2px);box-shadow:0 8px 24px rgba(109,40,217,.4);}
-.login-switch{text-align:center;margin-top:1.2rem;}
-.login-switch a{color:var(--pl);font-size:.85rem;cursor:pointer;font-weight:700;text-decoration:none;}
-.login-err{
-  background:rgba(190,24,93,.15);border:1px solid rgba(190,24,93,.4);
-  color:#fca5a5;border-radius:10px;padding:.6rem 1rem;font-size:.82rem;
-  margin-bottom:.8rem;display:none;
-}
-.login-err.show{display:block;}
-.pending-badge{
-  background:rgba(217,119,6,.15);border:1px solid rgba(217,119,6,.4);
-  color:#fcd34d;border-radius:10px;padding:.8rem 1rem;font-size:.85rem;
-  text-align:center;margin-top:.8rem;display:none;
-}
-.pending-badge.show{display:block;}
+    html {
+      scroll-behavior: smooth;
+    }
 
-/* ════ TOP BAR ════ */
-.topbar{
-  background:var(--ink);color:#fff;padding:.9rem 1.5rem;
-  display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:90;
-}
-.topbar-brand{font-size:1.1rem;font-weight:900;}
-.topbar-brand span{color:var(--pl);}
-.topbar-right{display:flex;align-items:center;gap:.8rem;}
-.topbar-user{font-size:.82rem;color:rgba(255,255,255,.7);}
-.topbar-user strong{color:#fff;}
-.logout-btn{
-  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
-  color:#fff;border-radius:8px;padding:.35rem .8rem;font-size:.78rem;
-  cursor:pointer;font-family:'Cairo',sans-serif;transition:all .2s;
-}
-.logout-btn:hover{background:rgba(255,255,255,.18);}
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-/* ════ NAV ════ */
-.nav-wrap{background:var(--white);box-shadow:0 2px 12px rgba(124,58,237,.08);overflow-x:auto;}
-.nav-tabs{display:flex;min-width:max-content;padding:0 1rem;}
-.ntab{
-  padding:.85rem 1.2rem;font-size:.83rem;font-weight:700;color:var(--gray);
-  cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;
-  transition:all .2s;background:none;border-top:none;border-left:none;border-right:none;
-  font-family:'Cairo',sans-serif;
-}
-.ntab:hover{color:var(--p);}
-.ntab.on{color:var(--p);border-bottom-color:var(--p);}
+    /* ══ UTILS ══ */
+    .hide {
+      display: none !important;
+    }
 
-/* ════ PAGES ════ */
-.page{display:none;padding:1.8rem 1.2rem;max-width:960px;margin:0 auto;}
-.page.on{display:block;animation:fadeUp .3s ease;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+    .show-flex {
+      display: flex !important;
+    }
 
-/* labels */
-.lbl{font-size:.7rem;font-weight:700;letter-spacing:.16em;color:var(--p);text-transform:uppercase;margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem;}
-.lbl::after{content:'';flex:1;height:1px;background:linear-gradient(to left,transparent,var(--pl));max-width:50px;}
-.ptitle{font-size:clamp(1.4rem,4vw,2rem);font-weight:900;margin-bottom:.4rem;}
-.pdesc{font-size:.9rem;color:var(--gray);font-weight:300;margin-bottom:1.8rem;max-width:620px;}
+    .show-block {
+      display: block !important;
+    }
 
-/* cards */
-.card{background:var(--card);border-radius:18px;border:1px solid #e8e0ff;box-shadow:var(--shadow);}
+    /* ══ SCREENS ══ */
+    .screen {
+      display: none;
+      min-height: 100vh;
+    }
 
-/* stat row */
-.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.9rem;margin-bottom:1.8rem;}
-.stat-c{background:var(--card);border:1px solid #e8e0ff;border-radius:14px;padding:1.1rem;text-align:center;box-shadow:var(--shadow);}
-.stat-n{font-size:1.8rem;font-weight:900;color:var(--p);}
-.stat-l{font-size:.75rem;color:var(--gray);}
+    .screen.active {
+      display: block;
+    }
 
-/* progress */
-.prog-wrap{background:var(--pp2);border-radius:100px;height:8px;overflow:hidden;}
-.prog-bar{height:100%;background:linear-gradient(to left,var(--p),var(--pl));border-radius:100px;transition:width .5s;}
+    #s-login.active {
+      display: flex;
+    }
 
-/* level pills */
-.level-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap;}
-.ltab{
-  padding:.45rem 1.1rem;border-radius:100px;font-size:.8rem;font-weight:700;
-  cursor:pointer;border:2px solid transparent;transition:all .2s;
-  font-family:'Cairo',sans-serif;
-}
-.ltab.beg{background:#e0f2fe;color:#0369a1;}
-.ltab.mid{background:#fef3c7;color:#92400e;}
-.ltab.adv{background:#ede9fe;color:var(--p);}
-.ltab.on{border-color:currentColor;box-shadow:0 2px 10px rgba(0,0,0,.1);}
+    /* ══ LOGIN ══ */
+    #s-login {
+      background: linear-gradient(160deg, #0f0720 0%, #2d1065 60%, #4c1d95 100%);
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+      position: relative;
+      overflow: hidden;
+    }
 
-/* track grid */
-.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;}
-.tcard{
-  background:var(--card);border:2px solid var(--pp2);border-radius:18px;
-  padding:1.4rem;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;
-  font-family:'Cairo',sans-serif;text-align:right;width:100%;
-}
-.tcard::after{content:'';position:absolute;bottom:-16px;left:-16px;width:64px;height:64px;border-radius:50%;background:var(--pp);transition:all .3s;}
-.tcard:hover{border-color:var(--p);transform:translateY(-4px);box-shadow:0 10px 32px rgba(124,58,237,.15);}
-.tcard:hover::after{transform:scale(3);}
-.tc-icon{font-size:1.9rem;display:block;margin-bottom:.7rem;position:relative;z-index:1;}
-.tcard h3{font-size:1rem;font-weight:800;margin-bottom:.2rem;position:relative;z-index:1;}
-.tcard p{font-size:.8rem;color:var(--gray);font-weight:300;position:relative;z-index:1;}
-.tc-prog{margin-top:.8rem;position:relative;z-index:1;}
-.tc-prog-label{font-size:.7rem;color:var(--p);font-weight:700;margin-bottom:.3rem;}
-.tc-badge{
-  display:inline-block;margin-top:.6rem;font-size:.7rem;font-weight:700;
-  padding:.2rem .7rem;border-radius:100px;position:relative;z-index:1;
-}
-.tc-badge.beg{background:#e0f2fe;color:#0369a1;}
-.tc-badge.mid{background:#fef3c7;color:#92400e;}
-.tc-badge.adv{background:#ede9fe;color:var(--p);}
+    #s-login::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
 
-/* modal */
-.moverlay{
-  display:none;position:fixed;inset:0;background:rgba(26,14,53,.6);
-  backdrop-filter:blur(5px);z-index:200;overflow-y:auto;padding:1rem;
-  align-items:flex-start;justify-content:center;
-}
-.moverlay.on{display:flex;}
-.mbox{
-  background:var(--white);border-radius:24px;width:100%;max-width:700px;
-  overflow:hidden;animation:mIn .35s cubic-bezier(.2,.8,.3,1) both;margin:auto;
-}
-@keyframes mIn{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:none}}
-.mhead{
-  background:linear-gradient(135deg,#1a0e35,#6d28d9);
-  padding:1.6rem 1.8rem;color:#fff;position:relative;
-}
-.mhead h2{font-size:1.3rem;font-weight:900;margin-bottom:.2rem;}
-.mhead p{font-size:.82rem;opacity:.75;font-weight:300;}
-.mclose{
-  position:absolute;top:.9rem;left:.9rem;background:rgba(255,255,255,.15);
-  border:none;color:#fff;width:34px;height:34px;border-radius:50%;
-  font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  font-family:'Cairo',sans-serif;transition:background .2s;
-}
-.mclose:hover{background:rgba(255,255,255,.25);}
-.itabs{display:flex;background:#faf7ff;border-bottom:1px solid #ede9fe;overflow-x:auto;}
-.itab{
-  padding:.75rem 1.1rem;font-size:.8rem;font-weight:700;color:var(--gray);
-  cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;
-  font-family:'Cairo',sans-serif;background:none;border-top:none;border-left:none;border-right:none;
-  transition:all .2s;
-}
-.itab.on{color:var(--p);border-bottom-color:var(--p);}
-.ipage{display:none;padding:1.5rem 1.8rem;}
-.ipage.on{display:block;animation:fadeUp .25s ease;}
+    .login-card {
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(167, 139, 250, .2);
+      border-radius: 24px;
+      padding: 2rem 1.5rem;
+      width: 100%;
+      max-width: 400px;
+      backdrop-filter: blur(16px);
+      position: relative;
+      z-index: 1;
+    }
 
-/* content blocks */
-.cblock{background:var(--pp);border-radius:14px;padding:1.2rem 1.4rem;margin-bottom:.9rem;border-right:4px solid var(--p);}
-.cblock h4{font-size:.95rem;font-weight:800;margin-bottom:.4rem;}
-.cblock p,.cblock li{font-size:.87rem;color:#3b2a6e;line-height:1.85;}
-.cblock ul{padding-right:1.2rem;}
-.cblock li{margin-bottom:.25rem;}
-.steps{display:flex;flex-direction:column;gap:.7rem;}
-.step{display:flex;gap:.9rem;align-items:flex-start;background:var(--white);border:1px solid var(--pp2);border-radius:12px;padding:.9rem 1.1rem;}
-.snum{width:30px;height:30px;border-radius:50%;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:900;flex-shrink:0;}
-.step h5{font-size:.88rem;font-weight:800;margin-bottom:.15rem;}
-.step p{font-size:.8rem;color:var(--gray);font-weight:300;}
+    .login-brand {
+      text-align: center;
+      margin-bottom: 1.8rem;
+    }
 
-/* level badge in modal */
-.level-badge{
-  display:inline-flex;align-items:center;gap:.4rem;
-  padding:.3rem .9rem;border-radius:100px;font-size:.75rem;font-weight:700;
-  margin-bottom:1rem;
-}
-.level-badge.beg{background:#e0f2fe;color:#0369a1;}
-.level-badge.mid{background:#fef3c7;color:#92400e;}
-.level-badge.adv{background:#ede9fe;color:var(--p);}
+    .login-brand .logo {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -1px;
+    }
 
-/* activities */
-.acts{display:flex;flex-direction:column;gap:.8rem;}
-.act-item{background:var(--white);border:1px solid var(--pp2);border-radius:12px;padding:1rem 1.2rem;display:flex;align-items:flex-start;gap:.9rem;}
-.act-chk{width:26px;height:26px;border-radius:7px;border:2px solid var(--pl);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.9rem;transition:all .2s;}
-.act-chk.done{background:var(--p);border-color:var(--p);color:#fff;}
-.act-h5{font-size:.88rem;font-weight:800;margin-bottom:.15rem;}
-.act-p{font-size:.79rem;color:var(--gray);font-weight:300;}
-.act-tag{display:inline-block;margin-top:.4rem;font-size:.7rem;font-weight:700;background:var(--pp);color:var(--p);padding:.18rem .6rem;border-radius:100px;}
+    .login-brand .logo span {
+      color: #c4b5fd;
+    }
 
-/* quiz */
-.quiz-q{background:var(--white);border:1px solid var(--pp2);border-radius:14px;padding:1.1rem 1.3rem;margin-bottom:.9rem;}
-.qq{font-size:.92rem;font-weight:700;margin-bottom:.7rem;}
-.qopts{display:flex;flex-direction:column;gap:.45rem;}
-.qopt{
-  background:var(--pp);border:2px solid transparent;border-radius:10px;
-  padding:.55rem .95rem;font-size:.83rem;font-weight:600;cursor:pointer;
-  text-align:right;transition:all .2s;font-family:'Cairo',sans-serif;color:var(--ink);
-}
-.qopt:hover{border-color:var(--p);background:var(--pp2);}
-.qopt.correct{background:#d1fae5;border-color:var(--success);color:#065f46;}
-.qopt.wrong{background:#fee2e2;border-color:#ef4444;color:#991b1b;}
-.qfb{margin-top:.6rem;font-size:.82rem;font-weight:700;padding:.4rem .9rem;border-radius:8px;display:none;}
-.qfb.on{display:block;}
-.qfb.ok{background:#d1fae5;color:#065f46;}
-.qfb.no{background:#fee2e2;color:#991b1b;}
-.score-box{
-  background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;
-  border-radius:16px;padding:1.4rem;text-align:center;margin-top:1rem;display:none;
-}
-.score-box.on{display:block;animation:fadeUp .4s;}
-.score-n{font-size:2.8rem;font-weight:900;}
+    .login-brand p {
+      font-size: .8rem;
+      color: rgba(255, 255, 255, .45);
+      margin-top: .3rem;
+    }
 
-/* cta btn */
-.cbtn{
-  display:inline-flex;align-items:center;gap:.5rem;background:var(--p);color:#fff;
-  border:none;border-radius:12px;padding:.75rem 1.5rem;font-size:.88rem;font-weight:700;
-  cursor:pointer;font-family:'Cairo',sans-serif;transition:all .25s;margin-top:.9rem;
-}
-.cbtn:hover{background:#6d28d9;transform:translateY(-2px);box-shadow:0 6px 20px rgba(109,40,217,.3);}
-.cbtn.sec{background:var(--pp);color:var(--p);}
-.cbtn.sec:hover{background:var(--pp2);}
+    .tab-switch {
+      display: flex;
+      background: rgba(255, 255, 255, .08);
+      border-radius: 12px;
+      padding: 4px;
+      gap: 4px;
+      margin-bottom: 1.5rem;
+    }
 
-/* cert preview */
-.cert-preview{
-  border:3px solid var(--pl);border-radius:20px;padding:2rem;text-align:center;
-  background:linear-gradient(135deg,#faf7ff,#ede9fe);margin-bottom:1.2rem;
-  position:relative;overflow:hidden;
-}
-.cert-preview::before{
-  content:'تمكين 11';position:absolute;font-size:8rem;font-weight:900;
-  color:rgba(124,58,237,.05);top:50%;left:50%;transform:translate(-50%,-50%);
-  white-space:nowrap;pointer-events:none;
-}
-.cert-name{font-size:1.6rem;font-weight:900;color:var(--p);margin:1rem 0 .3rem;}
-.cert-track{font-size:1rem;color:var(--ink);margin-bottom:.3rem;}
-.cert-level{font-size:.85rem;color:var(--gray);}
-.cert-date{font-size:.78rem;color:var(--gray);margin-top:.8rem;}
-.cert-stars{font-size:1.5rem;margin:.5rem 0;}
+    .tab-sw-btn {
+      flex: 1;
+      padding: .55rem;
+      border: none;
+      border-radius: 9px;
+      font-family: var(--font);
+      font-size: .82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
+      color: rgba(255, 255, 255, .5);
+      background: transparent;
+    }
 
-/* ══ ADMIN SCREEN ══ */
-#s-admin{background:var(--bg);}
-.admin-wrap{max-width:1000px;margin:0 auto;padding:1.5rem 1.2rem;}
-.admin-title{font-size:1.6rem;font-weight:900;margin-bottom:.3rem;}
-.admin-sub{font-size:.88rem;color:var(--gray);margin-bottom:1.5rem;}
+    .tab-sw-btn.on {
+      background: var(--p);
+      color: #fff;
+      box-shadow: 0 2px 12px rgba(109, 40, 217, .4);
+    }
 
-.req-table{width:100%;border-collapse:collapse;}
-.req-table th{background:var(--pp);color:var(--p);padding:.7rem .9rem;font-size:.78rem;font-weight:800;text-align:right;border-bottom:2px solid var(--pp2);}
-.req-table td{padding:.75rem .9rem;font-size:.83rem;border-bottom:1px solid #f0eaff;vertical-align:middle;}
-.req-table tr:hover td{background:#faf7ff;}
-.status-pill{display:inline-block;padding:.22rem .75rem;border-radius:100px;font-size:.72rem;font-weight:700;}
-.sp-pend{background:#fef3c7;color:#92400e;}
-.sp-ok{background:#d1fae5;color:#065f46;}
-.sp-rej{background:#fee2e2;color:#991b1b;}
-.action-btn{
-  padding:.3rem .8rem;border-radius:8px;font-size:.75rem;font-weight:700;
-  cursor:pointer;border:none;font-family:'Cairo',sans-serif;transition:all .2s;margin:0 .2rem;
-}
-.ab-ok{background:#d1fae5;color:#065f46;}
-.ab-ok:hover{background:var(--success);color:#fff;}
-.ab-rej{background:#fee2e2;color:#991b1b;}
-.ab-rej:hover{background:#ef4444;color:#fff;}
+    .fgrp {
+      margin-bottom: .9rem;
+    }
 
-.admin-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.9rem;margin-bottom:1.5rem;}
-.astat{background:var(--white);border:1px solid #e8e0ff;border-radius:14px;padding:1rem;text-align:center;box-shadow:var(--shadow);}
-.astat-n{font-size:1.8rem;font-weight:900;color:var(--p);}
-.astat-l{font-size:.72rem;color:var(--gray);}
+    .fgrp label {
+      display: block;
+      font-size: .75rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, .6);
+      margin-bottom: .35rem;
+    }
 
-/* search */
-.search-bar{
-  background:var(--white);border:1.5px solid var(--pp2);border-radius:12px;
-  padding:.6rem 1rem;font-size:.88rem;width:100%;max-width:320px;
-  font-family:'Cairo',sans-serif;outline:none;margin-bottom:1rem;
-  transition:border .2s;
-}
-.search-bar:focus{border-color:var(--p);}
+    .fgrp input,
+    .fgrp select {
+      width: 100%;
+      background: rgba(255, 255, 255, .09);
+      border: 1.5px solid rgba(167, 139, 250, .25);
+      border-radius: 11px;
+      padding: .72rem 1rem;
+      font-size: .92rem;
+      color: #fff;
+      font-family: var(--font);
+      outline: none;
+      transition: border .2s;
+      -webkit-appearance: none;
+    }
 
-/* ════ MOBILE RESPONSIVE ════ */
-@media(max-width:600px){
-  #s-login{padding:1rem .8rem;align-items:flex-start;padding-top:2rem;}
-  .login-box{padding:1.6rem 1.2rem;border-radius:20px;}
-  .login-logo h1{font-size:1.8rem;}
-  .login-logo p{font-size:.75rem;}
-  .form-grp input,.form-grp select{font-size:1rem;padding:.7rem .9rem;}
-  .login-btn{font-size:.95rem;padding:.85rem;}
-  .topbar{padding:.7rem 1rem;}
-  .topbar-brand{font-size:.95rem;}
-  .topbar-user{font-size:.72rem;}
-  .logout-btn{padding:.28rem .6rem;font-size:.72rem;}
-  .nav-wrap{-webkit-overflow-scrolling:touch;}
-  .ntab{padding:.7rem .9rem;font-size:.75rem;}
-  .page{padding:1rem .9rem;}
-  .ptitle{font-size:1.4rem;}
-  .pdesc{font-size:.83rem;margin-bottom:1.2rem;}
-  .lbl{font-size:.65rem;}
-  .stat-row{grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1.2rem;}
-  .stat-c{padding:.8rem .6rem;}
-  .stat-n{font-size:1.5rem;}
-  .stat-l{font-size:.68rem;}
-  .tgrid{grid-template-columns:1fr;gap:.8rem;}
-  .tcard{padding:1.1rem;}
-  .tc-icon{font-size:1.6rem;margin-bottom:.5rem;}
-  .tcard h3{font-size:.92rem;}
-  .tcard p{font-size:.76rem;}
-  .level-tabs{gap:.4rem;margin-bottom:1.1rem;}
-  .ltab{padding:.38rem .85rem;font-size:.74rem;}
-  .moverlay{padding:.4rem;}
-  .mbox{border-radius:18px;max-height:94vh;overflow-y:auto;}
-  .mhead{padding:1.1rem 1rem 1rem;}
-  .mhead h2{font-size:1.1rem;}
-  .mhead p{font-size:.76rem;}
-  .mclose{top:.7rem;left:.7rem;width:30px;height:30px;font-size:.9rem;}
-  .itabs{overflow-x:auto;-webkit-overflow-scrolling:touch;}
-  .itab{padding:.65rem .85rem;font-size:.74rem;min-width:max-content;}
-  .ipage{padding:1rem;}
-  .cblock{padding:1rem 1.1rem;}
-  .cblock h4{font-size:.88rem;}
-  .cblock p,.cblock li{font-size:.82rem;}
-  .steps{gap:.55rem;}
-  .step{padding:.75rem .9rem;gap:.7rem;}
-  .snum{width:26px;height:26px;font-size:.75rem;}
-  .step h5{font-size:.82rem;}
-  .step p{font-size:.76rem;}
-  .act-item{padding:.85rem 1rem;gap:.7rem;}
-  .act-chk{width:24px;height:24px;border-radius:6px;}
-  .act-h5{font-size:.82rem;}
-  .act-p{font-size:.75rem;}
-  .quiz-q{padding:.9rem 1rem;}
-  .qq{font-size:.85rem;}
-  .qopt{padding:.5rem .85rem;font-size:.8rem;}
-  .score-n{font-size:2.2rem;}
-  .cert-preview{padding:1.3rem 1rem;}
-  .cert-preview::before{font-size:5rem;}
-  .cbtn{padding:.65rem 1.2rem;font-size:.82rem;}
-  .admin-wrap{padding:1rem .9rem;}
-  .admin-title{font-size:1.2rem;}
-  .admin-sub{font-size:.78rem;}
-  .admin-stats{grid-template-columns:1fr 1fr;gap:.6rem;}
-  .astat{padding:.8rem .6rem;}
-  .astat-n{font-size:1.5rem;}
-  .astat-l{font-size:.65rem;}
-  .search-bar{max-width:100%;font-size:.85rem;}
-  .card{overflow-x:auto;}
-  .req-table{min-width:520px;}
-  .req-table th,.req-table td{padding:.55rem .65rem;font-size:.75rem;}
-  .action-btn{padding:.25rem .6rem;font-size:.7rem;}
-  .status-pill{font-size:.66rem;padding:.18rem .6rem;}
-  .level-badge{font-size:.7rem;}
-  .m-level-badge{display:block;margin-bottom:.5rem;}
-}
+    .fgrp input::placeholder {
+      color: rgba(255, 255, 255, .28);
+    }
 
-/* activity link button */
-.act-link-btn{
-  display:inline-flex;align-items:center;gap:.4rem;
-  background:var(--p);color:#fff;text-decoration:none;
-  border-radius:10px;padding:.45rem 1rem;font-size:.8rem;font-weight:700;
-  font-family:'Cairo',sans-serif;transition:all .25s;
-  box-shadow:0 2px 10px rgba(124,58,237,.25);
-}
-.act-link-btn:hover{background:#6d28d9;transform:translateY(-2px);box-shadow:0 4px 16px rgba(109,40,217,.35);}
-.act-done-note{font-size:.72rem;color:var(--success);font-weight:700;margin-top:.3rem;}
-@media(max-width:600px){
-  .act-link-btn{font-size:.76rem;padding:.4rem .85rem;}
-}
-</style>
+    .fgrp input:focus,
+    .fgrp select:focus {
+      border-color: #8b5cf6;
+    }
+
+    .fgrp select option {
+      color: #000;
+      background: #fff;
+    }
+
+    .login-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: .88rem;
+      font-size: .95rem;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: all .25s;
+      box-shadow: 0 4px 20px rgba(109, 40, 217, .35);
+      margin-top: .3rem;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(109, 40, 217, .45);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .err-msg {
+      background: rgba(239, 68, 68, .15);
+      border: 1px solid rgba(239, 68, 68, .35);
+      color: #fca5a5;
+      border-radius: 10px;
+      padding: .6rem 1rem;
+      font-size: .8rem;
+      margin-bottom: .8rem;
+      display: none;
+    }
+
+    .err-msg.on {
+      display: block;
+    }
+
+    .pending-msg {
+      background: rgba(217, 119, 6, .15);
+      border: 1px solid rgba(217, 119, 6, .35);
+      color: #fcd34d;
+      border-radius: 10px;
+      padding: .8rem 1rem;
+      font-size: .82rem;
+      text-align: center;
+      margin-top: .8rem;
+      display: none;
+    }
+
+    .pending-msg.on {
+      display: block;
+    }
+
+    .admin-hint {
+      text-align: center;
+      margin-top: .8rem;
+      font-size: .72rem;
+      color: rgba(255, 255, 255, .25);
+    }
+
+    /* ══ APP SHELL ══ */
+    .topbar {
+      background: var(--ink);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .8rem 1.2rem;
+      position: sticky;
+      top: 0;
+      z-index: 80;
+    }
+
+    .topbar-logo {
+      font-size: 1.1rem;
+      font-weight: 900;
+      letter-spacing: -.5px;
+    }
+
+    .topbar-logo span {
+      color: #c4b5fd;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+
+    .topbar-name {
+      font-size: .75rem;
+      color: rgba(255, 255, 255, .6);
+    }
+
+    .topbar-name strong {
+      color: #fff;
+      font-size: .82rem;
+    }
+
+    .out-btn {
+      background: rgba(255, 255, 255, .1);
+      border: 1px solid rgba(255, 255, 255, .15);
+      color: #fff;
+      border-radius: 8px;
+      padding: .3rem .75rem;
+      font-size: .75rem;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: all .2s;
+    }
+
+    .out-btn:hover {
+      background: rgba(255, 255, 255, .18);
+    }
+
+    /* bottom nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border-top: 1px solid #e8e0ff;
+      display: flex;
+      z-index: 80;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .bnav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: .6rem .3rem .5rem;
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-family: var(--font);
+      transition: all .2s;
+      color: var(--gray);
+      gap: .2rem;
+    }
+
+    .bnav-item.on {
+      color: var(--p);
+    }
+
+    .bnav-icon {
+      font-size: 1.3rem;
+      line-height: 1;
+    }
+
+    .bnav-label {
+      font-size: .62rem;
+      font-weight: 700;
+    }
+
+    /* pages */
+    .app-page {
+      display: none;
+      padding: 1.2rem 1rem 6rem;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .app-page.on {
+      display: block;
+      animation: fadeUp .28s ease;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    /* section headers */
+    .pg-title {
+      font-size: 1.5rem;
+      font-weight: 900;
+      margin-bottom: .2rem;
+    }
+
+    .pg-sub {
+      font-size: .85rem;
+      color: var(--gray);
+      font-weight: 400;
+      margin-bottom: 1.4rem;
+    }
+
+    .sec-head {
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .16em;
+      color: var(--p);
+      text-transform: uppercase;
+      margin-bottom: .7rem;
+      margin-top: 1.4rem;
+    }
+
+    /* stat cards */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: .7rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border: 1px solid #ede9fe;
+      border-radius: 16px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .stat-n {
+      font-size: 1.9rem;
+      font-weight: 900;
+      color: var(--p);
+      line-height: 1;
+    }
+
+    .stat-l {
+      font-size: .72rem;
+      color: var(--gray);
+      margin-top: .2rem;
+    }
+
+    /* progress ring */
+    .prog-ring-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: .5rem 0 1.2rem;
+    }
+
+    .prog-ring {
+      transform: rotate(-90deg);
+    }
+
+    .ring-bg {
+      fill: none;
+      stroke: #ede9fe;
+      stroke-width: 8;
+    }
+
+    .ring-bar {
+      fill: none;
+      stroke: url(#ringGrad);
+      stroke-width: 8;
+      stroke-linecap: round;
+      transition: stroke-dashoffset .6s ease;
+    }
+
+    .ring-label {
+      font-size: 1.4rem;
+      font-weight: 900;
+      fill: var(--p);
+    }
+
+    .ring-sub {
+      font-size: .55rem;
+      fill: var(--gray);
+    }
+
+    /* track cards */
+    .track-list {
+      display: flex;
+      flex-direction: column;
+      gap: .8rem;
+    }
+
+    .tcard {
+      background: var(--white);
+      border: 1.5px solid #ede9fe;
+      border-radius: 18px;
+      padding: 1.1rem 1.2rem;
+      cursor: pointer;
+      transition: all .25s;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-right: 4px solid var(--p);
+    }
+
+    .tcard:hover,
+    .tcard:active {
+      border-color: var(--p);
+      box-shadow: 0 4px 20px rgba(109, 40, 217, .12);
+      transform: translateX(-3px);
+    }
+
+    .tcard-icon {
+      font-size: 1.8rem;
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      background: var(--pp);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tcard-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .tcard-name {
+      font-size: .95rem;
+      font-weight: 800;
+      margin-bottom: .15rem;
+    }
+
+    .tcard-desc {
+      font-size: .76rem;
+      color: var(--gray);
+      font-weight: 400;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tcard-footer {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      margin-top: .5rem;
+    }
+
+    .tpill {
+      font-size: .65rem;
+      font-weight: 700;
+      padding: .18rem .6rem;
+      border-radius: 100px;
+    }
+
+    .tpill.beg {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .tpill.mid {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .tpill.adv {
+      background: #ede9fe;
+      color: var(--p);
+    }
+
+    .tpill.done {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .tcard-prog-bar {
+      flex: 1;
+      height: 4px;
+      background: #ede9fe;
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .tcard-prog-fill {
+      height: 100%;
+      background: linear-gradient(to left, var(--p), var(--p2));
+      border-radius: 100px;
+      transition: width .4s;
+    }
+
+    .tcard-arrow {
+      color: #c4b5fd;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    /* ══ TRACK DETAIL (full page) ══ */
+    #s-track {
+      background: var(--bg);
+    }
+
+    .track-header {
+      background: linear-gradient(135deg, #1a0a3e, #4c1d95);
+      padding: 1.2rem 1.2rem 1.8rem;
+      color: #fff;
+      position: relative;
+    }
+
+    .back-btn {
+      background: rgba(255, 255, 255, .12);
+      border: none;
+      color: #fff;
+      border-radius: 10px;
+      padding: .4rem .9rem;
+      font-size: .8rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font);
+      margin-bottom: .9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+    }
+
+    .track-header h2 {
+      font-size: 1.3rem;
+      font-weight: 900;
+      margin-bottom: .2rem;
+    }
+
+    .track-header p {
+      font-size: .8rem;
+      opacity: .7;
+      font-weight: 300;
+    }
+
+    .level-pills {
+      display: flex;
+      gap: .5rem;
+      margin-top: .9rem;
+      overflow-x: auto;
+      padding-bottom: .2rem;
+    }
+
+    .lpill {
+      padding: .42rem 1rem;
+      border-radius: 100px;
+      font-size: .78rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all .2s;
+      white-space: nowrap;
+      font-family: var(--font);
+    }
+
+    .lpill.beg {
+      background: rgba(219, 234, 254, .15);
+      color: #bfdbfe;
+      border-color: rgba(219, 234, 254, .2);
+    }
+
+    .lpill.mid {
+      background: rgba(254, 243, 199, .15);
+      color: #fde68a;
+      border-color: rgba(254, 243, 199, .2);
+    }
+
+    .lpill.adv {
+      background: rgba(237, 233, 254, .15);
+      color: #ddd6fe;
+      border-color: rgba(237, 233, 254, .2);
+    }
+
+    .lpill.on.beg {
+      background: #1d4ed8;
+      color: #fff;
+      border-color: #1d4ed8;
+    }
+
+    .lpill.on.mid {
+      background: #d97706;
+      color: #fff;
+      border-color: #d97706;
+    }
+
+    .lpill.on.adv {
+      background: var(--p);
+      color: #fff;
+      border-color: var(--p);
+    }
+
+    .track-body {
+      padding: 1.2rem 1rem 6rem;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* lesson steps */
+    .lesson-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .lesson-card {
+      background: var(--white);
+      border: 1px solid #ede9fe;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .lesson-head {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      padding: 1rem 1.1rem;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .lesson-head:hover {
+      background: #faf7ff;
+    }
+
+    .lesson-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: var(--pp);
+      color: var(--p);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .85rem;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .lesson-num.done {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .lesson-title {
+      flex: 1;
+      font-size: .92rem;
+      font-weight: 700;
+    }
+
+    .lesson-status {
+      font-size: .72rem;
+      color: var(--gray);
+    }
+
+    .lesson-body {
+      display: none;
+      padding: 0 1.1rem 1.1rem;
+      border-top: 1px solid #f0eaff;
+    }
+
+    .lesson-body.on {
+      display: block;
+      animation: fadeUp .2s ease;
+    }
+
+    .content-block {
+      background: var(--pp);
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+      margin-bottom: .9rem;
+      margin-top: .9rem;
+    }
+
+    .content-block h4 {
+      font-size: .88rem;
+      font-weight: 800;
+      margin-bottom: .5rem;
+      color: var(--ink);
+    }
+
+    .content-block p,
+    .content-block li {
+      font-size: .84rem;
+      color: #3b2a6e;
+      line-height: 1.85;
+    }
+
+    .content-block ul {
+      padding-right: 1.1rem;
+    }
+
+    .content-block li {
+      margin-bottom: .25rem;
+    }
+
+    .video-link {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      background: var(--ink);
+      color: #fff;
+      border-radius: 12px;
+      padding: .85rem 1.1rem;
+      text-decoration: none;
+      margin-bottom: .8rem;
+      transition: all .2s;
+    }
+
+    .video-link:hover {
+      background: #2d1065;
+      transform: translateY(-1px);
+    }
+
+    .video-link .play {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .video-link-text {
+      flex: 1;
+    }
+
+    .video-link-title {
+      font-size: .85rem;
+      font-weight: 700;
+    }
+
+    .video-link-sub {
+      font-size: .72rem;
+      color: rgba(255, 255, 255, .55);
+      margin-top: .1rem;
+    }
+
+    .video-link-arrow {
+      color: rgba(255, 255, 255, .4);
+    }
+
+    .tool-link {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      background: var(--white);
+      border: 1.5px solid var(--pp2);
+      border-radius: 12px;
+      padding: .85rem 1.1rem;
+      text-decoration: none;
+      margin-bottom: .7rem;
+      transition: all .2s;
+      color: var(--ink);
+    }
+
+    .tool-link:hover {
+      border-color: var(--p);
+      transform: translateY(-1px);
+      box-shadow: 0 3px 12px rgba(109, 40, 217, .12);
+    }
+
+    .tool-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .tool-text {
+      flex: 1;
+    }
+
+    .tool-name {
+      font-size: .85rem;
+      font-weight: 700;
+    }
+
+    .tool-desc {
+      font-size: .72rem;
+      color: var(--gray);
+      margin-top: .1rem;
+    }
+
+    .tool-btn {
+      background: var(--p);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: .35rem .85rem;
+      font-size: .75rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font);
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    /* task */
+    .task-item {
+      background: var(--white);
+      border: 1px solid #ede9fe;
+      border-radius: 12px;
+      padding: .9rem 1rem;
+      display: flex;
+      gap: .8rem;
+      align-items: flex-start;
+      margin-bottom: .7rem;
+    }
+
+    .task-chk {
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+      border: 2px solid #c4b5fd;
+      flex-shrink: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .85rem;
+      transition: all .2s;
+      margin-top: .1rem;
+    }
+
+    .task-chk.done {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+
+    .task-text h5 {
+      font-size: .85rem;
+      font-weight: 700;
+      margin-bottom: .15rem;
+    }
+
+    .task-text p {
+      font-size: .76rem;
+      color: var(--gray);
+      font-weight: 400;
+    }
+
+    .complete-lesson-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--p), var(--p2));
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: .78rem;
+      font-size: .88rem;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: all .25s;
+      margin-top: .5rem;
+      opacity: .4;
+      pointer-events: none;
+    }
+
+    .complete-lesson-btn.ready {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .complete-lesson-btn.ready:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(109, 40, 217, .3);
+    }
+
+    /* quiz */
+    .quiz-wrap {
+      margin-top: .9rem;
+    }
+
+    .quiz-q {
+      background: var(--white);
+      border: 1px solid #ede9fe;
+      border-radius: 14px;
+      padding: 1rem 1.1rem;
+      margin-bottom: .8rem;
+    }
+
+    .q-text {
+      font-size: .88rem;
+      font-weight: 700;
+      margin-bottom: .7rem;
+    }
+
+    .q-opts {
+      display: flex;
+      flex-direction: column;
+      gap: .45rem;
+    }
+
+    .q-opt {
+      background: var(--pp);
+      border: 2px solid transparent;
+      border-radius: 10px;
+      padding: .58rem .95rem;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: right;
+      transition: all .18s;
+      font-family: var(--font);
+      color: var(--ink);
+    }
+
+    .q-opt:hover {
+      border-color: var(--p);
+      background: var(--pp2);
+    }
+
+    .q-opt.correct {
+      background: #d1fae5;
+      border-color: var(--green);
+      color: #065f46;
+    }
+
+    .q-opt.wrong {
+      background: #fee2e2;
+      border-color: #ef4444;
+      color: #991b1b;
+    }
+
+    .q-fb {
+      font-size: .78rem;
+      font-weight: 700;
+      padding: .38rem .8rem;
+      border-radius: 8px;
+      margin-top: .5rem;
+      display: none;
+    }
+
+    .q-fb.on {
+      display: block;
+    }
+
+    .q-fb.ok {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .q-fb.no {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .quiz-submit {
+      width: 100%;
+      background: var(--p);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: .78rem;
+      font-size: .88rem;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: all .25s;
+      margin-top: .3rem;
+    }
+
+    .quiz-submit:hover {
+      background: #5b21b6;
+    }
+
+    .quiz-result {
+      background: linear-gradient(135deg, var(--p), var(--p2));
+      color: #fff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+      margin-top: .9rem;
+      display: none;
+    }
+
+    .quiz-result.on {
+      display: block;
+      animation: fadeUp .4s;
+    }
+
+    .result-score {
+      font-size: 3rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .result-msg {
+      font-size: .88rem;
+      opacity: .85;
+      margin-top: .4rem;
+    }
+
+    .result-next {
+      background: rgba(255, 255, 255, .2);
+      border: 1px solid rgba(255, 255, 255, .3);
+      color: #fff;
+      border-radius: 10px;
+      padding: .55rem 1.2rem;
+      font-size: .82rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font);
+      margin-top: .9rem;
+      display: inline-block;
+      transition: all .2s;
+    }
+
+    .result-next:hover {
+      background: rgba(255, 255, 255, .3);
+    }
+
+    /* ══ CERTIFICATE ══ */
+    .cert-wrap {
+      background: var(--white);
+      border-radius: 20px;
+      border: 2px solid var(--pp2);
+      padding: 1.8rem 1.2rem;
+      text-align: center;
+      margin-bottom: 1.2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cert-wrap::before {
+      content: 'تمكين';
+      position: absolute;
+      font-size: 7rem;
+      font-weight: 900;
+      color: rgba(109, 40, 217, .04);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .cert-label {
+      font-size: .72rem;
+      color: var(--gray);
+      margin-bottom: .3rem;
+    }
+
+    .cert-title {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--p);
+      margin-bottom: .2rem;
+    }
+
+    .cert-sub {
+      font-size: .82rem;
+      color: var(--gray);
+      margin-bottom: .8rem;
+    }
+
+    .cert-name {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--ink);
+      margin: .6rem 0 .2rem;
+    }
+
+    .cert-track {
+      font-size: .88rem;
+      color: var(--gray);
+    }
+
+    .cert-stars {
+      font-size: 1.4rem;
+      margin: .5rem 0;
+    }
+
+    .cert-sigs {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-top: 1.2rem;
+      padding-top: .9rem;
+      border-top: 1px solid #f0eaff;
+    }
+
+    .cert-sig {
+      font-size: .72rem;
+      text-align: center;
+    }
+
+    .cert-sig strong {
+      display: block;
+      font-size: .78rem;
+      color: var(--ink);
+      margin-bottom: .1rem;
+    }
+
+    .cert-date {
+      font-size: .7rem;
+      color: var(--gray);
+      margin-top: .7rem;
+    }
+
+    .cert-btn {
+      width: 100%;
+      background: var(--p);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: .85rem;
+      font-size: .9rem;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: all .25s;
+    }
+
+    .cert-btn:hover {
+      background: #5b21b6;
+      transform: translateY(-2px);
+    }
+
+    .cert-empty {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--gray);
+    }
+
+    .cert-empty .big {
+      font-size: 3rem;
+      margin-bottom: .5rem;
+    }
+
+    /* ══ ADMIN ══ */
+    #s-admin {
+      background: var(--bg);
+    }
+
+    .admin-top {
+      background: var(--ink);
+      padding: .9rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .admin-top .logo {
+      font-size: 1rem;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .admin-top .logo span {
+      color: #c4b5fd;
+    }
+
+    .admin-body {
+      padding: 1.2rem 1rem 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: .7rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .astat {
+      background: var(--white);
+      border: 1px solid #ede9fe;
+      border-radius: 14px;
+      padding: .9rem;
+      text-align: center;
+    }
+
+    .astat-n {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--p);
+    }
+
+    .astat-l {
+      font-size: .7rem;
+      color: var(--gray);
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: .4rem;
+      margin-bottom: 1rem;
+      overflow-x: auto;
+      padding-bottom: .2rem;
+    }
+
+    .ftab {
+      padding: .38rem .9rem;
+      border-radius: 100px;
+      font-size: .75rem;
+      font-weight: 700;
+      border: 1.5px solid var(--pp2);
+      color: var(--gray);
+      cursor: pointer;
+      background: var(--white);
+      font-family: var(--font);
+      white-space: nowrap;
+      transition: all .2s;
+    }
+
+    .ftab.on {
+      background: var(--p);
+      color: #fff;
+      border-color: var(--p);
+    }
+
+    .search-inp {
+      width: 100%;
+      background: var(--white);
+      border: 1.5px solid var(--pp2);
+      border-radius: 12px;
+      padding: .65rem 1rem;
+      font-size: .88rem;
+      font-family: var(--font);
+      outline: none;
+      margin-bottom: .9rem;
+      transition: border .2s;
+    }
+
+    .search-inp:focus {
+      border-color: var(--p);
+    }
+
+    .user-card {
+      background: var(--white);
+      border: 1px solid #ede9fe;
+      border-radius: 14px;
+      padding: 1rem 1.1rem;
+      margin-bottom: .7rem;
+      display: flex;
+      align-items: center;
+      gap: .9rem;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--pp);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .user-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .user-name {
+      font-size: .9rem;
+      font-weight: 800;
+      margin-bottom: .1rem;
+    }
+
+    .user-meta {
+      font-size: .72rem;
+      color: var(--gray);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-actions {
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+      align-items: flex-end;
+    }
+
+    .status-pill {
+      font-size: .66rem;
+      font-weight: 700;
+      padding: .18rem .65rem;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+
+    .sp-pend {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .sp-ok {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .sp-rej {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .act-btns {
+      display: flex;
+      gap: .3rem;
+    }
+
+    .act-btn {
+      padding: .28rem .65rem;
+      border-radius: 7px;
+      font-size: .72rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      font-family: var(--font);
+      transition: all .18s;
+    }
+
+    .ab-ok {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .ab-ok:hover {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .ab-rej {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .ab-rej:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    .ab-reset {
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    .ab-reset:hover {
+      background: #cbd5e1;
+    }
+
+    .team-box {
+      background: var(--white);
+      border: 1px solid #ede9fe;
+      border-radius: 14px;
+      padding: 1rem 1.1rem;
+      margin-top: 1.2rem;
+    }
+
+    .team-box h4 {
+      font-size: .8rem;
+      font-weight: 800;
+      color: var(--p);
+      margin-bottom: .7rem;
+    }
+
+    .team-members {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+
+    .team-member {
+      background: var(--pp);
+      color: var(--p);
+      font-size: .75rem;
+      font-weight: 700;
+      padding: .3rem .8rem;
+      border-radius: 100px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 2rem;
+      color: var(--gray);
+      font-size: .85rem;
+    }
+
+    /* ══ MOBILE POLISH ══ */
+    @media(max-width:400px) {
+      .login-card {
+        padding: 1.5rem 1.1rem;
+      }
+
+      .login-brand .logo {
+        font-size: 2rem;
+      }
+
+      .stat-n {
+        font-size: 1.6rem;
+      }
+
+      .track-header h2 {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- ══════════════ LOGIN SCREEN ══════════════ -->
-<div id="s-login" class="screen on">
-  <div class="login-box">
-    <div class="login-logo">
-      <h1>تمكين <span>11</span></h1>
-      <p>مدرسة الابتدائية الحادية عشر · الخبر</p>
-    </div>
-
-    <!-- toggle -->
-    <div style="display:flex;gap:.5rem;margin-bottom:1.5rem;">
-      <button id="tab-emp" onclick="setLoginTab('emp')" style="flex:1;padding:.55rem;border-radius:10px;border:none;font-family:'Cairo',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;background:var(--p);color:#fff;transition:all .2s;">دخول الموظفة</button>
-      <button id="tab-adm" onclick="setLoginTab('adm')" style="flex:1;padding:.55rem;border-radius:10px;border:none;font-family:'Cairo',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;background:rgba(255,255,255,.12);color:rgba(255,255,255,.7);transition:all .2s;">لوحة الإدارة</button>
-    </div>
-
-    <!-- employee form -->
-    <div id="form-emp">
-      <div id="err-emp" class="login-err"></div>
-      <div class="form-grp">
-        <label>الاسم الكامل</label>
-        <input type="text" id="emp-name" placeholder="أدخلي اسمك الكامل">
+  <!-- ══════ LOGIN ══════ -->
+  <div id="s-login" class="screen active">
+    <div class="login-card">
+      <div class="login-brand">
+        <div class="logo">تمكين <span>11</span></div>
+        <p>مدرسة الابتدائية الحادية عشر · الخبر</p>
       </div>
-      <div class="form-grp">
-        <label>البريد الإلكتروني</label>
-        <input type="email" id="emp-email" placeholder="example@edu.sa">
+      <div class="tab-switch">
+        <button class="tab-sw-btn on" id="tb-emp" onclick="switchTab('emp')">دخول الموظفة</button>
+        <button class="tab-sw-btn" id="tb-adm" onclick="switchTab('adm')">الإدارة</button>
       </div>
-      <div class="form-grp">
-        <label>الدور الوظيفي</label>
-        <select id="emp-role">
-          <option value="">— اختاري —</option>
-          <option>معلمة</option>
-          <option>مساعد إداري</option>
-          <option>مرشدة طلابية</option>
-          <option>منسقة نشاط</option>
-          <option>أخرى</option>
-        </select>
-      </div>
-      <button class="login-btn" onclick="empLogin()">دخول / تسجيل ←</button>
-      <div id="pending-msg" class="pending-badge">⏳ طلبك قيد المراجعة من فريق الإدارة. سيتم الموافقة قريباً.</div>
-    </div>
 
-    <!-- admin form -->
-    <div id="form-adm" style="display:none;">
-      <div id="err-adm" class="login-err"></div>
-      <div class="form-grp">
-        <label>كلمة مرور الإدارة</label>
-        <input type="password" id="adm-pass" placeholder="••••••••" onkeypress="if(event.key==='Enter')admLogin()">
-      </div>
-      <button class="login-btn" onclick="admLogin()">دخول الإدارة ←</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════ EMPLOYEE SCREEN ══════════════ -->
-<div id="s-emp" class="screen">
-  <div class="topbar">
-    <div class="topbar-brand">تمكين <span>11</span></div>
-    <div class="topbar-right">
-      <div class="topbar-user">مرحباً، <strong id="tb-name">—</strong></div>
-      <button class="logout-btn" onclick="logout()">خروج</button>
-    </div>
-  </div>
-
-  <div class="nav-wrap">
-    <div class="nav-tabs">
-      <button class="ntab on" onclick="showPage('home',this)">🏠 الرئيسية</button>
-      <button class="ntab" onclick="showPage('tracks',this)">🎯 المسارات</button>
-      <button class="ntab" onclick="showPage('cert',this)">📜 شهادتي</button>
-      <button class="ntab" onclick="showPage('profile',this)">👤 ملفي</button>
-    </div>
-  </div>
-
-  <!-- HOME -->
-  <div class="page on" id="page-home">
-    <div class="lbl">📊 لوحتي</div>
-    <h2 class="ptitle" id="home-greeting">مرحباً!</h2>
-    <p class="pdesc">منصتك الشخصية للتعلم والتطوير في مبادرة تمكين 11</p>
-
-    <div class="stat-row">
-      <div class="stat-c"><div class="stat-n" id="st-tracks">0</div><div class="stat-l">مسارات بدأت</div></div>
-      <div class="stat-c"><div class="stat-n" id="st-acts">0</div><div class="stat-l">أنشطة مكتملة</div></div>
-      <div class="stat-c"><div class="stat-n" id="st-score">0%</div><div class="stat-l">متوسط التقويم</div></div>
-      <div class="stat-c"><div class="stat-n" id="st-level">—</div><div class="stat-l">مستواك الحالي</div></div>
-    </div>
-
-    <div class="lbl">🚀 ابدئي الآن</div>
-    <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem;">اختاري مسارك وابدئي رحلتك</h3>
-    <div class="tgrid" id="home-tracks"></div>
-  </div>
-
-  <!-- TRACKS -->
-  <div class="page" id="page-tracks">
-    <div class="lbl">🎯 المسارات التخصصية</div>
-    <h2 class="ptitle">خمسة مسارات — ثلاثة مستويات</h2>
-    <p class="pdesc">اختاري مسارك ثم مستواك: مبتدئ → متوسط → متقدم</p>
-    <div class="level-tabs">
-      <button class="ltab beg on" onclick="filterLevel('all',this)">🌟 الكل</button>
-      <button class="ltab beg" onclick="filterLevel('beg',this)">🌱 مبتدئ</button>
-      <button class="ltab mid" onclick="filterLevel('mid',this)">📈 متوسط</button>
-      <button class="ltab adv" onclick="filterLevel('adv',this)">🚀 متقدم</button>
-    </div>
-    <div class="tgrid" id="all-tracks"></div>
-  </div>
-
-  <!-- CERT -->
-  <div class="page" id="page-cert">
-    <div class="lbl">📜 شهادة الإنجاز</div>
-    <h2 class="ptitle">شهادتي الرقمية</h2>
-    <p class="pdesc">شهادة تُوثّق إنجازاتك في مبادرة تمكين 11 — قابلة للتصدير بصيغة PDF</p>
-
-    <div class="cert-preview" id="cert-preview-box">
-      <div style="font-size:.8rem;color:var(--gray);margin-bottom:.5rem;">مدرسة الابتدائية الحادية عشر · الخبر</div>
-      <div style="font-size:1rem;color:var(--gray);">شهادة إتمام</div>
-      <div style="font-size:.85rem;color:var(--gray);">مبادرة</div>
-      <div style="font-size:2rem;font-weight:900;color:var(--p);">تمكين 11</div>
-      <div style="font-size:.9rem;color:var(--gray);margin:.3rem 0;">تُشهد بأن</div>
-      <div class="cert-name" id="c-name">—</div>
-      <div class="cert-track" id="c-track">قد أتمّت متطلبات المسار</div>
-      <div class="cert-level" id="c-level">المستوى: —</div>
-      <div class="cert-stars" id="c-stars">⭐⭐⭐</div>
-      <div style="display:flex;justify-content:space-around;margin-top:1.2rem;font-size:.75rem;color:var(--gray);">
-        <div><div style="font-weight:700;">عفاف عبدالرحمن الحويل</div><div>مديرة المدرسة</div></div>
-        <div><div style="font-weight:700;">منال العمير</div><div>الوكيلة المدرسية</div></div>
-      </div>
-      <div class="cert-date" id="c-date"></div>
-    </div>
-
-    <div style="display:flex;gap:.8rem;flex-wrap:wrap;">
-      <button class="cbtn" onclick="exportPDF()">⬇️ تصدير PDF</button>
-      <button class="cbtn sec" onclick="showPage('tracks',document.querySelectorAll('.ntab')[1])">🎯 العودة للمسارات</button>
-    </div>
-    <p style="font-size:.78rem;color:var(--gray);margin-top:.8rem;">* تظهر الشهادة بعد إكمال أنشطة ومسار واحد على الأقل</p>
-  </div>
-
-  <!-- PROFILE -->
-  <div class="page" id="page-profile">
-    <div class="lbl">👤 ملفي الشخصي</div>
-    <h2 class="ptitle" id="prof-name">—</h2>
-    <p class="pdesc" id="prof-role">—</p>
-    <div class="card" style="padding:1.4rem;margin-bottom:1.2rem;">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;">
-        <div><div style="font-size:.72rem;color:var(--gray);font-weight:700;">البريد</div><div id="prof-email" style="font-size:.88rem;font-weight:600;">—</div></div>
-        <div><div style="font-size:.72rem;color:var(--gray);font-weight:700;">تاريخ التسجيل</div><div id="prof-date" style="font-size:.88rem;font-weight:600;">—</div></div>
-        <div><div style="font-size:.72rem;color:var(--gray);font-weight:700;">المسارات المكتملة</div><div id="prof-tracks" style="font-size:.88rem;font-weight:600;color:var(--p);">—</div></div>
-        <div><div style="font-size:.72rem;color:var(--gray);font-weight:700;">المستوى الحالي</div><div id="prof-level" style="font-size:.88rem;font-weight:600;color:var(--p);">—</div></div>
-      </div>
-    </div>
-    <div class="lbl">🏅 الشارات المكتسبة</div>
-    <div id="prof-badges" style="display:flex;gap:.8rem;flex-wrap:wrap;margin-top:.8rem;"></div>
-  </div>
-</div>
-
-<!-- ══════════════ ADMIN SCREEN ══════════════ -->
-<div id="s-admin" class="screen">
-  <div class="topbar">
-    <div class="topbar-brand">تمكين <span>11</span> · الإدارة</div>
-    <div class="topbar-right">
-      <div class="topbar-user"><strong>لوحة التحكم</strong></div>
-      <button class="logout-btn" onclick="logout()">خروج</button>
-    </div>
-  </div>
-
-  <div class="admin-wrap">
-    <div class="lbl">📊 إحصائيات عامة</div>
-    <h2 class="admin-title">لوحة تحكم فريق العمل</h2>
-    <p class="admin-sub">مدرسة الابتدائية الحادية عشر · الخبر — إدارة طلبات الانضمام ومتابعة التقدم</p>
-
-    <div class="admin-stats">
-      <div class="astat"><div class="astat-n" id="a-total">0</div><div class="astat-l">إجمالي الطلبات</div></div>
-      <div class="astat"><div class="astat-n" id="a-pend">0</div><div class="astat-l">قيد المراجعة</div></div>
-      <div class="astat"><div class="astat-n" id="a-appr">0</div><div class="astat-l">مقبولات</div></div>
-      <div class="astat"><div class="astat-n" id="a-rej">0</div><div class="astat-l">مرفوضات</div></div>
-    </div>
-
-    <div class="nav-wrap" style="margin-bottom:1.2rem;border-radius:12px;">
-      <div class="nav-tabs">
-        <button class="ntab on" onclick="showAdminTab('all',this)">📋 الكل</button>
-        <button class="ntab" onclick="showAdminTab('pending',this)">⏳ قيد المراجعة</button>
-        <button class="ntab" onclick="showAdminTab('approved',this)">✅ مقبولات</button>
-        <button class="ntab" onclick="showAdminTab('rejected',this)">❌ مرفوضات</button>
-      </div>
-    </div>
-
-    <input class="search-bar" placeholder="🔍 ابحثي بالاسم أو البريد..." oninput="searchUsers(this.value)" id="search-inp">
-
-    <div class="card" style="overflow:hidden;">
-      <table class="req-table" id="req-table">
-        <thead>
-          <tr>
-            <th>الاسم</th>
-            <th>البريد الإلكتروني</th>
-            <th>الدور</th>
-            <th>تاريخ التسجيل</th>
-            <th>الحالة</th>
-            <th>إجراء</th>
-          </tr>
-        </thead>
-        <tbody id="req-body"></tbody>
-      </table>
-    </div>
-
-    <div style="margin-top:1.5rem;padding:1rem;background:var(--white);border-radius:14px;border:1px solid #e8e0ff;">
-      <div style="font-size:.78rem;color:var(--gray);font-weight:700;margin-bottom:.4rem;">📌 فريق القيادة</div>
-      <div style="display:flex;flex-wrap:wrap;gap:.6rem;font-size:.82rem;">
-        <span style="background:var(--pp);padding:.3rem .8rem;border-radius:100px;color:var(--p);font-weight:700;">🏫 عفاف عبدالرحمن الحويل · مديرة</span>
-        <span style="background:var(--pp);padding:.3rem .8rem;border-radius:100px;color:var(--p);font-weight:700;">📋 منال العمير · وكيلة</span>
-        <span style="background:var(--pp);padding:.3rem .8rem;border-radius:100px;color:var(--p);font-weight:700;">💼 نورة المبارك · مساعد إداري</span>
-        <span style="background:var(--pp);padding:.3rem .8rem;border-radius:100px;color:var(--p);font-weight:700;">💼 آلاء الكباسي · مساعد إداري</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════ TRACK MODAL ══════════════ -->
-<div class="moverlay" id="moverlay" onclick="closeMOverlay(event)">
-  <div class="mbox">
-    <div class="mhead">
-      <button class="mclose" onclick="closeModal()">✕</button>
-      <div id="m-level-badge" class="level-badge beg">🌱 مبتدئ</div>
-      <h2 id="m-title">المسار</h2>
-      <p id="m-desc">وصف</p>
-    </div>
-    <div class="itabs">
-      <button class="itab on" onclick="showITab('learn',this)">📚 التعلم</button>
-      <button class="itab" onclick="showITab('apply',this)">⚙️ التطبيق</button>
-      <button class="itab" onclick="showITab('assess',this)">✅ التقويم</button>
-    </div>
-    <div class="ipage on" id="it-learn"><div id="learn-body"></div></div>
-    <div class="ipage" id="it-apply">
-      <div class="lbl" style="margin-bottom:.6rem;">⚙️ الأنشطة التطبيقية</div>
-      <div class="prog-wrap" style="margin-bottom:.5rem;"><div class="prog-bar" id="act-prog" style="width:0%"></div></div>
-      <p id="act-label" style="font-size:.72rem;color:var(--p);font-weight:700;margin-bottom:.9rem;"></p>
-      <div class="acts" id="act-body"></div>
-    </div>
-    <div class="ipage" id="it-assess">
-      <div class="lbl" style="margin-bottom:.6rem;">✅ التقويم الذاتي</div>
-      <div id="quiz-body"></div>
-      <button class="cbtn" id="quiz-sub-btn" onclick="submitQuiz()">📊 عرض النتيجة</button>
-      <div class="score-box" id="score-box">
-        <div class="score-n" id="score-n">0/3</div>
-        <p id="score-msg"></p>
-        <button class="cbtn sec" style="margin-top:.8rem;" onclick="exportPDF()">📜 احصلي على شهادتك</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-// ══ DATA ══
-const ADMIN_PASS = 'admin123';
-let users = JSON.parse(localStorage.getItem('t11_users') || '[]');
-let curUser = null;
-let curTrack = null;
-let quizAns = {};
-let actDone = {};
-let scores = {};
-let adminFilter = 'all';
-
-const TRACKS = {
-  auto:{id:'auto',icon:'🤖',name:'الأتمتة الذكية',desc:'أتمتة المهام التكرارية ووفّري وقتك للعمل الاستراتيجي',
-    levels:{
-      beg:{label:'مبتدئ',cls:'beg',
-        learn:`<div class="cblock"><h4>🎯 ما ستتعلمينه</h4><ul><li>مفهوم الأتمتة ولماذا هي مهمة اليوم</li><li>تحديد المهام التي يمكن أتمتتها</li><li>أول خطوة مع Power Automate</li></ul></div>
-        <div class="lbl" style="margin:.9rem 0 .5rem;">📖 خطوات التعلم</div>
-        <div class="steps">
-          <div class="step"><div class="snum">١</div><div><h5>ما هي الأتمتة؟</h5><p>شاهدي فيديو 5 دق عن كيف تُوفّر الأتمتة ساعات عمل يومية في المدارس</p></div></div>
-          <div class="step"><div class="snum">٢</div><div><h5>حدّدي مهامك التكرارية</h5><p>اكتبي كل مهمة تكررينها أكثر من مرة في الأسبوع (بريد، تقارير، جداول)</p></div></div>
-          <div class="step"><div class="snum">٣</div><div><h5>جرّبي Power Automate</h5><p>أنشئي حساباً مجانياً وشاهدي أول قالب جاهز للاستخدام</p></div></div>
-        </div>`,
-        acts:[{t:'سجّلي ٣ مهام تكرارية في عملك',d:'افتحي Notion واكتبي جدولاً بالمهام التي تتكررين فيها أسبوعياً',g:'📋 Notion',u:'https://www.notion.so',btn:'افتحي Notion'},
-              {t:'افتحي Power Automate وجوّلي فيه',d:'سجّلي دخولاً وجرّبي أول قالب جاهز — اختاري "وصف إشعار تلقائي"',g:'⚡ Power Automate',u:'https://make.powerautomate.com',btn:'افتحي Power Automate'}],
-        quiz:[{q:'ما الهدف الأساسي من الأتمتة؟',o:['استبدال الموظفات','تحرير الوقت للمهام ذات القيمة الأعلى','تقليل الراتب','تعقيد الإجراءات'],a:1},
-              {q:'ما أولى خطوات أتمتة مهمة؟',o:['شراء برنامج مدفوع','تحديد المهمة التكرارية المناسبة','تدريب الجميع فوراً','الانتظار لأمر الإدارة'],a:1}]},
-      mid:{label:'متوسط',cls:'mid',
-        learn:`<div class="cblock"><h4>🎯 المستوى المتوسط</h4><ul><li>بناء تدفقات آلية متكاملة في Power Automate</li><li>ربط التطبيقات ببعضها (Forms → Email → Excel)</li><li>أتمتة التقارير الأسبوعية</li></ul></div>
-        <div class="steps">
-          <div class="step"><div class="snum">١</div><div><h5>بناء أول تدفق كامل</h5><p>اربطي نموذج Microsoft Forms بإرسال بريد تلقائي عند الاستجابة</p></div></div>
-          <div class="step"><div class="snum">٢</div><div><h5>Excel الذكي</h5><p>ابني جدول Excel يتحدّث تلقائياً من مصدر بيانات خارجي</p></div></div>
-          <div class="step"><div class="snum">٣</div><div><h5>أتمتة التقرير الأسبوعي</h5><p>أنشئي تدفقاً يجمع البيانات ويرسل تقريراً كل أحد صباحاً</p></div></div>
-        </div>`,
-        acts:[{t:'بناء تدفق Forms → Email',d:'افتحي Power Automate وأنشئي تدفقاً: عند تعبئة نموذج Microsoft Forms يُرسل بريد تلقائي',g:'⚙️ Power Automate',u:'https://make.powerautomate.com/galleries',btn:'افتحي القوالب'},
-              {t:'أنشئي نموذج Microsoft Forms',d:'ابني نموذجاً بسيطاً لجمع بيانات من زميلاتك',g:'📝 Microsoft Forms',u:'https://forms.microsoft.com',btn:'افتحي Forms'}],
-        quiz:[{q:'ما معنى "تدفق آلي" في Power Automate؟',o:['ملف PDF','سلسلة إجراءات تُنفَّذ تلقائياً عند حدث معين','رسالة بريد عادية','جدول Excel'],a:1},
-              {q:'كيف تربطين Forms بـ Excel تلقائياً؟',o:['نسخ ولصق يدوي','باستخدام تدفق Power Automate أو Power Query','استيراد يدوي يومياً','لا يمكن ربطهما'],a:1}]},
-      adv:{label:'متقدم',cls:'adv',
-        learn:`<div class="cblock"><h4>🎯 المستوى المتقدم</h4><ul><li>بناء حلول أتمتة شاملة للقسم كاملاً</li><li>استخدام AI Builder داخل Power Automate</li><li>قيادة مشروع أتمتة وتدريب الزميلات عليه</li></ul></div>
-        <div class="steps">
-          <div class="step"><div class="snum">١</div><div><h5>AI Builder في Power Automate</h5><p>استخدمي نماذج الذكاء الاصطناعي لاستخراج البيانات من المستندات تلقائياً</p></div></div>
-          <div class="step"><div class="snum">٢</div><div><h5>مشروع أتمتة شامل</h5><p>صمّمي حلاً يُؤتمت عملية كاملة (من الإدخال حتى التقرير النهائي)</p></div></div>
-          <div class="step"><div class="snum">٣</div><div><h5>التوثيق والتدريب</h5><p>وثّقي الحل وقودي ورشة 30 دق لتعليم زميلاتك استخدامه</p></div></div>
-        </div>`,
-        acts:[{t:'بناء حل أتمتة شامل بـ AI Builder',d:'استخدمي AI Builder داخل Power Automate لاستخراج بيانات من مستندات تلقائياً',g:'🤖 AI Builder',u:'https://make.powerautomate.com',btn:'افتحي Power Automate'},
-              {t:'وثّقي الحل في Notion',d:'أنشئي صفحة في Notion توثّق خطوات الحل ليتمكن فريقك من استخدامه',g:'📄 Notion',u:'https://www.notion.so',btn:'افتحي Notion'}],
-        quiz:[{q:'ما الذي يميز AI Builder عن الأتمتة العادية؟',o:['السرعة فقط','قدرته على فهم المحتوى غير المهيكل كالصور والمستندات','توفير التكاليف','لا فرق بينهما'],a:1},
-              {q:'لماذا يهم التوثيق في مشاريع الأتمتة؟',o:['للزخرفة فقط','لضمان استمرارية الحل وسهولة تعليمه للآخرين','لأن الإدارة تطلبه','ليس ضرورياً'],a:0}]}
-  }},
-  data:{id:'data',icon:'📊',name:'تحليل البيانات',desc:'اقرئي الأرقام واتخذي قرارات ذكية مبنية على البيانات',
-    levels:{
-      beg:{label:'مبتدئ',cls:'beg',
-        learn:`<div class="cblock"><h4>🎯 ما ستتعلمينه</h4><ul><li>الفرق بين البيانات والمعلومات</li><li>قراءة التقارير والجداول البسيطة</li><li>دوال Excel الأساسية</li></ul></div>
-        <div class="steps">
-          <div class="step"><div class="snum">١</div><div><h5>لماذا البيانات مهمة؟</h5><p>مثال عملي: كيف ساعدت البيانات مدرسة في رفع معدل الحضور</p></div></div>
-          <div class="step"><div class="snum">٢</div><div><h5>Excel الأساسي</h5><p>تعلّمي SUM وAVERAGE وCOUNT وكيف تبنين جدولاً منظماً</p></div></div>
-          <div class="step"><div class="snum">٣</div><div><h5>أول رسم بياني</h5><p>حوّلي جدول بيانات بسيط إلى رسم بياني يروي قصة واضحة</p></div></div>
-        </div>`,
-        acts:[{t:'سجّلي بياناتك في Google Sheets',d:'افتحي Google Sheets وأنشئي جدولاً تسجّلين فيه مؤشراً يومياً لأسبوع كامل',g:'📊 Google Sheets',u:'https://sheets.new',btn:'افتحي Google Sheets'},
-              {t:'أنشئي رسماً بيانياً تلقائياً',d:'في Google Sheets: حدّدي بياناتك ← Insert ← Chart — اختاري النوع المناسب',g:'📈 Google Sheets',u:'https://sheets.new',btn:'افتحي Google Sheets'}],
-        quiz:[{q:'ما الفرق بين البيانات والمعلومات؟',o:['لا فرق','البيانات خام والمعلومات نتاج تحليلها لإضافة معنى','المعلومات أرقام والبيانات نصوص','البيانات أحدث دائماً'],a:1},
-              {q:'ما دالة حساب المتوسط في Excel؟',o:['=SUM()','=COUNT()','=AVERAGE()','=MEDIAN()'],a:2}]},
-      mid:{label:'متوسط',cls:'mid',
-        learn:`<div class="cblock"><h4>🎯 المستوى المتوسط</h4><ul><li>بناء لوحات تحكم Dashboard في Excel</li><li>استخدام Pivot Tables لتحليل البيانات</li><li>ربط مصادر بيانات متعددة</li></ul></div>
-        <div class="steps">
-          <div class="step"><div class="snum">١</div><div><h5>Pivot Tables من الصفر</h5><p>تعلّمي كيف تحلّلين مئات السجلات في ثوانٍ بجدول محوري</p></div></div>
-          <div class="step"><div class="snum">٢</div><div><h5>لوحة تحكم بسيطة</h5><p>ابني لوحة بمؤشرين أو ثلاثة تُعطي صورة سريعة عن وضع القسم</p></div></div>
-          <div class="step"><div class="snum">٣</div><div><h5>التحليل المقارن</h5><p>قارني أداء شهر بشهر أو فصل بفصل وحدّدي الأنماط</p></div></div>
-        </div>`,
-        acts:[{t:'بناء Pivot Table في Google Sheets',d:'افتحي جدولك ← Data ← Pivot Table — حلّلي بيانات شهر كامل',g:'📊 Google Sheets',u:'https://sheets.new',btn:'افتحي Google Sheets'},
-              {t:'جرّبي لوحة تحكم جاهزة في Looker Studio',d:'Looker Studio مجاني من Google — صلّيه ببياناتك وأنشئي لوحتك',g:'📊 Looker Studio',u:'https://lookerstudio.google.com',btn:'افتحي Looker Studio'}],
-        quiz:[{q:'ما الوظيفة الرئيسية للـ Pivot Table؟',o:['التصميم الجرافيكي','تلخيص وتحليل كميات كبيرة من البيانات بسرعة','حفظ الملفات','إرسال البيانات'],a:1},
-              {q:'لماذا نبني لوحة تحكم بدل الجداول العادية؟',o:['للزخرفة فقط','لتقديم صورة فورية واضحة لصانعي القرار دون تعمق في التفاصيل','لأنها أسهل في البناء','لا فائدة منها'],a:1}]},
-      adv:{label:'متقدم',cls:'adv',
-        learn:`<div class="cblock"><h4>🎯 المستوى المتقدم</h4><ul><li>استخدام AI لتحليل البيانات وتوليد رؤى</li><li>Power BI للتصورات المتقدمة</li><li>تقديم توصيات استراتيجية مبنية على البيانات</li></ul></div>
-        <div class="steps">
-          <div class="step"><div class="snum">١</div><div><h5>AI وتحليل البيانات</h5><p>استخدمي ChatGPT أو Copilot لتحليل جدول Excel وتلخيص النتائج</p></div></div>
-          <div class="step"><div class="snum">٢</div><div><h5>Power BI الأساسي</h5><p>أنشئي تقريراً تفاعلياً في Power BI يمكن لأي شخص استكشافه</p></div></div>
-          <div class="step"><div class="snum">٣</div><div><h5>التوصية الاستراتيجية</h5><p>قدّمي توصيتين مدعومتين ببيانات لمديرتك في عرض من 3 شرائح</p></div></div>
-        </div>`,
-        acts:[{t:'تحليل بياناتك مع ChatGPT',d:'افتحي ChatGPT وألصقي بياناتك واطلبي: "حللي هذه البيانات وأعطيني أهم 3 رؤى"',g:'🤖 ChatGPT',u:'https://chatgpt.com',btn:'افتحي ChatGPT'},
-              {t:'ابني تقريرك في Looker Studio',d:'صمّمي تقريراً تفاعلياً بمؤشراتك وشاركيه مع الإدارة برابط مباشر',g:'📊 Looker Studio',u:'https://lookerstudio.google.com',btn:'افتحي Looker Studio'}],
-        quiz:[{q:'كيف يُساعد AI في تحليل البيانات؟',o:['لا يفيد في شيء','يكتشف الأنماط، يلخّص، ويقترح رؤى بسرعة تفوق القدرة اليدوية','يستبدل المحلل البشري كلياً','يجمع البيانات فقط'],a:1},
-              {q:'ما الفرق بين Excel و Power BI في التحليل؟',o:['لا فرق','Power BI أقوى في التصورات التفاعلية وتحديث البيانات الحي','Excel أحدث دائماً','Power BI للأرقام فقط'],a:1}]}
-  }},
-  content:{id:'content',icon:'✍️',name:'الإنتاجية الإبداعية',desc:'وظّفي AI في الكتابة والتواصل الاحترافي',
-    levels:{
-      beg:{label:'مبتدئ',cls:'beg',
-        learn:`<div class="cblock"><h4>🎯 ما ستتعلمينه</h4><ul><li>ما هو ChatGPT وكيف تتحدثين معه</li><li>كتابة أول مطالبة (Prompt) بسيطة</li><li>استخدامه في الرسائل اليومية</li></ul></div>
-        <div class="steps">
-          <div class="step"><div class="snum">١</div><div><h5>تعرّفي على ChatGPT</h5><p>سجّلي دخولاً وجرّبي محادثة حرة — اسأليه عن أي شيء تريدين</p></div></div>
-          <div class="step"><div class="snum">٢</div><div><h5>أول مطالبة عملية</h5><p>اطلبي منه صياغة رسالة لوليّ أمر عن موعد اجتماع — قارني النتيجة بما كنتِ ستكتبينه</p></div></div>
-          <div class="step"><div class="snum">٣</div><div><h5>التعديل والتحسين</h5><p>اطلبي منه تعديل النص (أقصر، أرسمى، أبسط) وشاهدي كيف يستجيب</p></div></div>
-        </div>`,
-        acts:[{t:'صيغي رسالة مع ChatGPT',d:'افتحي ChatGPT واطلبي: "اكتبي إشعاراً رسمياً لأولياء الأمور عن اجتماع يوم الأحد الساعة 5م"',g:'✍️ ChatGPT',u:'https://chatgpt.com',btn:'افتحي ChatGPT'},
-              {t:'جرّبي Claude لمقارنة النتائج',d:'اطلبي نفس الطلب في Claude وقارني النتيجة — أي النموذجين أفضل لك؟',g:'🤖 Claude',u:'https://claude.ai',btn:'افتحي Claude'}],
-        quiz:[{q:'ما المقصود بـ "Prompt"؟',o:['برنامج حاسوبي','التعليمة أو الطلب الذي تكتبينه لنموذج AI','رسالة بريد عادية','نوع من الجداول'],a:1},
-              {q:'كيف تحصلين على نتيجة أفضل من ChatGPT؟',o:['اكتبي كلمة واحدة فقط','كوني محددة وأعطي السياق والنتيجة المطلوبة','اكتبي بالإنجليزية فقط','لا يهم ما تكتبين'],a:1}]},
-      mid:{label:'متوسط',cls:'mid',
-        learn:`<div class="cblock"><h4>🎯 المستوى المتوسط</h4><ul><li>بناء مطالبات احترافية متعددة الخطوات</li><li>استخدام AI في تلخيص التقارير والوثائق</li><li>توليد محتوى للفعاليات والنشرات</li></ul></div>
-        <div class="steps">
-          <div class="step"><div class="snum">١</div><div><h5>مطالبات متقدمة</h5><p>تعلّمي تقنية "دوري" (Role Prompting): "تصرّفي كـ مديرة مدرسة وأكتبي..."</p></div></div>
-          <div class="step"><div class="snum">٢</div><div><h5>تلخيص الوثائق</h5><p>ألصقي تقريراً طويلاً واطلبي ملخصاً في 5 نقاط</p></div></div>
-          <div class="step"><div class="snum">٣</div><div><h5>محتوى الفعاليات</h5><p>اطلبي كلمة ترحيب، برنامج احتفالية، أو نشرة للطالبات</p></div></div>
-        </div>`,
-        acts:[{t:'أنشئي محتوى فعالية مع Claude',d:'افتحي Claude واطلبي كلمة افتتاحية ليوم المعلم مع برنامج الحفل',g:'🎉 Claude',u:'https://claude.ai',btn:'افتحي Claude'},
-              {t:'لخّصي وثيقة في NotebookLM',d:'NotebookLM من Google — ارفعي فيه ملف PDF وهو يلخّصه ويجيب على أسئلتك',g:'📖 NotebookLM',u:'https://notebooklm.google.com',btn:'افتحي NotebookLM'}],
-        quiz:[{q:'ما تقنية "Role Prompting"؟',o:['اختيار دور في لعبة فيديو','طلب من AI التصرف بدور معين لتحسين جودة الإخراج','نوع من أنواع البرمجة','تقنية لتصميم المواقع'],a:1},
-              {q:'ما أفضل طريقة لتلخيص وثيقة طويلة بـ AI؟',o:['اكتبي ملخصك أولاً ثم أعطيه للـ AI','ألصقي النص وحدّدي عدد النقاط والأسلوب المطلوب','دعيه يختار بنفسه','لا يمكن تلخيص الوثائق بـ AI'],a:1}]},
-      adv:{label:'متقدم',cls:'adv',
-        learn:`<div class="cblock"><h4>🎯 المستوى المتقدم</h4><ul><li>بناء نظام مطالبات (Prompt Library) للمدرسة</li><li>دمج AI مع أدوات التصميم (Canva AI, Gamma)</li><li>قيادة ورشة لتعليم زميلاتك</li></ul></div>
-        <div class="steps">
-          <div class="step"><div class="snum">١</div><div><h5>مكتبة المطالبات</h5><p>اجمعي أفضل 10 مطالبات في ملف مشترك — هذا سيوفّر ساعات لكل الفريق</p></div></div>
-          <div class="step"><div class="snum">٢</div><div><h5>Canva AI + Gamma</h5><p>استخدمي Gamma لإنشاء عروض تقديمية من نص فقط، وCanva AI للتصاميم</p></div></div>
-          <div class="step"><div class="snum">٣</div><div><h5>ورشة الإنتاجية</h5><p>علّمي ٣ زميلات كيف يستخدمن AI في عملهن اليومي</p></div></div>
-        </div>`,
-        acts:[{t:'ابني مكتبة مطالبات في Notion',d:'أنشئي قاعدة بيانات في Notion تجمعين فيها أفضل مطالباتك لتشاركيها مع الفريق',g:'📚 Notion',u:'https://www.notion.so',btn:'افتحي Notion'},
-              {t:'أنشئي عرضاً تقديمياً بـ Gamma',d:'افتحي Gamma واكتبي موضوعك — سيُنشئ لك العرض كاملاً خلال ثوانٍ',g:'🎨 Gamma AI',u:'https://gamma.app',btn:'افتحي Gamma'}],
-        quiz:[{q:'ما فائدة مكتبة المطالبات المشتركة؟',o:['لا فائدة منها','توفير الوقت وضمان جودة موحّدة لإخراج الفريق كله',  'تُعقّد العمل','للأرشفة فقط'],a:1},
-              {q:'ما ميزة Gamma عن PowerPoint؟',o:['Gamma أقدم وأكثر استقراراً','Gamma يُنشئ العروض تلقائياً من نص بمساعدة AI','PowerPoint لا يمكن استخدامه على الإنترنت','لا فرق بينهما'],a:1}]}
-  }},
-  leadership:{id:'leadership',icon:'🌐',name:'قيادة التحول',desc:'قودي مشاريع AI وابني ثقافة الابتكار في فريقك',
-    levels:{
-      beg:{label:'مبتدئ',cls:'beg',
-        learn:`<div class="cblock"><h4>🎯 ما ستتعلمينه</h4><ul><li>مفهوم التحول الرقمي في التعليم</li><li>دور القائد في التغيير</li><li>كيف تبدئين بخطوة صغيرة مؤثرة</li></ul></div>
-        <div class="steps">
-          <div class="step"><div class="snum">١</div><div><h5>ما هو التحول الرقمي؟</h5><p>ليس مجرد شراء تقنية — بل تغيير طريقة التفكير والعمل</p></div></div>
-          <div class="step"><div class="snum">٢</div><div><h5>دورك كقائدة للتغيير</h5><p>اقرئي عن نموذج Kotter للتغيير وكيف تُطبّقينه في المدرسة</p></div></div>
-          <div class="step"><div class="snum">٣</div><div><h5>حدّدي فرصة تغيير واحدة</h5><p>فرصة صغيرة وقابلة للقياس في بيئة عملك اليومية</p></div></div>
-        </div>`,
-        acts:[{t:'اكتبي تعريفك في Notion',d:'افتحي Notion وأنشئي صفحة جديدة — اكتبي: ما التحول الرقمي في مدرستي؟ وما الفرصة التي أريد استغلالها؟',g:'✍️ Notion',u:'https://www.notion.so',btn:'افتحي Notion'},
-              {t:'ابحثي عن مبادرات مدارس رائدة',d:'ابحثي في Google عن "مدارس رائدة في التحول الرقمي السعودية" واجمعي 3 أفكار ملهمة',g:'🔍 بحث',u:'https://www.google.com/search?q=مدارس+رائدة+التحول+الرقمي+السعودية',btn:'ابحثي الآن'}],
-        quiz:[{q:'ما الفرق بين التحول الرقمي ومجرد استخدام التقنية؟',o:['لا فرق','التحول الرقمي يغيّر طريقة التفكير والعمل وليس فقط الأدوات','التحول الرقمي أغلى','التقنية أهم من التحول'],a:1},
-              {q:'ما أهم صفة في قائدة التغيير؟',o:['السلطة الإدارية العالية','القدرة على التواصل وبناء الثقة وإلهام الآخرين','المعرفة التقنية المتعمقة فقط','العمر والخبرة الطويلة'],a:1}]},
-      mid:{label:'متوسط',cls:'mid',
-        learn:`<div class="cblock"><h4>🎯 المستوى المتوسط</h4><ul><li>بناء خطة تحول بمؤشرات قابلة للقياس</li><li>إدارة مقاومة التغيير في الفريق</li><li>قيادة ورشة تحسين داخلية</li></ul></div>
-        <div class="steps">
-          <div class="step"><div class="snum">١</div><div><h5>خطة التحول الذكية</h5><p>استخدمي إطار OKR لبناء خطة: هدف واحد وثلاثة نتائج قابلة للقياس</p></div></div>
-          <div class="step"><div class="snum">٢</div><div><h5>إدارة المقاومة</h5><p>تعلّمي لماذا يقاوم الناس التغيير وكيف تحوّلين المتشككات إلى داعمات</p></div></div>
-          <div class="step"><div class="snum">٣</div><div><h5>ورشة تحسين داخلية</h5><p>قودي اجتماع 45 دقيقة لتحديد عملية واحدة للتحسين مع فريقك</p></div></div>
-        </div>`,
-        acts:[{t:'ابني خطة OKR في Notion',d:'افتحي Notion وأنشئي جدولاً: عمود الهدف + 3 أعمدة للنتائج القابلة للقياس',g:'🎯 Notion',u:'https://www.notion.so/templates/okrs',btn:'افتحي قالب OKR'},
-              {t:'أنشئي أجندة الاجتماع في Google Docs',d:'افتحي Google Docs وأنشئي أجندة اجتماع التحسين: المشكلة، الحلول المقترحة، الخطوات',g:'📝 Google Docs',u:'https://docs.new',btn:'افتحي Google Docs'}],
-        quiz:[{q:'ما إطار OKR؟',o:['نوع من البرامج','إطار لتحديد الأهداف والنتائج القابلة للقياس',  'نظام مكافآت','برنامج تدريبي'],a:1},
-              {q:'لماذا يقاوم الناس التغيير في الغالب؟',o:['لأنهم كسولون','بسبب الخوف من المجهول وفقدان الأمان والمهارات المكتسبة','لأنهم لا يريدون النجاح','بسبب قلة الراتب'],a:1}]},
-      adv:{label:'متقدم',cls:'adv',
-        learn:`<div class="cblock"><h4>🎯 المستوى المتقدم</h4><ul><li>إطلاق مبادرة تحول مؤسسية</li><li>بناء مجتمع تعلم مستدام</li><li>قياس الأثر وتقديم تقرير للإدارة العليا</li></ul></div>
-        <div class="steps">
-          <div class="step"><div class="snum">١</div><div><h5>تصميم المبادرة المؤسسية</h5><p>ضعي رؤية وخارطة طريق واضحة لمبادرة تحول تمسّ المدرسة كاملاً</p></div></div>
-          <div class="step"><div class="snum">٢</div><div><h5>مجتمع التعلم</h5><p>أسّسي مجموعة تعلم شهرية — شارِكي قصص نجاح وتحديات</p></div></div>
-          <div class="step"><div class="snum">٣</div><div><h5>تقرير الأثر</h5><p>قدّمي تقريراً ربعياً للإدارة بالأرقام والإنجازات والخطوات القادمة</p></div></div>
-        </div>`,
-        acts:[{t:'اكتبي وثيقة المبادرة في Google Docs',d:'افتحي Google Docs وأنشئي وثيقتك: رؤية، أهداف، جدول زمني، مؤشرات نجاح',g:'📄 Google Docs',u:'https://docs.new',btn:'افتحي Google Docs'},
-              {t:'أنشئي عرض تقرير الأثر بـ Gamma',d:'افتحي Gamma وأنشئي عرضاً من 3 شرائح: ما فعلناه، ما حققناه، الخطوات القادمة',g:'📊 Gamma AI',u:'https://gamma.app',btn:'افتحي Gamma'}],
-        quiz:[{q:'ما أهم عنصر في تقرير الأثر؟',o:['الطول والتفصيل','الأرقام والشواهد الملموسة التي تُثبت القيمة المُحققة','التصميم الجميل فقط','ذكر المشكلات فقط'],a:1},
-              {q:'لماذا نبني مجتمع تعلم وليس ندوة واحدة؟',o:['الندوة الواحدة كافية','الاستدامة — التعلم المنتظم يُرسّخ التغيير ويبني شبكة دعم مستمرة','لأن الندوات مكلفة','مجتمعات التعلم ليست فعّالة'],a:1}]}
-  }},
-  innovation:{id:'innovation',icon:'🔬',name:'الابتكار والتجريب',desc:'اختبري أدوات AI جديدة وقيّميها لاحتياجات مدرستك',
-    levels:{
-      beg:{label:'مبتدئ',cls:'beg',
-        learn:`<div class="cblock"><h4>🎯 ما ستتعلمينه</h4><ul><li>عقلية المبتكرة وكيف تبنينها</li><li>كيف تقيّمين أداة جديدة بشكل سريع</li><li>تجربة أداة AI جديدة خلال أسبوع</li></ul></div>
-        <div class="steps">
-          <div class="step"><div class="snum">١</div><div><h5>عقلية التجريب</h5><p>الفشل السريع والتعلم منه ليس إخفاقاً — بل طريق أسرع للنجاح</p></div></div>
-          <div class="step"><div class="snum">٢</div><div><h5>معايير تقييم الأداة</h5><p>سهولة الاستخدام، الوقت الموفّر، الملاءمة، التكلفة</p></div></div>
-          <div class="step"><div class="snum">٣</div><div><h5>اختاري أداة وجرّبيها</h5><p>من: Gamma, Notion AI, Canva AI, Otter.ai — أسبوع تجريب حقيقي</p></div></div>
-        </div>`,
-        acts:[{t:'جرّبي Gamma لإنشاء عرض تقديمي',d:'افتحي Gamma واكتبي موضوع درس أو فعالية — شاهدي كيف يبني العرض تلقائياً',g:'🎨 Gamma AI',u:'https://gamma.app',btn:'افتحي Gamma'},
-              {t:'جرّبي Canva AI للتصميم',d:'افتحي Canva وجرّبي ميزة "Magic Design" — أدخلي نصاً واحصلي على تصميم جاهز',g:'🎨 Canva AI',u:'https://www.canva.com/ai-image-generator/',btn:'افتحي Canva AI'}],
-        quiz:[{q:'ما معنى "التجريب السريع" Rapid Experimentation؟',o:['الاستعجال في كل شيء','اختبار فكرة بأدنى تكلفة وأسرع وقت للتعلم قبل الاستثمار الكبير','تجربة برامج بدون إذن','العمل بدون خطة'],a:1},
-              {q:'ما أهم معيار عند اختيار أداة AI جديدة للمدرسة؟',o:['شعبيتها على YouTube','ملاءمتها للاحتياج الفعلي وسهولة تبنّيها من الفريق','أنها مجانية تماماً','أنها من شركة أمريكية'],a:1}]},
-      mid:{label:'متوسط',cls:'mid',
-        learn:`<div class="cblock"><h4>🎯 المستوى المتوسط</h4><ul><li>بناء نموذج أولي (Prototype) بدون برمجة</li><li>إجراء تجربة مصغّرة وقياس نتائجها</li><li>كتابة تقرير تقييم موجّه للإدارة</li></ul></div>
-        <div class="steps">
-          <div class="step"><div class="snum">١</div><div><h5>Prototype بدون كود</h5><p>استخدمي أدوات No-Code مثل Notion أو Airtable لبناء حل بسيط</p></div></div>
-          <div class="step"><div class="snum">٢</div><div><h5>تجربة مصغّرة</h5><p>طبّقي الحل على مجموعة صغيرة (٣-٥ أشخاص) لمدة أسبوعين</p></div></div>
-          <div class="step"><div class="snum">٣</div><div><h5>تقرير التقييم</h5><p>وثّقي النتائج: ماذا نجح؟ ماذا فشل؟ ما التوصية؟</p></div></div>
-        </div>`,
-        acts:[{t:'ابني نموذجاً أولياً في Notion',d:'افتحي Notion وأنشئي صفحة تمثّل الحل المقترح — أضيفي قوائم، جداول، وخطوات',g:'🛠️ Notion',u:'https://www.notion.so',btn:'افتحي Notion'},
-              {t:'وثّقي نتائج تجربتك في Google Docs',d:'افتحي Google Docs واكتبي: المشكلة، الحل المجرَّب، ماذا نجح، التوصية',g:'📝 Google Docs',u:'https://docs.new',btn:'افتحي Google Docs'}],
-        quiz:[{q:'ما الهدف من التجربة المصغّرة؟',o:['إضاعة الوقت','تقليل المخاطر والتعلم قبل الانتشار الكامل','إثبات الفشل','إرضاء الإدارة'],a:1},
-              {q:'ما أهم ما يجب توثيقه بعد التجربة؟',o:['عدد ساعات العمل فقط','ما نجح وما فشل والدروس المستفادة والتوصية',  'اسم الأداة فقط','التكلفة فقط'],a:1}]},
-      adv:{label:'متقدم',cls:'adv',
-        learn:`<div class="cblock"><h4>🎯 المستوى المتقدم</h4><ul><li>بناء خارطة أدوات AI للمدرسة</li><li>تقييم عروض الموردين التقنيين</li><li>تقديم توصية شراء للإدارة</li></ul></div>
-        <div class="steps">
-          <div class="step"><div class="snum">١</div><div><h5>خارطة الأدوات</h5><p>وثّقي جميع الأدوات المستخدمة في المدرسة وفجوات الاحتياج</p></div></div>
-          <div class="step"><div class="snum">٢</div><div><h5>تقييم العروض التقنية</h5><p>تعلّمي كيف تقرئين عرضاً تقنياً وتسألين الأسئلة الصحيحة للموردين</p></div></div>
-          <div class="step"><div class="snum">٣</div><div><h5>توصية الاستثمار</h5><p>قدّمي تحليل ROI بسيطاً: تكلفة الأداة مقابل الوقت الموفّر والقيمة المضافة</p></div></div>
-        </div>`,
-        acts:[{t:'وثّقي خارطة الأدوات في Notion',d:'افتحي Notion وأنشئي جدولاً: اسم الأداة، الغرض، التقييم، الفجوة',g:'🗺️ Notion',u:'https://www.notion.so',btn:'افتحي Notion'},
-              {t:'احسبي ROI في Google Sheets',d:'افتحي Google Sheets وأنشئي جدولاً: تكلفة الأداة، الوقت الموفّر، القيمة المضافة',g:'💰 Google Sheets',u:'https://sheets.new',btn:'افتحي Google Sheets'}],
-        quiz:[{q:'ما ROI في سياق أدوات AI؟',o:['نوع من الشبكات الاجتماعية','نسبة العائد على الاستثمار: ما تكسبينه مقارنة بما تصرفينه','برنامج حاسوبي','مؤشر رضا المستخدم'],a:1},
-              {q:'ما أهم سؤال تسأله للمورّد التقني؟',o:['كم عمر الشركة؟','كيف سيُدرَّب فريقي وما دعم ما بعد البيع؟','هل الأداة جميلة؟','هل توجد نسخة مجانية؟'],a:1}]}
-  }}
-};
-
-function saveUsers(){localStorage.setItem('t11_users',JSON.stringify(users));}
-
-function empLogin(){
-  const name=document.getElementById('emp-name').value.trim();
-  const email=document.getElementById('emp-email').value.trim();
-  const role=document.getElementById('emp-role').value;
-  const err=document.getElementById('err-emp');
-  const pend=document.getElementById('pending-msg');
-  if(!name||!email||!role){err.textContent='⚠️ يرجى ملء جميع الحقول';err.classList.add('show');return;}
-  if(!email.includes('@')){err.textContent='⚠️ البريد الإلكتروني غير صحيح';err.classList.add('show');return;}
-  err.classList.remove('show'); pend.classList.remove('show');
-  let u=users.find(x=>x.email===email);
-  if(!u){
-    u={name,email,role,status:'pending',date:new Date().toLocaleDateString('ar-SA'),
-       progress:{},scores:{},acts:{}};
-    users.push(u); saveUsers();
-    pend.classList.add('show'); return;
-  }
-  if(u.status==='pending'){pend.classList.add('show');return;}
-  if(u.status==='rejected'){err.textContent='❌ عذراً، طلبك لم يُقبل. تواصلي مع الإدارة.';err.classList.add('show');return;}
-  u.name=name; u.role=role; saveUsers();
-  enterEmp(u);
-}
-
-function admLogin(){
-  const pass=document.getElementById('adm-pass').value;
-  const err=document.getElementById('err-adm');
-  if(!pass||pass!==ADMIN_PASS){
-    err.textContent='❌ كلمة المرور غير صحيحة';
-    err.classList.add('show');
-    return;
-  }
-  err.classList.remove('show');
-  // hide all screens
-  document.querySelectorAll('.screen').forEach(s=>{s.style.display='none';s.classList.remove('on');});
-  // show admin
-  const adm=document.getElementById('s-admin');
-  adm.style.display='block';
-  adm.classList.add('on');
-  renderAdminTable('all');
-}
-
-function enterEmp(u){
-  curUser=u;
-  document.querySelectorAll('.screen').forEach(s=>{s.style.display='none';s.classList.remove('on');});
-  const emp=document.getElementById('s-emp');
-  emp.style.display='block'; emp.classList.add('on');
-  document.getElementById('tb-name').textContent=u.name;
-  document.getElementById('home-greeting').textContent='مرحباً، '+u.name+' 👋';
-  document.getElementById('prof-name').textContent=u.name;
-  document.getElementById('prof-role').textContent=u.role+' · '+u.email;
-  document.getElementById('prof-email').textContent=u.email;
-  document.getElementById('prof-date').textContent=u.date||'—';
-  renderHomeTracks(); renderAllTracks(); updateStats(); renderCert(); renderBadges();
-}
-
-function logout(){
-  curUser=null;
-  document.querySelectorAll('.screen').forEach(s=>{s.style.display='none';s.classList.remove('on');});
-  const login=document.getElementById('s-login');
-  login.style.display='flex'; login.classList.add('on');
-  document.getElementById('emp-name').value='';
-  document.getElementById('emp-email').value='';
-  document.getElementById('emp-role').value='';
-  document.getElementById('adm-pass').value='';
-  document.getElementById('pending-msg').classList.remove('show');
-  document.getElementById('err-emp').classList.remove('show');
-}
-
-function setLoginTab(t){
-  document.getElementById('form-emp').style.display=t==='emp'?'block':'none';
-  document.getElementById('form-adm').style.display=t==='adm'?'block':'none';
-  document.getElementById('tab-emp').style.background=t==='emp'?'var(--p)':'rgba(255,255,255,.12)';
-  document.getElementById('tab-emp').style.color=t==='emp'?'#fff':'rgba(255,255,255,.7)';
-  document.getElementById('tab-adm').style.background=t==='adm'?'var(--p)':'rgba(255,255,255,.12)';
-  document.getElementById('tab-adm').style.color=t==='adm'?'#fff':'rgba(255,255,255,.7)';
-}
-
-// ── PAGES ──
-function showPage(id,btn){
-  document.querySelectorAll('#s-emp .page').forEach(p=>p.classList.remove('on'));
-  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('on'));
-  document.getElementById('page-'+id).classList.add('on');
-  if(btn)btn.classList.add('on');
-  if(id==='cert')renderCert();
-}
-
-// ── TRACKS RENDER ──
-function trackCardHTML(tid,lvl,compact){
-  const t=TRACKS[tid]; const l=t.levels[lvl];
-  const prog=getTrackProg(tid,lvl);
-  return `<button class="tcard" onclick="openTrack('${tid}','${lvl}')">
-    <span class="tc-icon">${t.icon}</span>
-    <h3>${t.name}</h3>
-    <p>${t.desc}</p>
-    <span class="tc-badge ${lvl}">${lvl==='beg'?'🌱 مبتدئ':lvl==='mid'?'📈 متوسط':'🚀 متقدم'}</span>
-    <div class="tc-prog"><div class="tc-prog-label">${prog}% مكتمل</div>
-    <div class="prog-wrap"><div class="prog-bar" style="width:${prog}%"></div></div></div>
-  </button>`;
-}
-
-function renderHomeTracks(){
-  const w=document.getElementById('home-tracks');
-  w.innerHTML=['auto','data','content'].map(id=>trackCardHTML(id,'beg')).join('');
-}
-function renderAllTracks(){
-  const w=document.getElementById('all-tracks');
-  w.innerHTML=Object.keys(TRACKS).flatMap(id=>['beg','mid','adv'].map(l=>trackCardHTML(id,l))).join('');
-}
-
-function filterLevel(lvl,btn){
-  document.querySelectorAll('.ltab').forEach(t=>t.classList.remove('on'));
-  btn.classList.add('on');
-  const cards=document.querySelectorAll('#all-tracks .tcard');
-  cards.forEach(c=>{
-    if(lvl==='all')c.style.display='';
-    else c.style.display=c.querySelector('.tc-badge').classList.contains(lvl)?'':'none';
-  });
-}
-
-function getTrackProg(tid,lvl){
-  if(!curUser)return 0;
-  const key=tid+'_'+lvl;
-  const acts=TRACKS[tid].levels[lvl].acts;
-  const done=curUser.acts&&curUser.acts[key]?Object.values(curUser.acts[key]).filter(Boolean).length:0;
-  return Math.round((done/acts.length)*100);
-}
-
-function updateStats(){
-  if(!curUser)return;
-  let started=0,totalActs=0,totalScore=0,scoreCount=0;
-  Object.keys(TRACKS).forEach(tid=>{
-    ['beg','mid','adv'].forEach(lvl=>{
-      const key=tid+'_'+lvl;
-      const prog=getTrackProg(tid,lvl);
-      if(prog>0)started++;
-      if(curUser.acts&&curUser.acts[key])
-        totalActs+=Object.values(curUser.acts[key]).filter(Boolean).length;
-      if(curUser.scores&&curUser.scores[key]!==undefined){
-        totalScore+=curUser.scores[key]; scoreCount++;
-      }
-    });
-  });
-  document.getElementById('st-tracks').textContent=started;
-  document.getElementById('st-acts').textContent=totalActs;
-  document.getElementById('st-score').textContent=scoreCount?Math.round(totalScore/scoreCount)+'%':'0%';
-  // level
-  const avgScore=scoreCount?totalScore/scoreCount:0;
-  const lvlTxt=avgScore>=80?'متقدم 🚀':avgScore>=50?'متوسط 📈':'مبتدئ 🌱';
-  document.getElementById('st-level').textContent=lvlTxt;
-  document.getElementById('prof-tracks').textContent=started+' مسار';
-  document.getElementById('prof-level').textContent=lvlTxt;
-}
-
-// ── MODAL ──
-let curModalTrack=null,curModalLvl=null;
-function openTrack(tid,lvl){
-  curModalTrack=tid; curModalLvl=lvl;
-  const t=TRACKS[tid]; const l=t.levels[lvl];
-  const lblTxt=lvl==='beg'?'🌱 مبتدئ':lvl==='mid'?'📈 متوسط':'🚀 متقدم';
-  const lbl=document.getElementById('m-level-badge');
-  lbl.textContent=lblTxt; lbl.className='level-badge '+lvl;
-  document.getElementById('m-title').textContent=t.icon+' '+t.name;
-  document.getElementById('m-desc').textContent=t.desc;
-  document.getElementById('learn-body').innerHTML=l.learn;
-  // activities
-  renderModalActs(tid,lvl);
-  // quiz
-  quizAns={};
-  renderModalQuiz(tid,lvl);
-  document.getElementById('score-box').classList.remove('on');
-  document.getElementById('quiz-sub-btn').style.display='inline-flex';
-  showITab('learn',document.querySelector('.itab'));
-  document.getElementById('moverlay').classList.add('on');
-}
-
-function renderModalActs(tid,lvl){
-  const key=tid+'_'+lvl;
-  const acts=TRACKS[tid].levels[lvl].acts;
-  const w=document.getElementById('act-body');
-  w.innerHTML='';
-  if(!curUser.acts)curUser.acts={};
-  if(!curUser.acts[key])curUser.acts[key]={};
-  acts.forEach((a,i)=>{
-    const done=curUser.acts[key][i]||false;
-    const d=document.createElement('div');
-    d.className='act-item';
-    const linkBtn=a.u?`<a href="${a.u}" target="_blank" rel="noopener" class="act-link-btn">🔗 ${a.btn||'افتحي الأداة'}</a>`:'';
-    d.innerHTML=`<div class="act-chk ${done?'done':''}" id="ach-${i}" onclick="toggleAct(${i})">${done?'✓':''}</div>
-      <div style="flex:1">
-        <div class="act-h5">${a.t}</div>
-        <div class="act-p">${a.d}</div>
-        <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-top:.5rem;">
-          <span class="act-tag">${a.g}</span>
-          ${linkBtn}
+      <!-- employee -->
+      <div id="form-emp">
+        <div class="err-msg" id="err-emp"></div>
+        <div class="fgrp"><label>الاسم الكامل</label><input type="text" id="f-name" placeholder="أدخلي اسمك"></div>
+        <div class="fgrp"><label>البريد الإلكتروني</label><input type="email" id="f-email" placeholder="example@edu.sa">
         </div>
-        ${done?'<div class="act-done-note">✅ تم الإنجاز — ضعي علامة ✓ عند إكمالك فعلاً على الموقع</div>':''}
-      </div>`;
-    w.appendChild(d);
-  });
-  updateActProg(tid,lvl);
-}
+        <div class="fgrp">
+          <label>الدور الوظيفي</label>
+          <select id="f-role">
+            <option value="">— اختاري —</option>
+            <option>معلمة</option>
+            <option>مساعد إداري</option>
+            <option>مرشدة طلابية</option>
+            <option>منسقة نشاط</option>
+            <option>أخرى</option>
+          </select>
+        </div>
+        <button class="login-btn" onclick="empLogin()">دخول ←</button>
+        <div class="pending-msg on" id="pend-msg" style="display:none;">⏳ طلبك قيد المراجعة. ستتمكنين من الدخول بعد
+          موافقة الإدارة.</div>
+      </div>
 
-function toggleAct(i){
-  const key=curModalTrack+'_'+curModalLvl;
-  if(!curUser.acts)curUser.acts={};
-  if(!curUser.acts[key])curUser.acts[key]={};
-  curUser.acts[key][i]=!curUser.acts[key][i];
-  saveUsers();
-  const el=document.getElementById('ach-'+i);
-  el.classList.toggle('done');
-  el.textContent=curUser.acts[key][i]?'✓':'';
-  updateActProg(curModalTrack,curModalLvl);
-  updateStats(); renderAllTracks(); renderHomeTracks();
-}
+      <!-- admin -->
+      <div id="form-adm" style="display:none;">
+        <div class="err-msg" id="err-adm"></div>
+        <div class="fgrp"><label>كلمة المرور</label><input type="password" id="f-pass" placeholder="••••••••"
+            onkeydown="if(event.key==='Enter')admLogin()"></div>
+        <button class="login-btn" onclick="admLogin()">دخول الإدارة ←</button>
+        <div class="admin-hint">للحصول على كلمة المرور تواصلي مع مديرة المدرسة</div>
+      </div>
+    </div>
+  </div>
 
-function updateActProg(tid,lvl){
-  const key=tid+'_'+lvl;
-  const acts=TRACKS[tid].levels[lvl].acts;
-  const done=curUser.acts&&curUser.acts[key]?Object.values(curUser.acts[key]).filter(Boolean).length:0;
-  const pct=Math.round((done/acts.length)*100);
-  document.getElementById('act-prog').style.width=pct+'%';
-  document.getElementById('act-label').textContent=done+' من '+acts.length+' أنشطة مكتملة ('+pct+'%)';
-}
+  <!-- ══════ EMPLOYEE APP ══════ -->
+  <div id="s-emp" class="screen">
+    <div class="topbar">
+      <div class="topbar-logo">تمكين <span>11</span></div>
+      <div class="topbar-right">
+        <div class="topbar-name">أهلاً <strong id="tb-uname">—</strong></div>
+        <button class="out-btn" onclick="logout()">خروج</button>
+      </div>
+    </div>
 
-function renderModalQuiz(tid,lvl){
-  const quiz=TRACKS[tid].levels[lvl].quiz;
-  const w=document.getElementById('quiz-body');
-  w.innerHTML='';
-  quiz.forEach((q,qi)=>{
-    const d=document.createElement('div');
-    d.className='quiz-q';
-    d.innerHTML=`<div class="qq">${qi+1}. ${q.q}</div>
-      <div class="qopts">${q.o.map((o,oi)=>`<div class="qopt" id="qo-${qi}-${oi}" onclick="selOpt(${qi},${oi})">${o}</div>`).join('')}</div>
-      <div class="qfb" id="qfb-${qi}"></div>`;
-    w.appendChild(d);
-  });
-}
+    <!-- home -->
+    <div class="app-page on" id="pg-home">
+      <div style="margin-top:.3rem;">
+        <div class="pg-title" id="greet-title">مرحباً 👋</div>
+        <div class="pg-sub">رحلتك في مبادرة تمكين 11</div>
+      </div>
 
-function selOpt(qi,oi){
-  quizAns[qi]=oi;
-  const quiz=TRACKS[curModalTrack].levels[curModalLvl].quiz;
-  document.querySelectorAll(`[id^="qo-${qi}-"]`).forEach(e=>{e.style.borderColor='';e.style.background='';});
-  const s=document.getElementById(`qo-${qi}-${oi}`);
-  s.style.borderColor='var(--p)'; s.style.background='var(--pp2)';
-}
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-n" id="st-done">0</div>
+          <div class="stat-l">دروس مكتملة</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-n" id="st-score">—</div>
+          <div class="stat-l">متوسط التقويم</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-n" id="st-tracks">0</div>
+          <div class="stat-l">مسارات بدأت</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-n" id="st-level">—</div>
+          <div class="stat-l">مستواك</div>
+        </div>
+      </div>
 
-function submitQuiz(){
-  const quiz=TRACKS[curModalTrack].levels[curModalLvl].quiz;
-  let correct=0;
-  quiz.forEach((q,qi)=>{
-    const chosen=quizAns[qi];
-    const fb=document.getElementById(`qfb-${qi}`);
-    document.querySelectorAll(`[id^="qo-${qi}-"]`).forEach(e=>{e.classList.remove('correct','wrong');});
-    if(chosen===undefined){fb.textContent='⚠️ لم تختاري إجابة';fb.className='qfb on no';return;}
-    const cEl=document.getElementById(`qo-${qi}-${q.a}`);
-    if(chosen===q.a){correct++;cEl.classList.add('correct');fb.textContent='✅ صحيح!';fb.className='qfb on ok';}
-    else{document.getElementById(`qo-${qi}-${chosen}`).classList.add('wrong');cEl.classList.add('correct');fb.textContent='❌ الصحيح: '+q.o[q.a];fb.className='qfb on no';}
-  });
-  const total=quiz.length;
-  const pct=Math.round((correct/total)*100);
-  const key=curModalTrack+'_'+curModalLvl;
-  if(!curUser.scores)curUser.scores={};
-  curUser.scores[key]=pct; saveUsers(); updateStats();
-  document.getElementById('score-n').textContent=correct+'/'+total;
-  const msgs=['استمري، أنتِ تتعلمين! 💪','جيد! راجعي الإجابات 📚','ممتاز! أنتِ في المسار الصحيح 🌟','رائع! جاهزة للمستوى التالي 🚀'];
-  document.getElementById('score-msg').textContent=msgs[correct]||msgs[3];
-  document.getElementById('score-box').classList.add('on');
-  document.getElementById('quiz-sub-btn').style.display='none';
-  renderCert();
-}
+      <div class="prog-ring-wrap">
+        <svg class="prog-ring" width="110" height="110" viewBox="0 0 110 110">
+          <defs>
+            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#8b5cf6" />
+              <stop offset="100%" stop-color="#6d28d9" />
+            </linearGradient>
+          </defs>
+          <circle class="ring-bg" cx="55" cy="55" r="46" />
+          <circle class="ring-bar" id="ring-bar" cx="55" cy="55" r="46" stroke-dasharray="289"
+            stroke-dashoffset="289" />
+          <text class="ring-label" x="55" y="52" text-anchor="middle" dominant-baseline="middle" id="ring-pct">0%</text>
+          <text class="ring-sub" x="55" y="65" text-anchor="middle" dominant-baseline="middle">إجمالي التقدم</text>
+        </svg>
+      </div>
 
-function showITab(id,btn){
-  document.querySelectorAll('.ipage').forEach(p=>p.classList.remove('on'));
-  document.querySelectorAll('.itab').forEach(t=>t.classList.remove('on'));
-  document.getElementById('it-'+id).classList.add('on');
-  if(btn)btn.classList.add('on');
-}
+      <div class="sec-head">ابدئي من هنا</div>
+      <div class="track-list" id="home-tracks"></div>
+    </div>
 
-function closeMOverlay(e){if(e.target===document.getElementById('moverlay'))closeModal();}
-function closeModal(){document.getElementById('moverlay').classList.remove('on');}
+    <!-- tracks -->
+    <div class="app-page" id="pg-tracks">
+      <div class="pg-title">المسارات</div>
+      <div class="pg-sub">اختاري مسارك وابدئي من المستوى المناسب</div>
+      <div class="track-list" id="all-tracks"></div>
+    </div>
 
-// ── CERT ──
-function renderCert(){
-  if(!curUser)return;
-  document.getElementById('c-name').textContent=curUser.name||'—';
-  let bestTrack='',bestScore=0,bestLvl='';
-  Object.keys(TRACKS).forEach(tid=>{['beg','mid','adv'].forEach(lvl=>{
-    const key=tid+'_'+lvl;
-    const sc=curUser.scores&&curUser.scores[key]!==undefined?curUser.scores[key]:0;
-    if(sc>bestScore){bestScore=sc;bestTrack=TRACKS[tid].name;bestLvl=lvl==='beg'?'مبتدئ':lvl==='mid'?'متوسط':'متقدم';}
-  });});
-  document.getElementById('c-track').textContent=bestTrack?'قد أتمّت متطلبات مسار '+bestTrack:'أكملي مسارًا للحصول على شهادتك';
-  document.getElementById('c-level').textContent=bestLvl?'المستوى: '+bestLvl:'—';
-  document.getElementById('c-stars').textContent=bestScore>=80?'⭐⭐⭐':bestScore>=50?'⭐⭐':'⭐';
-  document.getElementById('c-date').textContent='بتاريخ: '+new Date().toLocaleDateString('ar-SA');
-}
+    <!-- cert -->
+    <div class="app-page" id="pg-cert">
+      <div class="pg-title">شهادتي</div>
+      <div class="pg-sub">شهادة إنجاز قابلة للتصدير PDF</div>
+      <div id="cert-area"></div>
+    </div>
 
-function renderBadges(){
-  if(!curUser)return;
-  const w=document.getElementById('prof-badges');
-  w.innerHTML='';
-  let total=0,scores=0,count=0;
-  Object.keys(TRACKS).forEach(tid=>{['beg','mid','adv'].forEach(lvl=>{
-    const key=tid+'_'+lvl;
-    const prog=getTrackProg(tid,lvl);
-    if(prog>0)total++;
-    if(curUser.scores&&curUser.scores[key]!==undefined){scores+=curUser.scores[key];count++;}
-  });});
-  const avg=count?scores/count:0;
-  if(total>=1){w.innerHTML+=`<span style="background:var(--pp);color:var(--p);padding:.4rem 1rem;border-radius:100px;font-size:.82rem;font-weight:700;">🥉 AI Explorer</span>`;}
-  if(avg>=60&&total>=3){w.innerHTML+=`<span style="background:#fef3c7;color:#92400e;padding:.4rem 1rem;border-radius:100px;font-size:.82rem;font-weight:700;">🥈 AI Champion</span>`;}
-  if(avg>=80&&total>=6){w.innerHTML+=`<span style="background:#d1fae5;color:#065f46;padding:.4rem 1rem;border-radius:100px;font-size:.82rem;font-weight:700;">🥇 Innovation Leader</span>`;}
-  if(!w.innerHTML)w.innerHTML=`<span style="color:var(--gray);font-size:.85rem;font-weight:300;">أكملي مسارات للحصول على شارات الإنجاز ✨</span>`;
-}
+    <!-- profile -->
+    <div class="app-page" id="pg-profile">
+      <div class="pg-title" id="prof-name">—</div>
+      <div class="pg-sub" id="prof-role">—</div>
+      <div class="stat-card" style="text-align:right;padding:1.1rem;margin-bottom:1rem;">
+        <div style="font-size:.72rem;color:var(--gray);margin-bottom:.5rem;">البريد</div>
+        <div id="prof-email" style="font-size:.88rem;font-weight:600;">—</div>
+        <div style="font-size:.72rem;color:var(--gray);margin:.5rem 0 .2rem;">تاريخ الانضمام</div>
+        <div id="prof-date" style="font-size:.88rem;font-weight:600;">—</div>
+      </div>
+      <div class="sec-head">الشارات المكتسبة</div>
+      <div id="prof-badges" style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem;"></div>
+    </div>
 
-// ── PDF ──
-async function exportPDF(){
-  if(!curUser){alert('يرجى تسجيل الدخول أولاً');return;}
-  const {jsPDF}=window.jspdf;
-  const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
-  const W=297,H=210;
-  // background
-  doc.setFillColor(244,240,255);doc.rect(0,0,W,H,'F');
-  doc.setFillColor(26,14,53);doc.rect(0,0,W,18,'F');
-  doc.setFillColor(26,14,53);doc.rect(0,H-18,W,18,'F');
-  // border
-  doc.setDrawColor(124,58,237);doc.setLineWidth(1.5);doc.rect(8,8,W-16,H-16);
-  doc.setDrawColor(167,139,250);doc.setLineWidth(0.5);doc.rect(11,11,W-22,H-22);
-  // header
-  doc.setTextColor(255,255,255);doc.setFontSize(13);doc.setFont('helvetica','bold');
-  doc.text('مدرسة الابتدائية الحادية عشر - الخبر',W/2,12,{align:'center'});
-  // title
-  doc.setTextColor(26,14,53);doc.setFontSize(11);doc.setFont('helvetica','normal');
-  doc.text('Certificate of Achievement',W/2,35,{align:'center'});
-  doc.setFontSize(22);doc.setFont('helvetica','bold');doc.setTextColor(124,58,237);
-  doc.text('Tamkeen 11 Initiative',W/2,48,{align:'center'});
-  // body
-  doc.setFontSize(10);doc.setTextColor(100,100,100);doc.setFont('helvetica','normal');
-  doc.text('This certificate is awarded to',W/2,62,{align:'center'});
-  doc.setFontSize(20);doc.setFont('helvetica','bold');doc.setTextColor(26,14,53);
-  doc.text(curUser.name,W/2,75,{align:'center'});
-  doc.setDrawColor(167,139,250);doc.setLineWidth(0.7);doc.line(80,78,W-80,78);
-  // track & level
-  let bestTrack='',bestScore=0,bestLvl='';
-  Object.keys(TRACKS).forEach(tid=>{['beg','mid','adv'].forEach(lvl=>{
-    const key=tid+'_'+lvl;
-    const sc=curUser.scores&&curUser.scores[key]!==undefined?curUser.scores[key]:0;
-    if(sc>bestScore){bestScore=sc;bestTrack=TRACKS[tid].name;bestLvl=lvl==='beg'?'Beginner':lvl==='mid'?'Intermediate':'Advanced';}
-  });});
-  doc.setFontSize(10);doc.setTextColor(100,100,100);doc.setFont('helvetica','normal');
-  doc.text('for successfully completing the track',W/2,88,{align:'center'});
-  doc.setFontSize(14);doc.setFont('helvetica','bold');doc.setTextColor(124,58,237);
-  doc.text(bestTrack||'—',W/2,98,{align:'center'});
-  doc.setFontSize(11);doc.setTextColor(100,100,100);doc.setFont('helvetica','normal');
-  doc.text('Level: '+(bestLvl||'—')+'    |    Score: '+(bestScore||0)+'%',W/2,108,{align:'center'});
-  // stars
-  const stars=bestScore>=80?'★★★':bestScore>=50?'★★':'★';
-  doc.setFontSize(20);doc.setTextColor(124,58,237);doc.text(stars,W/2,120,{align:'center'});
-  // signatures
-  doc.setDrawColor(200,200,220);doc.setLineWidth(0.4);
-  doc.line(40,148,100,148);doc.line(W-100,148,W-40,148);
-  doc.setFontSize(9);doc.setTextColor(60,60,80);doc.setFont('helvetica','bold');
-  doc.text('Afaf Al-Huwayl',70,154,{align:'center'});
-  doc.text('Manal Al-Umayr',W-70,154,{align:'center'});
-  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(130,130,150);
-  doc.text('School Principal',70,159,{align:'center'});
-  doc.text('Vice Principal',W-70,159,{align:'center'});
-  // date & footer
-  doc.setFontSize(8);doc.setTextColor(130,130,150);
-  doc.text('Date: '+new Date().toLocaleDateString('en-GB'),W/2,170,{align:'center'});
-  doc.setTextColor(255,255,255);doc.setFontSize(9);
-  doc.text('Tamkeen 11 Initiative - Al-Ibtidaiyah 11 School, Al-Khobar - 2025',W/2,H-8,{align:'center'});
-  doc.save('Tamkeen11_Certificate_'+curUser.name+'.pdf');
-}
+    <div class="bottom-nav">
+      <button class="bnav-item on" onclick="showPage('home',this)"><span class="bnav-icon">🏠</span><span
+          class="bnav-label">الرئيسية</span></button>
+      <button class="bnav-item" onclick="showPage('tracks',this)"><span class="bnav-icon">🎯</span><span
+          class="bnav-label">المسارات</span></button>
+      <button class="bnav-item" onclick="showPage('cert',this)"><span class="bnav-icon">📜</span><span
+          class="bnav-label">شهادتي</span></button>
+      <button class="bnav-item" onclick="showPage('profile',this)"><span class="bnav-icon">👤</span><span
+          class="bnav-label">ملفي</span></button>
+    </div>
+  </div>
 
-// ── ADMIN ──
-function renderAdminTable(filter){
-  adminFilter=filter;
-  const body=document.getElementById('req-body');
-  const search=document.getElementById('search-inp')?.value?.toLowerCase()||'';
-  let list=users.filter(u=>{
-    if(filter!=='all'&&u.status!==filter)return false;
-    if(search&&!u.name?.toLowerCase().includes(search)&&!u.email?.toLowerCase().includes(search))return false;
-    return true;
-  });
-  document.getElementById('a-total').textContent=users.length;
-  document.getElementById('a-pend').textContent=users.filter(u=>u.status==='pending').length;
-  document.getElementById('a-appr').textContent=users.filter(u=>u.status==='approved').length;
-  document.getElementById('a-rej').textContent=users.filter(u=>u.status==='rejected').length;
-  if(!list.length){body.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--gray);">لا توجد سجلات</td></tr>`;return;}
-  body.innerHTML=list.map((u,i)=>{
-    const si=users.indexOf(u);
-    const sp=u.status==='pending'?'sp-pend':u.status==='approved'?'sp-ok':'sp-rej';
-    const sl=u.status==='pending'?'قيد المراجعة':u.status==='approved'?'مقبولة':'مرفوضة';
-    const actions=u.status==='pending'?
-      `<button class="action-btn ab-ok" onclick="changeStatus(${si},'approved')">✅ قبول</button>
-       <button class="action-btn ab-rej" onclick="changeStatus(${si},'rejected')">❌ رفض</button>`:
-      `<button class="action-btn" style="background:#f3f4f6;color:#374151;" onclick="changeStatus(${si},'pending')">↩️ إعادة</button>`;
-    return `<tr>
-      <td><strong>${u.name||'—'}</strong></td>
-      <td style="font-size:.8rem;color:var(--gray);">${u.email||'—'}</td>
-      <td style="font-size:.8rem;">${u.role||'—'}</td>
-      <td style="font-size:.78rem;color:var(--gray);">${u.date||'—'}</td>
-      <td><span class="status-pill ${sp}">${sl}</span></td>
-      <td>${actions}</td>
-    </tr>`;
-  }).join('');
-}
+  <!-- ══════ TRACK DETAIL ══════ -->
+  <div id="s-track" class="screen">
+    <div class="track-header">
+      <button class="back-btn" onclick="closeTrack()">← رجوع</button>
+      <h2 id="tr-title">—</h2>
+      <p id="tr-desc">—</p>
+      <div class="level-pills">
+        <button class="lpill beg on" onclick="setLevel('beg',this)">🌱 مبتدئ</button>
+        <button class="lpill mid" onclick="setLevel('mid',this)">📈 متوسط</button>
+        <button class="lpill adv" onclick="setLevel('adv',this)">🚀 متقدم</button>
+      </div>
+    </div>
+    <div class="track-body" id="track-body"></div>
+  </div>
 
-function changeStatus(i,status){
-  users[i].status=status; saveUsers(); renderAdminTable(adminFilter);
-}
-function showAdminTab(f,btn){
-  document.querySelectorAll('#s-admin .ntab').forEach(t=>t.classList.remove('on'));
-  btn.classList.add('on');
-  renderAdminTable(f);
-}
-function searchUsers(v){renderAdminTable(adminFilter);}
+  <!-- ══════ ADMIN ══════ -->
+  <div id="s-admin" class="screen">
+    <div class="admin-top">
+      <div class="logo">تمكين <span>11</span> · الإدارة</div>
+      <button class="out-btn" onclick="logout()">خروج</button>
+    </div>
+    <div class="admin-body">
+      <div class="pg-title">لوحة التحكم</div>
+      <div class="pg-sub">إدارة طلبات الانضمام ومتابعة الموظفات</div>
+      <div class="admin-stats">
+        <div class="astat">
+          <div class="astat-n" id="a-total">0</div>
+          <div class="astat-l">إجمالي الطلبات</div>
+        </div>
+        <div class="astat">
+          <div class="astat-n" id="a-pend">0</div>
+          <div class="astat-l">قيد المراجعة</div>
+        </div>
+        <div class="astat">
+          <div class="astat-n" id="a-appr">0</div>
+          <div class="astat-l">مقبولات</div>
+        </div>
+        <div class="astat">
+          <div class="astat-n" id="a-rej">0</div>
+          <div class="astat-l">مرفوضات</div>
+        </div>
+      </div>
+      <div class="filter-tabs">
+        <button class="ftab on" onclick="adminFilter('all',this)">الكل</button>
+        <button class="ftab" onclick="adminFilter('pending',this)">⏳ قيد المراجعة</button>
+        <button class="ftab" onclick="adminFilter('approved',this)">✅ مقبولات</button>
+        <button class="ftab" onclick="adminFilter('rejected',this)">❌ مرفوضات</button>
+      </div>
+      <input class="search-inp" id="search-inp" placeholder="🔍 ابحثي بالاسم أو البريد..." oninput="renderAdmin()">
+      <div id="admin-list"></div>
+      <div class="team-box">
+        <h4>👥 فريق القيادة</h4>
+        <div class="team-members">
+          <span class="team-member">🏫 عفاف عبدالرحمن الحويل · مديرة</span>
+          <span class="team-member">📋 منال العمير · وكيلة</span>
+          <span class="team-member">💼 نورة المبارك · مساعد إداري</span>
+          <span class="team-member">💼 آلاء الكباسي · مساعد إداري</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-// init demo users
-if(!users.length){
-  users=[
-    {name:'سارة الأحمد',email:'sara@edu.sa',role:'معلمة',status:'pending',date:'09/05/2025',progress:{},scores:{},acts:{}},
-    {name:'منيرة القحطاني',email:'munira@edu.sa',role:'مرشدة طلابية',status:'approved',date:'08/05/2025',progress:{},scores:{},acts:{}},
-    {name:'ريم الزهراني',email:'reem@edu.sa',role:'معلمة',status:'approved',date:'07/05/2025',progress:{},scores:{},acts:{}},
-  ];
-  saveUsers();
-}
-</script>
+  <script>
+    // ═══════════════════════════════════════
+    // DATA — منهجية تدريبية متدرجة صحيحة
+    // كل مسار: مبتدئ → متوسط → متقدم
+    // كل مستوى: فيديو نظري → أداة تطبيقية → مهمة → تقويم
+    // ═══════════════════════════════════════
+
+    const TRACKS = [
+      {
+        id: 'chatgpt', icon: '🤖', name: 'الذكاء الاصطناعي في العمل',
+        desc: 'أتقني استخدام AI في التقارير والتحليل والأفكار والتصميم وبناء المشاريع والتدريب الشخصي',
+        levels: {
+          beg: {
+            name: 'مبتدئ — أنواع استخدام الذكاء الاصطناعي',
+            lessons: [
+              {
+                title: 'AI في كتابة التقارير الإدارية',
+                content: `<div class="content-block"><h4>📝 التقارير — من ساعات إلى دقائق</h4><p>AI يكتب التقارير الإدارية والوصفية بجودة عالية إذا أعطيتِه المعلومات الصحيحة. أنواع التقارير التي يساعد فيها:</p><ul><li>تقارير الحضور والغياب الأسبوعية</li><li>تقارير إنجازات المدرسة الشهرية</li><li>رسائل لأولياء الأمور</li><li>التقارير الوصفية للمبادرات</li><li>محاضر الاجتماعات</li></ul></div>
+            <div class="content-block"><h4>🎯 مطالبة احترافية للتقارير</h4><p>"اكتبي تقريراً [نوع التقرير] لـ [المستلم] عن [الموضوع] يتضمن [النقاط الرئيسية] بأسلوب [رسمي/ودي/مختصر]"</p></div>`,
+                video: { title: 'استخدام ChatGPT في كتابة التقارير بالعربي', url: 'https://www.youtube.com/results?search_query=chatgpt+كتابة+تقارير+عربي+2024', sub: 'فيديو 8-10 دقائق' },
+                tool: { icon: '🤖', name: 'Claude AI', desc: 'Claude متميز في التقارير العربية الرسمية — جرّبيه الآن', url: 'https://claude.ai', btn: 'افتحي Claude ↗' },
+                tasks: [
+                  { t: 'اكتبي تقرير حضور أسبوعي بـ AI', d: 'افتحي Claude أو ChatGPT واكتبي: "اكتبي تقريراً رسمياً موجزاً لمديرة المدرسة عن حضور هذا الأسبوع: [أدخلي البيانات]"' },
+                  { t: 'اطلبي تقريراً لإنجاز مبادرة', d: 'اكتبي: "اكتبي تقريراً وصفياً عن مبادرة تمكين 11 يتضمن: الهدف، الأنشطة المنفذة، النتائج الأولية، التوصيات"' }
+                ],
+                quiz: [
+                  { q: 'ما أهم عنصر في المطالبة للحصول على تقرير جيد من AI؟', o: [ 'الطول الكبير فقط', 'تحديد: نوع التقرير + المستلم + الموضوع + النبرة المطلوبة', 'استخدام الإنجليزية', 'سؤال واحد فقط' ], a: 1 },
+                  { q: 'ما الفرق بين Claude و ChatGPT في كتابة التقارير؟', o: [ 'لا فرق تماماً', 'كلاهما قوي لكن Claude متميز في العربية الرسمية — جرّبي الاثنين واختاري', 'ChatGPT للتقارير فقط', 'Claude للتصميم فقط' ], a: 1 }
+                ]
+              },
+              {
+                title: 'AI في تحليل البيانات واستخراج الرؤى',
+                content: `<div class="content-block"><h4>📊 AI كمحلل بيانات شخصي</h4><p>أرسلي أي جدول أو أرقام لـ AI واطلبي التحليل — يستخرج الأنماط والتوجهات والمقارنات في ثوانٍ.</p><ul><li>تحليل نتائج الطالبات</li><li>مقارنة الأداء بين الفصول</li><li>اكتشاف أنماط الغياب</li><li>تقييم فعالية المبادرات</li></ul></div>
+            <div class="content-block"><h4>🎯 مطالبات تحليل البيانات</h4><ul><li>"حللي هذه البيانات واستخرجي أهم 3 رؤى: [البيانات]"</li><li>"قارني هذين الشهرين وأخبريني بالتغيرات الجوهرية"</li><li>"ما الأنماط الملحوظة في هذه البيانات؟ وما أسبابها المحتملة؟"</li><li>"اكتبي توصيتين بناءً على هذا التحليل"</li></ul></div>`,
+                tool: { icon: '🤖', name: 'ChatGPT', desc: 'الصقي بياناتك مع سؤال تحليلي محدد', url: 'https://chatgpt.com', btn: 'افتحي ChatGPT ↗' },
+                tasks: [
+                  { t: 'حلّلي بيانات حضور شهر بـ ChatGPT', d: 'انسخي جدول الحضور والصقيه: "حللي هذه البيانات واستخرجي الأنماط وأعطيني توصيتين"' },
+                  { t: 'اطلبي مقارنة بين فترتين', d: '"قارني بيانات هذا الشهر [البيانات] بالشهر الماضي [البيانات] وأخبريني بأبرز التغيرات"' }
+                ],
+                quiz: [
+                  { q: 'ما أفضل طريقة لتحليل جدول بيانات بـ AI؟', o: [ 'إرسال "لخّص" فقط', 'إرسال البيانات مع سؤال محدد: ما الذي تريدين معرفته وما القرار المطلوب', 'إرسال صورة للجدول', 'كتابة الأرقام يدوياً' ], a: 1 },
+                  { q: 'ما الذي يميز تحليل AI عن التحليل اليدوي؟', o: [ 'AI دائماً أدق من البشر', 'السرعة في اكتشاف الأنماط ومعالجة كميات كبيرة — لكن البشر يتحققون من النتائج', 'لا فرق', 'التحليل اليدوي أفضل دائماً' ], a: 1 }
+                ]
+              }
+            ]
+          },
+          mid: {
+            name: 'متوسط — AI في الأفكار والتصميم والمشاريع',
+            lessons: [
+              {
+                title: 'AI في توليد الأفكار والإبداع',
+                content: `<div class="content-block"><h4>💡 AI كشريك تفكير لا كبديل</h4><p>AI ممتاز في توليد الأفكار الأولية — أنتِ تصفّينها وتختارين الأنسب. استخدميه لـ:</p><ul><li>أفكار فعاليات مدرسية</li><li>مواضيع مبادرات تطويرية</li><li>حلول لمشكلة معينة</li><li>أسماء إبداعية للمشاريع</li><li>خطط عمل تفصيلية</li></ul></div>
+            <div class="content-block"><h4>🎯 تقنية "العصف الذهني مع AI"</h4><p>١. اشرحي المشكلة أو الهدف بوضوح<br>٢. اطلبي: "أعطيني 10 أفكار مختلفة لـ [الهدف]"<br>٣. اختاري أفضل 3 أفكار<br>٤. اطلبي تطوير كل فكرة<br>٥. ادمجي الأفضل في فكرة واحدة متكاملة</p></div>`,
+                video: { title: 'استخدام AI في توليد الأفكار والإبداع', url: 'https://www.youtube.com/results?search_query=chatgpt+brainstorming+ideas+arabic+2024', sub: 'فيديو 8-10 دقائق' },
+                tool: { icon: '🤖', name: 'ChatGPT', desc: 'اطلبي 10 أفكار لفعالية أو مبادرة مدرسية', url: 'https://chatgpt.com', btn: 'افتحي ChatGPT ↗' },
+                tasks: [
+                  { t: 'اطلبي 10 أفكار لفعالية مدرسية قادمة', d: '"أعطيني 10 أفكار مبتكرة لفعالية يوم المعلمة في مدرسة ابتدائية — متنوعة وعملية"' },
+                  { t: 'طوّري الفكرة الأفضل إلى خطة', d: '"طوّري الفكرة رقم [X] إلى خطة تنفيذية مفصّلة: الهدف، الأنشطة، المواد، الجدول الزمني"' }
+                ],
+                quiz: [
+                  { q: 'ما الدور الأمثل لـ AI في توليد الأفكار؟', o: [ 'يستبدل التفكير البشري كلياً', 'شريك يوفر أفكاراً أولية كثيرة أنتِ تصفّينها وتختارين الأنسب لسياقك', 'مصدر للأفكار الجاهزة فقط', 'يولّد أفكاراً ليست مفيدة' ], a: 1 },
+                  { q: 'ما تقنية "العصف الذهني مع AI" الصحيحة؟', o: [ 'قبول أول فكرة يعطيها', 'طلب أفكار متعددة ← تصفية ← تطوير الأفضل ← دمج في فكرة متكاملة', 'رفض كل أفكاره', 'استخدامها دون تعديل' ], a: 1 }
+                ]
+              },
+              {
+                title: 'AI في التصميم البصري',
+                content: `<div class="content-block"><h4>🎨 أدوات AI للتصميم — لا تحتاجين خبرة</h4><p>أدوات التصميم بـ AI أصبحت سهلة للجميع. اختاري الأداة المناسبة لكل مهمة:</p><ul><li><strong>Canva AI:</strong> تصاميم جاهزة + Magic Design + توليد صور</li><li><strong>Gamma:</strong> عروض تقديمية من نص في دقائق</li><li><strong>Adobe Firefly:</strong> توليد صور احترافية بالوصف</li><li><strong>Microsoft Designer:</strong> تصاميم بالذكاء الاصطناعي مجاناً</li></ul></div>
+            <div class="content-block"><h4>🎯 كيف تطلبين تصميماً من AI؟</h4><p>كوني محددة: "تصميم [إعلان/بوستر/شهادة] لـ [المناسبة] بألوان [الألوان] وأسلوب [رسمي/احترافي/ملون] يتضمن [العناصر]"</p></div>`,
+                video: { title: 'Canva AI للتصميم بدون خبرة', url: 'https://www.youtube.com/results?search_query=canva+ai+magic+design+tutorial+arabic+2024', sub: 'فيديو 8-12 دقيقة' },
+                tool: { icon: '🎨', name: 'Canva AI', desc: 'جرّبي Magic Design — اكتبي وصفاً وشاهدي التصميم', url: 'https://www.canva.com/ai-image-generator/', btn: 'افتحي Canva AI ↗' },
+                tasks: [
+                  { t: 'صمّمي إعلاناً بـ Canva AI', d: 'Canva ← Create ← Magic Design ← اكتبي: "إعلان لفعالية مدرسية بألوان موف" وعدّليه' },
+                  { t: 'جرّبي Microsoft Designer مجاناً', d: 'افتحي designer.microsoft.com ← اكتبي وصف التصميم بالعربي ← اختاري النتيجة الأفضل' }
+                ],
+                quiz: [
+                  { q: 'ما أداة AI الأنسب لإنشاء عرض تقديمي من نص؟', o: [ 'Canva فقط', 'Gamma — تُحوّل النص إلى عرض احترافي كامل تلقائياً', 'Adobe فقط', 'Microsoft Word' ], a: 1 },
+                  { q: 'ما أهم شيء عند طلب تصميم من AI؟', o: [ 'كلمة واحدة كافية', 'التحديد: نوع التصميم + المناسبة + الألوان + الأسلوب + العناصر المطلوبة', 'الطول الكبير', 'استخدام الإنجليزية فقط' ], a: 1 }
+                ]
+              },
+              {
+                title: 'AI في بناء المشاريع التطويرية',
+                content: `<div class="content-block"><h4>🚀 من الفكرة إلى المشروع الكامل بمساعدة AI</h4><p>AI يساعدك في كل مراحل بناء المشروع:</p><ul><li><strong>التخطيط:</strong> تحديد الأهداف وخارطة الطريق</li><li><strong>التصميم:</strong> هيكل المشروع وآليات التنفيذ</li><li><strong>التوثيق:</strong> كتابة الوثائق والتقارير</li><li><strong>المتابعة:</strong> قوالب متابعة الأداء</li><li><strong>التقييم:</strong> معايير قياس النجاح</li></ul></div>
+            <div class="content-block"><h4>🎯 مطالبة بناء المشروع</h4><p>"ساعديني في بناء مشروع [اسم المشروع] في [السياق]. الهدف: [الهدف]. الفريق: [عدد الأشخاص]. المدة: [الزمن]. أريد: خطة تفصيلية + مؤشرات نجاح + جدول زمني"</p></div>`,
+                tool: { icon: '🤖', name: 'Claude AI', desc: 'Claude ممتاز في التخطيط المنظم وبناء المشاريع', url: 'https://claude.ai', btn: 'افتحي Claude ↗' },
+                tasks: [
+                  { t: 'اطلبي خطة مشروع تطويري كامل', d: '"ساعديني في بناء مشروع تمكين 11. الهدف: تطوير ٤ موظفات. المدة: ١٢ أسبوعاً. أريد: خطة + مراحل + مؤشرات نجاح + جدول زمني"' },
+                  { t: 'اطلبي قالب متابعة المشروع', d: '"أنشئي جدول متابعة أسبوعي لمشروع [الاسم] يتضمن: المهام، المسؤولة، الموعد، الحالة، الملاحظات"' }
+                ],
+                quiz: [
+                  { q: 'في أي مراحل يساعد AI في بناء المشاريع؟', o: [ 'التخطيط فقط', 'جميع المراحل: التخطيط والتصميم والتوثيق والمتابعة والتقييم', 'التنفيذ فقط', 'لا يساعد في المشاريع' ], a: 1 },
+                  { q: 'ما أفضل طريقة لطلب مساعدة AI في مشروع؟', o: [ 'قولي: "ساعديني في مشروع" فقط', 'أعطيه: اسم المشروع + الهدف + الفريق + المدة + ما تحتاجينه تحديداً', 'إرسال مستند طويل', 'سؤال واحد عام' ], a: 1 }
+                ]
+              }
+            ]
+          },
+          adv: {
+            name: 'متقدم — التدريب الشخصي وإتقان AI',
+            lessons: [
+              {
+                title: 'AI كمدرّب شخصي لتطوير مهاراتك',
+                content: `<div class="content-block"><h4>🎓 صمّمي برنامجك التدريبي بـ AI</h4><p>AI يمكنه أن يكون مدرّبك الشخصي — يحلل مستواك الحالي، يصمم خطة تعلم مخصصة، يشرح المفاهيم بأسلوبك، ويتحقق من فهمك.</p><ul><li>"علّميني [المهارة] خطوة بخطوة — أنا [مستواك الحالي]"</li><li>"اشرحي لي [المفهوم] بمثال من بيئة المدرسة"</li><li>"اختبريني على [الموضوع] بـ 5 أسئلة"</li><li>"صحّحي هذا العمل وأخبريني بنقاط التحسين"</li><li>"ما الخطوة التالية بعد إتقاني لـ [المهارة]؟"</li></ul></div>
+            <div class="content-block"><h4>🎯 بناء خطة تعلم مخصصة</h4><p>"أنا [دورك] في مدرسة ابتدائية، مستواي مع التكنولوجيا [مبتدئة/متوسطة]. أريد تعلم [المهارة] لأستخدمها في [الهدف]. صمّمي لي خطة تعلم شهرية مخصصة بمصادر مجانية"</p></div>`,
+                video: { title: 'استخدام ChatGPT في التعلم الذاتي', url: 'https://www.youtube.com/results?search_query=chatgpt+personal+learning+arabic+self+study', sub: 'فيديو 8-12 دقيقة' },
+                tool: { icon: '🤖', name: 'ChatGPT', desc: 'اطلبي خطة تعلم مخصصة لمهارة تريدين تطويرها', url: 'https://chatgpt.com', btn: 'افتحي ChatGPT ↗' },
+                tasks: [
+                  { t: 'اطلبي خطة تعلم شهرية مخصصة', d: '"صمّمي لي خطة تعلم شهرية لإتقان [مهارة تختارينها] مع مصادر مجانية ومهام أسبوعية"' },
+                  { t: 'اطلبي اختباراً لمهارة تعلمتِها', d: '"اختبريني على [الموضوع] بـ 5 أسئلة متدرجة من السهل للصعب ثم صحّحي إجاباتي"' }
+                ],
+                quiz: [
+                  { q: 'كيف تستخدمين AI كمدرّب شخصي فعّال؟', o: [ 'تقرئين فقط بدون تطبيق', 'تشرحين مستواك وهدفك وتطلبين خطة مخصصة ثم تطبّقين وتطلبين التصحيح', 'تسأليه أسئلة عامة فقط', 'تنسخين إجاباته مباشرة' ], a: 1 },
+                  { q: 'ما ميزة التعلم مع AI مقارنة بالدورات التقليدية؟', o: [ 'AI دائماً أفضل من الدورات', 'التخصيص والتفاعل — AI يتكيف مع مستواك وتساؤلاتك الخاصة في أي وقت', 'الدورات التقليدية أفضل دائماً', 'لا فرق' ], a: 1 }
+                ]
+              },
+              {
+                title: 'احتراف Prompt Engineering — فن التواصل مع AI',
+                content: `<div class="content-block"><h4>⚡ الفرق بين مطالبة عادية وخبيرة</h4><p>المطالبة الخبيرة تتبع هذا الهيكل:</p><ul><li><strong>الدور:</strong> "تصرّفي كـ [خبيرة تربوية / كاتبة تقارير]"</li><li><strong>السياق:</strong> "أنا [الدور] في مدرسة [الوصف]"</li><li><strong>المهمة:</strong> "أريدك أن [المهمة المحددة]"</li><li><strong>الأسلوب:</strong> "بأسلوب [رسمي/مختصر/نقاط]"</li><li><strong>القيود:</strong> "لا تتجاوزي [عدد الكلمات/الصفحات]"</li><li><strong>المثال:</strong> "مثال على ما أريد: [مثال]"</li></ul></div>
+            <div class="content-block"><h4>🎯 بناء مكتبة مطالبات للمدرسة</h4><p>وثّقي أفضل مطالباتك في Notion أو Google Docs — قسّميها حسب الاستخدام: تقارير، تحليل، أفكار، تصميم. شاركيها مع الفريق ليستفيد الجميع.</p></div>`,
+                video: { title: 'Prompt Engineering بالعربي — احتراف ChatGPT', url: 'https://www.youtube.com/results?search_query=prompt+engineering+arabic+chatgpt+احتراف+2024', sub: 'فيديو 10-15 دقيقة' },
+                tool: { icon: '📚', name: 'Notion', desc: 'ابني مكتبة مطالباتك الاحترافية وشاركيها مع الفريق', url: 'https://www.notion.so', btn: 'افتحي Notion ↗' },
+                tasks: [
+                  { t: 'اكتبي مطالبة خبيرة بالهيكل الكامل', d: 'طبّقي الهيكل الكامل: دور + سياق + مهمة + أسلوب + قيود — وقارني النتيجة بمطالبة عادية' },
+                  { t: 'أنشئي مكتبة مطالبات في Notion', d: 'صفحة Notion بجدول: الاستخدام — المطالبة — النتيجة — التقييم — شاركيها مع زميلاتك' },
+                  { t: 'جرّبي تقنية Chain of Thought', d: '"فكّري خطوة بخطوة قبل الإجابة على: [سؤال معقد]" — لاحظي الفرق في جودة الإجابة' }
+                ],
+                quiz: [
+                  { q: 'ما أهم عناصر المطالبة الخبيرة؟', o: [ 'الطول الكبير فقط', 'الدور + السياق + المهمة المحددة + الأسلوب + القيود — معاً تُنتج نتائج ممتازة', 'كلمة مفتاحية واحدة', 'سؤال عام مفتوح' ], a: 1 },
+                  { q: 'لماذا نبني مكتبة مطالبات مشتركة للفريق؟', o: [ 'للتفاخر', 'توحيد الجودة وتوفير وقت كل عضو في الفريق من إعادة اختراع المطالبات', 'لأن Notion يشترطه', 'لا فائدة حقيقية' ], a: 1 }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        id: 'sheets', icon: '📊', name: 'تحليل البيانات بالذكاء الاصطناعي',
+        desc: 'أتقني Google Sheets مع أدوات AI — من الجدول البسيط إلى تحليل البيانات الاحترافي',
+        levels: {
+          beg: {
+            name: 'مبتدئ — أساسيات Google Sheets',
+            lessons: [
+              {
+                title: 'إنشاء جدول بيانات وإدخال البيانات',
+                content: `<div class="content-block"><h4>📖 لماذا Google Sheets؟</h4><p>مجاني تماماً، يعمل على الجوال والكمبيوتر، يُحفظ تلقائياً، وتشاركينه بنقرة. مثالي لتتبع الحضور والمهام والتقارير.</p><ul><li>افتحي sheets.new لبدء جدول جديد فوراً</li><li>اكتبي العناوين في الصف الأول</li><li>أدخلي البيانات في الصفوف التالية</li></ul></div>
+            <div class="content-block"><h4>🎯 مثال عملي: جدول حضور الموظفات</h4><p>العمود A: الاسم | B: السبت | C: الأحد | D: الاثنين | E: الثلاثاء | F: الأربعاء | G: المجموع</p></div>`,
+                video: { title: 'Google Sheets للمبتدئات خطوة بخطوة بالعربي', url: 'https://www.youtube.com/results?search_query=google+sheets+للمبتدئين+بالعربي+2024', sub: 'ابحثي وشاهدي فيديو 10-15 دقيقة' },
+                tool: { icon: '📊', name: 'Google Sheets', desc: 'افتحي جدولاً جديداً الآن — لا يحتاج تثبيت', url: 'https://sheets.new', btn: 'افتحي جدول جديد ↗' },
+                tasks: [
+                  { t: 'أنشئي جدول حضور أسبوعي', d: 'أعمدة: الاسم — السبت — الأحد — الاثنين — الثلاثاء — الأربعاء — المجموع' },
+                  { t: 'أدخلي بيانات 5 موظفات', d: 'استخدمي أسماء حقيقية أو افتراضية مع بيانات الحضور' }
+                ],
+                quiz: [
+                  { q: 'ما ميزة Google Sheets الأساسية مقارنة بـ Excel؟', o: [ 'Excel أفضل دائماً', 'مجاني وسحابي يعمل على الجوال ويُشارَك بدون برامج إضافية', 'Sheets للجوال فقط', 'لا فرق بينهما' ], a: 1 },
+                  { q: 'أين يُحفظ ملف Google Sheets تلقائياً؟', o: [ 'على جهازك', 'في Google Drive تلقائياً بدون ضغط حفظ', 'في البريد الإلكتروني', 'لا يُحفظ تلقائياً' ], a: 1 }
+                ]
+              },
+              {
+                title: 'الدوال الأساسية: SUM — AVERAGE — COUNT — IF',
+                content: `<div class="content-block"><h4>📖 اجعلي الجدول يحسب عنكِ</h4><ul><li><strong>=SUM(B2:B10)</strong> — جمع الأرقام في نطاق</li><li><strong>=AVERAGE(B2:B10)</strong> — المتوسط الحسابي</li><li><strong>=COUNT(B2:B10)</strong> — عدد الخلايا التي تحتوي أرقاماً</li><li><strong>=COUNTA(B2:B10)</strong> — عدد الخلايا غير الفارغة</li><li><strong>=IF(B2>80,"ممتاز","جيد")</strong> — شرط: إذا تحقق → نتيجة معينة</li></ul></div>
+            <div class="content-block"><h4>🎯 تطبيق عملي</h4><p>في جدول الحضور: أضيفي عمود "المجموع" بـ =SUM وعمود "النسبة" بـ =B2/5*100</p></div>`,
+                tool: { icon: '📊', name: 'Google Sheets', desc: 'طبّقي الدوال على جدول الحضور الذي أنشأتِه', url: 'https://sheets.new', btn: 'افتحي Sheets ↗' },
+                tasks: [
+                  { t: 'أضيفي دالة SUM لحساب مجموع أيام الحضور', d: 'في الخلية G2 اكتبي: =SUM(B2:F2) ثم اسحبيها لبقية الصفوف' },
+                  { t: 'أضيفي دالة IF لتصنيف الحضور', d: '=IF(G2>=4,"منتظمة","تحتاج متابعة") — جرّبيها وشاهدي النتيجة' },
+                  { t: 'احسبي متوسط حضور الفريق', d: 'في خلية فارغة: =AVERAGE(G2:G6) لمعرفة متوسط الأيام' }
+                ],
+                quiz: [
+                  { q: 'ما الدالة الصحيحة لجمع الأرقام من B2 إلى B10؟', o: [ '=TOTAL(B2:B10)', '=SUM(B2:B10)', '=ADD(B2,B10)', '=PLUS(B2:B10)' ], a: 1 },
+                  { q: 'ماذا تفعل دالة IF في Sheets؟', o: [ 'تجمع الأرقام', 'تُطبّق شرطاً: إذا تحقق تُعطي نتيجة معينة وإلا تُعطي نتيجة أخرى', 'تحسب المتوسط', 'تعدّ الخلايا' ], a: 1 }
+                ]
+              }
+            ]
+          },
+          mid: {
+            name: 'متوسط — إضافة أدوات AI في Google Sheets',
+            lessons: [
+              {
+                title: 'إضافة Gemini AI داخل Google Sheets',
+                content: `<div class="content-block"><h4>📖 Gemini في Sheets — AI داخل جدولك مباشرة</h4><p>Google دمجت Gemini AI داخل Sheets — يمكنك الآن طلب تحليل أو دالة أو ملخص وهو يُنفّذها داخل الجدول مباشرة بدون مغادرة الملف.</p><ul><li>افتحي جدول Google Sheets</li><li>ابحثي عن أيقونة ✨ Gemini في الشريط الجانبي</li><li>اكتبي طلبك بالعربي أو الإنجليزي</li></ul></div>
+            <div class="content-block"><h4>🎯 أمثلة على ما يمكنك طلبه من Gemini في Sheets</h4><ul><li>"لخّصي بيانات هذا الجدول"</li><li>"أضيفي عموداً يحسب نسبة مئوية"</li><li>"أنشئي رسماً بيانياً لهذه البيانات"</li><li>"ما الموظفة الأعلى حضوراً؟"</li></ul></div>`,
+                video: { title: 'Gemini AI في Google Sheets 2024', url: 'https://www.youtube.com/results?search_query=gemini+ai+google+sheets+tutorial+2024', sub: 'ابحثي وشاهدي — فيديو 8-12 دقيقة' },
+                tool: { icon: '✨', name: 'Google Sheets + Gemini', desc: 'افتحي Sheets وابحثي عن أيقونة Gemini ✨ في الشريط الجانبي', url: 'https://sheets.new', btn: 'افتحي Sheets ↗' },
+                tasks: [
+                  { t: 'فعّلي Gemini في جدولك وجرّبيه', d: 'افتحي جدولك ← ابحثي عن ✨ في الجانب ← اكتبي: "لخّصي بيانات هذا الجدول"' },
+                  { t: 'اطلبي من Gemini إنشاء دالة تلقائياً', d: 'اكتبي: "أنشئي دالة تحسب نسبة الحضور من أصل 5 أيام" وطبّقيها' }
+                ],
+                quiz: [
+                  { q: 'كيف تصلين لـ Gemini AI داخل Google Sheets؟', o: [ 'تحتاجين تثبيت برنامج منفصل', 'ابحثي عن أيقونة ✨ Gemini في الشريط الجانبي داخل Sheets', 'من قائمة File', 'لا يوجد AI في Sheets' ], a: 1 },
+                  { q: 'ما الذي يمكن طلبه من Gemini داخل Sheets؟', o: [ 'التصميم الجرافيكي فقط', 'تحليل البيانات وكتابة الدوال وإنشاء الرسوم وتلخيص الجدول', 'طباعة الملف فقط', 'ترجمة النصوص فقط' ], a: 1 }
+                ]
+              },
+              {
+                title: 'دمج ChatGPT مع Google Sheets لتحليل البيانات',
+                content: `<div class="content-block"><h4>📖 طريقتان لاستخدام ChatGPT مع Sheets</h4><p><strong>الطريقة ١ — النسخ واللصق (الأسهل):</strong><br>صدّري بيانات Sheets كنص ← الصقيه في ChatGPT ← اطلبي التحليل</p><p style="margin-top:.5rem;"><strong>الطريقة ٢ — إضافة GPT for Sheets (متقدم):</strong><br>Extensions ← Add-ons ← Get add-ons ← ابحثي عن "GPT for Sheets" ← ثبّتيه</p></div>
+            <div class="content-block"><h4>🎯 مطالبات احترافية لتحليل بيانات المدرسة</h4><ul><li>"حللي جدول الحضور هذا واستخرجي أهم 3 رؤى"</li><li>"من الموظفة التي تحتاج متابعة وما توصيتك؟"</li><li>"قارني أداء هذا الشهر بالشهر الماضي وأخبريني بالتغيرات"</li><li>"اكتبي فقرة تلخيصية لهذه البيانات لتقرير الإدارة"</li></ul></div>`,
+                tool: { icon: '🤖', name: 'ChatGPT', desc: 'انسخي بيانات جدولك والصقيها في ChatGPT مع طلب تحليل محدد', url: 'https://chatgpt.com', btn: 'افتحي ChatGPT ↗' },
+                tasks: [
+                  { t: 'صدّري بيانات جدولك وحلّليها بـ ChatGPT', d: 'انسخي الجدول ← افتحي ChatGPT ← الصقيه واكتبي: "حللي هذه البيانات واستخرجي الأنماط"' },
+                  { t: 'اطلبي فقرة تلخيصية للإدارة', d: 'قولي: "اكتبي فقرة تلخيصية احترافية لهذه البيانات لتقديمها لمديرة المدرسة"' },
+                  { t: 'ثبّتي إضافة GPT for Sheets وجرّبيها', d: 'Extensions ← Add-ons ← Get add-ons ← ابحثي "GPT for Sheets and Docs"' }
+                ],
+                quiz: [
+                  { q: 'ما أسهل طريقة لاستخدام ChatGPT مع بيانات Sheets؟', o: [ 'برمجة API معقدة', 'نسخ البيانات من Sheets ولصقها في ChatGPT مع طلب التحليل', 'تثبيت إضافة مدفوعة', 'لا يمكن دمجهما' ], a: 1 },
+                  { q: 'ما إضافة Sheets التي تدمج ChatGPT مباشرة في الجدول؟', o: [ 'Sheets AI', 'GPT for Sheets and Docs — تُتيح استخدام دوال AI داخل الخلايا', 'Google Bard', 'Excel AI' ], a: 1 }
+                ]
+              },
+              {
+                title: 'إنشاء رسوم بيانية احترافية',
+                content: `<div class="content-block"><h4>📖 البيانات المرئية تُقنع أكثر من الأرقام</h4><p>قاعدة: اختاري نوع الرسم البياني بناءً على ما تريدين إظهاره.</p><ul><li><strong>أعمدة (Bar):</strong> مقارنة بين فئات</li><li><strong>خطي (Line):</strong> التغير عبر الزمن</li><li><strong>دائري (Pie):</strong> النسب من الكل</li><li><strong>مبعثر (Scatter):</strong> العلاقة بين متغيرين</li></ul></div>
+            <div class="content-block"><h4>🎯 خطوات إنشاء رسم في Sheets</h4><p>١. حدّدي البيانات ← ٢. Insert ← ٣. Chart ← ٤. اختاري النوع ← ٥. عنوان ومحاور ← ٦. انسخيه لتقريرك</p></div>`,
+                tool: { icon: '📊', name: 'Google Sheets', desc: 'أنشئي رسماً بيانياً من بيانات الحضور أو الأداء', url: 'https://sheets.new', btn: 'افتحي Sheets ↗' },
+                tasks: [
+                  { t: 'أنشئي رسم أعمدة لمقارنة حضور الموظفات', d: 'حدّدي بيانات الأسماء والمجاميع ← Insert ← Chart ← Bar Chart' },
+                  { t: 'أضيفي عنواناً ووصفاً للرسم', d: 'اضغطي الرسم ← Edit Chart ← Customize ← Chart & Axis Titles' }
+                ],
+                quiz: [
+                  { q: 'ما أفضل رسم بياني لمقارنة أداء الموظفات؟', o: [ 'الدائري دائماً', 'رسم الأعمدة — يُسهّل المقارنة المباشرة بين الفئات', 'الخطي دائماً', 'لا فرق بين أنواع الرسوم' ], a: 1 },
+                  { q: 'ما الخطوات الصحيحة لإنشاء رسم في Sheets؟', o: [ 'Format ← Chart', 'تحديد البيانات ← Insert ← Chart', 'File ← Create Chart', 'Tools ← Generate Chart' ], a: 1 }
+                ]
+              }
+            ]
+          },
+          adv: {
+            name: 'متقدم — تحليل احترافي ولوحات تحكم ذكية',
+            lessons: [
+              {
+                title: 'Pivot Tables — تحليل آلاف الصفوف في ثوانٍ',
+                content: `<div class="content-block"><h4>📖 Pivot Table — أقوى أداة في Sheets</h4><p>بدل تحليل كل صف يدوياً — Pivot Table تلخّص آلاف الصفوف في جدول ملخّص بنقرات. مثالية لتقارير الحضور الشهرية والإنجازات السنوية.</p><ul><li>Insert ← Pivot Table</li><li>اختاري: ماذا تريدين في الصفوف؟ الأعمدة؟ القيم؟</li><li>اسحبي وأفلتي الحقول</li></ul></div>
+            <div class="content-block"><h4>🎯 مثال: تقرير حضور شهري</h4><p>بيانات يومية لكل الشهر ← Pivot Table ← ملخص فوري: كل موظفة وإجمالي حضورها ونسبتها</p></div>`,
+                video: { title: 'Pivot Tables في Google Sheets عربي', url: 'https://www.youtube.com/results?search_query=pivot+table+google+sheets+عربي+2024', sub: 'فيديو 10-15 دقيقة' },
+                tool: { icon: '📊', name: 'Google Sheets', desc: 'جرّبي Pivot Table على بيانات شهر كامل', url: 'https://sheets.new', btn: 'افتحي Sheets ↗' },
+                tasks: [
+                  { t: 'أنشئي Pivot Table من بيانات الحضور', d: 'حدّدي البيانات ← Insert ← Pivot Table ← أضيفي الاسم في Rows والمجموع في Values' },
+                  { t: 'اطلبي من Gemini شرح النتائج', d: 'افتحي Gemini في Sheets واكتبي: "ما الذي تُظهره هذه Pivot Table؟ وما توصيتك؟"' }
+                ],
+                quiz: [
+                  { q: 'ما الوظيفة الأساسية لـ Pivot Table؟', o: [ 'التصميم الجرافيكي', 'تلخيص وتحليل كميات كبيرة من البيانات فوراً بدون دوال معقدة', 'حفظ الملف', 'طباعة التقارير' ], a: 1 },
+                  { q: 'ما ميزة استخدام Gemini مع Pivot Table؟', o: [ 'لا ميزة', 'Gemini يشرح النتائج ويستخلص الرؤى ويقترح التوصيات بلغة طبيعية', 'Gemini ينشئ الـ Pivot Table فقط', 'Gemini للترجمة فقط' ], a: 1 }
+                ]
+              },
+              {
+                title: 'بناء لوحة تحكم ذكية متكاملة',
+                content: `<div class="content-block"><h4>📖 لوحة التحكم = القرار في ثوانٍ</h4><p>لوحة تحكم احترافية تجمع: الأرقام الرئيسية + الرسوم البيانية + التحليل النصي من AI. المديرة تفتحها وترى كل شيء دفعة واحدة.</p><ul><li><strong>الورقة الأولى:</strong> البيانات الخام</li><li><strong>الورقة الثانية:</strong> Pivot Tables والحسابات</li><li><strong>الورقة الثالثة:</strong> لوحة التحكم — أرقام + رسوم + تحليل AI</li></ul></div>
+            <div class="content-block"><h4>🎯 إضافة تحليل AI في لوحة التحكم</h4><p>بعد بناء اللوحة: انسخي ملخصها ← الصقيه في Claude أو ChatGPT ← اطلبي: "اكتبي فقرة تحليلية احترافية لتضمينها في لوحة التحكم"</p></div>`,
+                video: { title: 'Dashboard احترافي Google Sheets AI', url: 'https://www.youtube.com/results?search_query=google+sheets+dashboard+AI+2024+arabic', sub: 'فيديو 12-18 دقيقة' },
+                tool: { icon: '📈', name: 'Looker Studio', desc: 'ارفعي Sheets في Looker Studio لتقارير تفاعلية احترافية', url: 'https://lookerstudio.google.com', btn: 'افتحي Looker Studio ↗' },
+                tasks: [
+                  { t: 'بناء لوحة تحكم بـ 3 ورقات', d: 'ورقة بيانات + ورقة تحليل + ورقة لوحة تحكم بالأرقام والرسوم' },
+                  { t: 'أضيفي تحليل AI كنص داخل اللوحة', d: 'انسخي ملخص اللوحة ← Claude.ai ← "اكتبي فقرة تحليلية موجزة للإدارة" ← أضيفيها في خلية بالوان' },
+                  { t: 'جرّبي Looker Studio مع بيانات Sheets', d: 'افتحي lookerstudio.google.com ← Create ← Data source ← Google Sheets ← اختاري ملفك' }
+                ],
+                quiz: [
+                  { q: 'ما هيكل لوحة التحكم الاحترافية في Sheets؟', o: [ 'ورقة واحدة بكل شيء', 'ورقة بيانات + ورقة تحليل + ورقة لوحة تحكم — فصل الأدوار يُسهّل الإدارة', 'لا يهم الترتيب', 'ورقتان فقط' ], a: 1 },
+                  { q: 'ما قيمة إضافة تحليل AI نصي داخل لوحة التحكم؟', o: [ 'للزخرفة', 'يُحوّل الأرقام إلى رؤية واضحة — صانع القرار يفهم فوراً دون تفسير', 'AI لا يُضاف في Sheets', 'يجعل الملف أبطأ' ], a: 1 }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        id: 'automate', icon: '⚡', name: 'أتمتة المهام بالذكاء الاصطناعي',
+        desc: 'وفّري ساعات عمل أسبوعياً — من أتمتة النماذج والتقارير إلى تدفقات Power Automate الكاملة',
+        levels: {
+          beg: {
+            name: 'مبتدئ — فهم الأتمتة وأدواتها',
+            lessons: [
+              {
+                title: 'ما هي الأتمتة؟ وكيف تغيّر عملك؟',
+                content: `<div class="content-block"><h4>⚡ الأتمتة = المهمة تُنجز وأنتِ لا تفعلين شيئاً</h4><p>تخيّلي: كل يوم أحد يُرسَل تقرير الأسبوع تلقائياً للإدارة. كل ما تملأ نموذجاً يصلك إشعار فوري. الحضور اليومي يُحفظ في جدول تلقائياً. هذا ما تفعله الأتمتة.</p></div>
+            <div class="content-block"><h4>🎯 المهام الأكثر قابلية للأتمتة في المدرسة</h4><ul><li>إرسال إشعارات تلقائية لأولياء الأمور</li><li>تجميع بيانات النماذج في جدول تلقائياً</li><li>تذكيرات اجتماعات وفعاليات</li><li>تقارير الحضور الأسبوعية</li><li>الردود التلقائية على الاستفسارات الشائعة</li><li>إشعار الإدارة عند تعبئة نموذج معين</li></ul></div>
+            <div class="content-block"><h4>🔧 الأدوات الرئيسية للأتمتة</h4><ul><li><strong>Google Forms + Sheets:</strong> جمع البيانات تلقائياً</li><li><strong>Power Automate:</strong> ربط التطبيقات وأتمتة التدفقات</li><li><strong>Zapier:</strong> أتمتة بدون برمجة بين آلاف التطبيقات</li><li><strong>Make (Integromat):</strong> تدفقات أتمتة بصرية متقدمة</li><li><strong>Google Apps Script:</strong> أتمتة مخصصة داخل Google Workspace</li></ul></div>`,
+                video: { title: 'مقدمة في الأتمتة بدون برمجة Power Automate', url: 'https://www.youtube.com/results?search_query=power+automate+مقدمة+أتمتة+بدون+برمجة+عربي', sub: 'فيديو 10-12 دقيقة' },
+                tool: { icon: '📋', name: 'Google Forms', desc: 'ابدئي بأبسط أتمتة: نموذج يجمع البيانات تلقائياً في Sheets', url: 'https://forms.new', btn: 'افتحي Google Forms ↗' },
+                tasks: [
+                  { t: 'اكتبي 5 مهام تكرارية في عملك الأسبوعي', d: 'قدّري الوقت الذي تستغرقه كل مهمة — هذا ما ستوفّرينه' },
+                  { t: 'أنشئي نموذج Google Forms واربطيه بـ Sheets', d: 'Forms ← إنشاء نموذج ← Responses ← إنشاء جدول ← شاهدي البيانات تُجمع تلقائياً' }
+                ],
+                quiz: [
+                  { q: 'ما تعريف الأتمتة في بيئة العمل؟', o: [ 'شراء أجهزة جديدة', 'جعل المهام التكرارية تُنفَّذ تلقائياً بدون تدخل يدوي مستمر', 'استبدال الموظفات', 'برمجة معقدة للمطورين فقط' ], a: 1 },
+                  { q: 'ما أول خطوة لأتمتة أي مهمة بنجاح؟', o: [ 'شراء أغلى برنامج', 'تحديد المهمة التكرارية وفهم خطواتها بدقة قبل أي شيء', 'تدريب الفريق كاملاً فوراً', 'الحصول على موافقة مسبقة' ], a: 1 }
+                ]
+              },
+              {
+                title: 'Google Forms + Sheets — أتمتة جمع البيانات',
+                content: `<div class="content-block"><h4>📋 أقوى ثنائي مجاني للأتمتة</h4><p>Forms + Sheets هو أبسط نظام أتمتة: الموظفة تملأ النموذج ← البيانات تُحفظ تلقائياً في Sheets ← يمكنك ربطه بإشعارات وتقارير.</p></div>
+            <div class="content-block"><h4>🎯 تطبيقات عملية في المدرسة</h4><ul><li>نموذج طلب إجازة → يُحفظ تلقائياً + إشعار للمديرة</li><li>نموذج حضور الفعاليات → تقرير فوري بعدد الحاضرين</li><li>استبيان رضا أولياء الأمور → تحليل فوري بالرسوم</li><li>نموذج الاحتياجات الشهرية → قائمة مجمّعة تلقائياً</li></ul></div>
+            <div class="content-block"><h4>⚡ إضافة إشعار تلقائي عبر البريد</h4><p>في Google Forms: الإعدادات ← Responses ← Get email notifications for new responses ← فعّليها وستصلك رسالة عند كل إجابة جديدة</p></div>`,
+                tool: { icon: '📊', name: 'Google Forms + Sheets', desc: 'أنشئي نموذجاً متكاملاً مع إشعار بريدي تلقائي', url: 'https://forms.new', btn: 'افتحي Forms ↗' },
+                tasks: [
+                  { t: 'أنشئي نموذج طلب إجازة كامل', d: 'حقول: الاسم، التاريخ، عدد الأيام، السبب، نوع الإجازة — اربطيه بجدول Sheets' },
+                  { t: 'فعّلي الإشعار التلقائي عبر البريد', d: 'Forms ← ⚙️ Settings ← Responses ← Get email notifications ← فعّليها' },
+                  { t: 'اختبري النموذج وشاهدي البيانات', d: 'املئي النموذج بنفسك وتحققي أن البيانات ظهرت في Sheets والإشعار وصل' }
+                ],
+                quiz: [
+                  { q: 'كيف تُفعّلين الإشعار التلقائي في Google Forms؟', o: [ 'لا يوجد هذا الخيار', 'الإعدادات ← Responses ← Get email notifications for new responses', 'يحتاج برنامجاً إضافياً مدفوعاً', 'من Google Sheets فقط' ], a: 1 },
+                  { q: 'ما ميزة ربط Forms بـ Sheets تلقائياً؟', o: [ 'لا ميزة', 'كل إجابة تُحفظ فوراً منظمة في الجدول دون إدخال يدوي', 'Sheets أسرع من Forms', 'Forms لا يرتبط بـ Sheets' ], a: 1 }
+                ]
+              }
+            ]
+          },
+          mid: {
+            name: 'متوسط — Power Automate تدفقات حقيقية',
+            lessons: [
+              {
+                title: 'Power Automate — بناء أول تدفق آلي',
+                content: `<div class="content-block"><h4>⚡ Power Automate — أتمتة Microsoft المجانية</h4><p>Power Automate يربط تطبيقات Microsoft وآلاف التطبيقات الأخرى بتدفقات آلية. مجاني مع حساب Microsoft المدرسي.</p><ul><li><strong>المُشغِّل (Trigger):</strong> ما الذي يبدأ التدفق؟</li><li><strong>الشرط (Condition):</strong> هل يُكمل أم يتوقف؟</li><li><strong>الإجراء (Action):</strong> ماذا يفعل؟</li></ul></div>
+            <div class="content-block"><h4>🎯 أمثلة تدفقات Power Automate للمدرسة</h4><ul><li>📧 عند وصول بريد من مُرسل معين → احفظيه في مجلد + أرسلي إشعاراً</li><li>📋 عند تعبئة Forms → أرسلي بريداً للمديرة + أضيفي صفاً في Sheets</li><li>⏰ كل أحد صباحاً → أرسلي تقرير الأسبوع تلقائياً</li><li>📁 عند رفع ملف في SharePoint → أرسلي إشعاراً للفريق</li></ul></div>`,
+                video: { title: 'Power Automate خطوة بخطوة للمبتدئين بالعربي', url: 'https://www.youtube.com/results?search_query=power+automate+tutorial+arabic+beginners+خطوة+بخطوة+2024', sub: 'فيديو 15-20 دقيقة — مهم جداً شاهديه كاملاً' },
+                tool: { icon: '⚡', name: 'Power Automate', desc: 'سجّلي بحسابك المدرسي Microsoft وافتحي القوالب الجاهزة', url: 'https://make.powerautomate.com', btn: 'افتحي Power Automate ↗' },
+                tasks: [
+                  { t: 'استعرضي القوالب الجاهزة في Power Automate', d: 'Templates ← ابحثي "email notification" و "save to SharePoint" — شاهدي كيف تعمل' },
+                  { t: 'أنشئي تدفق: Forms → بريد للمديرة', d: 'My flows ← Create ← Automated ← When a response is submitted (Forms) ← Send email (Outlook)' },
+                  { t: 'اختبري التدفق وتحققي من عمله', d: 'املئي النموذج ← تحققي وصول البريد ← راجعي Run history في Power Automate' }
+                ],
+                quiz: [
+                  { q: 'ما المُشغِّل (Trigger) في Power Automate؟', o: [ 'الإجراء الأخير في التدفق', 'الحدث الذي يبدأ التدفق تلقائياً — مثل تعبئة نموذج أو وصول بريد', 'نوع من البرمجة المعقدة', 'اسم التطبيق المستخدم' ], a: 1 },
+                  { q: 'ما أسهل طريقة لبدء تدفق في Power Automate؟', o: [ 'البناء من الصفر دائماً', 'استخدام القوالب الجاهزة (Templates) وتعديلها', 'الاستعانة بمطوّر', 'دراسة البرمجة أولاً' ], a: 1 }
+                ]
+              },
+              {
+                title: 'تدفقات متقدمة — الشروط والجداول الزمنية',
+                content: `<div class="content-block"><h4>🔀 الشروط (Conditions) — تدفق يفكر</h4><p>الشرط يجعل التدفق يتخذ قراراً: إذا كان [كذا] افعل [هذا] وإلا افعل [ذاك].</p><p>مثال: إذا كانت نسبة الغياب أكثر من 20% → أرسلي تنبيهاً للمديرة. وإلا → أرسلي تقريراً عادياً.</p></div>
+            <div class="content-block"><h4>⏰ الجداول الزمنية (Scheduled Flows)</h4><p>تدفق يعمل في وقت محدد تلقائياً:</p><ul><li>كل أحد الساعة 7 صباحاً → تقرير الأسبوع</li><li>أول كل شهر → ملخص إنجازات الشهر</li><li>قبل يوم من الاجتماع → تذكير للفريق</li></ul></div>
+            <div class="content-block"><h4>🎯 تدفق متكامل عملي</h4><p>Forms يُملأ ← Sheets يُحدَّث ← شرط: إذا "طلب إجازة" أرسلي لمديرة وإلا أرسلي لقسم الموارد ← Teams إشعار للفريق</p></div>`,
+                tool: { icon: '⚡', name: 'Power Automate', desc: 'أنشئي تدفقاً بشرط أو بجدول زمني', url: 'https://make.powerautomate.com', btn: 'افتحي Power Automate ↗' },
+                tasks: [
+                  { t: 'أنشئي تدفقاً بجدول زمني أسبوعي', d: 'Create ← Scheduled ← اختاري يوم الأحد 7 صباحاً ← Add action: Send email بملخص الأسبوع' },
+                  { t: 'أضيفي شرطاً لتدفقك الموجود', d: 'في تدفقك السابق ← Add step ← Condition ← إذا نوع الطلب = "إجازة" → إرسال لمديرة' },
+                  { t: 'وثّقي تدفقاتك في Notion', d: 'أنشئي صفحة في Notion لكل تدفق: الاسم، الهدف، المُشغِّل، الإجراءات، ملاحظات' }
+                ],
+                quiz: [
+                  { q: 'ما فائدة "Condition" في تدفق Power Automate؟', o: [ 'تجمّل التدفق فقط', 'تجعل التدفق يتخذ قراراً: إذا تحقق شرط → إجراء معين، وإلا → إجراء مختلف', 'تسرّع التدفق', 'لا فائدة حقيقية' ], a: 1 },
+                  { q: 'ما نوع التدفق المناسب لإرسال تقرير كل أسبوع تلقائياً؟', o: [ 'Automated Flow', 'Scheduled Flow — يعمل في وقت محدد بشكل دوري', 'Instant Flow', 'Manual Flow' ], a: 1 }
+                ]
+              }
+            ]
+          },
+          adv: {
+            name: 'متقدم — Zapier وأتمتة متكاملة للمدرسة',
+            lessons: [
+              {
+                title: 'Zapier — أتمتة بين آلاف التطبيقات',
+                content: `<div class="content-block"><h4>🔗 Zapier — عندما تريدين ربط أي تطبيقين</h4><p>Zapier يربط أكثر من 6000 تطبيق ببعضها بدون برمجة. مجاني للاستخدام الأساسي. مثالي إذا كانت مدرستك تستخدم تطبيقات غير Microsoft.</p><ul><li>Gmail ← → Google Sheets</li><li>WhatsApp Business ← → Sheets</li><li>Google Forms ← → Slack / Teams</li><li>Typeform ← → Airtable</li></ul></div>
+            <div class="content-block"><h4>🎯 Zap جاهز للمدرسة</h4><p>عندما تُملأ Google Form → أضيفي صفاً في Sheets → أرسلي رسالة Gmail للمعنية → سجّلي في Notion</p><p>هذا الـ Zap الواحد يوفّر 15 دقيقة يومياً = ساعة وربع أسبوعياً!</p></div>`,
+                video: { title: 'Zapier للمبتدئين بالعربي — أتمتة بدون برمجة', url: 'https://www.youtube.com/results?search_query=zapier+tutorial+arabic+beginners+2024', sub: 'فيديو 12-15 دقيقة' },
+                tool: { icon: '🔗', name: 'Zapier', desc: 'سجّلي مجاناً وابني أول Zap يربط تطبيقين', url: 'https://zapier.com', btn: 'افتحي Zapier ↗' },
+                tasks: [
+                  { t: 'أنشئي Zap: Google Forms → Gmail', d: 'Zapier ← Create Zap ← Trigger: Google Forms ← Action: Gmail send email ← اختبريه' },
+                  { t: 'أضيفي خطوة ثانية للـ Zap', d: 'في نفس الـ Zap ← Add Action ← Google Sheets ← Create Spreadsheet Row — الآن تدفق بـ 3 خطوات!' }
+                ],
+                quiz: [
+                  { q: 'ما الفرق الرئيسي بين Power Automate و Zapier؟', o: [ 'لا فرق بينهما', 'Power Automate متخصص في بيئة Microsoft، Zapier يربط آلاف التطبيقات المختلفة', 'Zapier مدفوع دائماً', 'Power Automate أفضل دائماً' ], a: 1 },
+                  { q: 'ما الـ "Zap" في Zapier؟', o: [ 'اسم الشركة', 'تدفق أتمتة: مُشغِّل + إجراء واحد أو أكثر — يعمل تلقائياً', 'نوع من البرمجة', 'ملف إعدادات' ], a: 1 }
+                ]
+              },
+              {
+                title: 'بناء نظام أتمتة متكامل للمدرسة',
+                content: `<div class="content-block"><h4>🏗️ من تدفقات منفردة إلى نظام متكامل</h4><p>النظام المتكامل يعني: كل العمليات اليومية المتكررة تعمل تلقائياً — أنتِ تراقبين وتتدخلين فقط عند الضرورة.</p></div>
+            <div class="content-block"><h4>🗺️ خريطة أتمتة مدرسة كاملة</h4><ul><li>📥 <strong>استقبال الطلبات:</strong> Forms → Sheets → إشعار تلقائي</li><li>📊 <strong>التقارير الأسبوعية:</strong> Scheduled Flow → ملخص → بريد للإدارة</li><li>📅 <strong>التذكيرات:</strong> Google Calendar → Power Automate → Teams</li><li>✅ <strong>المتابعة:</strong> Sheets → شرط → إشعار عند تأخر مهمة</li><li>📜 <strong>الأرشفة:</strong> كل وثيقة مكتملة → تُنقل لمجلد تلقائياً</li></ul></div>
+            <div class="content-block"><h4>🎯 قياس وفر الأتمتة</h4><p>وثّقي: كم كانت المهمة تأخذ يدوياً؟ وكم تأخذ الآن؟ الفرق = وقت استثمرتِه في مهام ذات قيمة أعلى.</p></div>`,
+                tool: { icon: '⚡', name: 'Power Automate', desc: 'ابني نظام تدفقات متكامل يغطي أهم 3 عمليات في قسمك', url: 'https://make.powerautomate.com', btn: 'افتحي Power Automate ↗' },
+                tasks: [
+                  { t: 'ارسمي خريطة أتمتة لقسمك', d: 'Notion أو ورقة: كل مهمة تكرارية ← هل هي مؤتمتة؟ ← ما الأداة المناسبة؟' },
+                  { t: 'نفّذي أتمتة لأهم 3 مهام', d: 'بناءً على الخريطة: طبّقي أتمتة للمهام الثلاث الأكثر تكراراً وقيسي الوقت الموفَّر' },
+                  { t: 'وثّقي النظام وعلّميه لزميلة', d: 'اكتبي دليلاً بسيطاً لكل تدفق وعلّمي زميلة كيف تستخدمه وتصوّن مشكلاته' }
+                ],
+                quiz: [
+                  { q: 'ما الهدف من بناء نظام أتمتة متكامل وليس تدفقات منفردة؟', o: [ 'الزخرفة التقنية', 'ضمان تدفق العمل كاملاً بانسجام وتقليل الأخطاء وتوفير وقت أكبر', 'لأن الأدوات تشترط ذلك', 'لا فرق بين الطريقتين' ], a: 1 },
+                  { q: 'لماذا يهم توثيق تدفقات الأتمتة وتعليمها للفريق؟', o: [ 'للتفاخر التقني', 'لضمان الاستمرارية — إذا غبتِ يستطيع الفريق إدارة النظام وصيانته', 'التوثيق غير ضروري', 'لأن الإدارة تطلبه فقط' ], a: 1 }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        id: 'design', icon: '🎨', name: 'التصميم والعروض بـ AI',
+        desc: 'أنشئي عروضاً احترافية وتصاميم مدرسية في دقائق بمساعدة الذكاء الاصطناعي',
+        levels: {
+          beg: {
+            name: 'مبتدئ — Canva للتصميم السريع',
+            lessons: [
+              {
+                title: 'إنشاء تصميم في Canva',
+                content: `<div class="content-block"><h4>📖 Canva — التصميم للجميع</h4><p>Canva أداة مجانية تُتيح لأي شخص إنشاء تصاميم احترافية بالسحب والإفلات. لا تحتاجين خبرة في التصميم.</p><ul><li>إعلانات مدرسية</li><li>شهادات تقدير</li><li>نشرات لأولياء الأمور</li><li>منشورات السوشيال ميديا</li></ul></div>`,
+                video: { title: 'Canva للمبتدئات بالعربي', url: 'https://www.youtube.com/results?search_query=canva+مبتدئ+عربي', sub: 'فيديو 8-10 دقائق' },
+                tool: { icon: '🎨', name: 'Canva', desc: 'أنشئي حساباً مجانياً وجرّبي القوالب العربية', url: 'https://www.canva.com', btn: 'افتحي Canva' },
+                tasks: [
+                  { t: 'أنشئي إعلاناً لفعالية مدرسية', d: 'Canva ← Create Design ← Poster ← اختاري قالباً عربياً وعدّليه' },
+                  { t: 'جرّبي Canva AI لتوليد صورة', d: 'في المشروع: Apps ← Text to Image ← اكتبي وصفاً بالعربي' }
+                ],
+                quiz: [
+                  { q: 'ما مزية Canva عن برامج التصميم المعقدة؟', o: [ 'Canva أغلى لكنه أفضل', 'سهل الاستخدام بدون خبرة مع قوالب جاهزة ومجانية', 'Canva للمحترفين فقط', 'لا مزية' ], a: 1 },
+                  { q: 'أين تجدين القوالب العربية في Canva؟', o: [ 'لا توجد قوالب عربية', 'في البحث: اكتبي موضوع التصميم أو فلتري باللغة العربية', 'في الإعدادات فقط', 'يجب شراؤها' ], a: 1 }
+                ]
+              }
+            ]
+          },
+          mid: {
+            name: 'متوسط — Gamma للعروض التقديمية',
+            lessons: [
+              {
+                title: 'إنشاء عرض تقديمي بالذكاء الاصطناعي',
+                content: `<div class="content-block"><h4>📖 Gamma — من نص إلى عرض في دقيقة</h4><p>Gamma أداة AI تُحوّل نصاً بسيطاً إلى عرض تقديمي كامل بتصميم احترافي. مثالية لتقارير المدرسة وعروض الإدارة.</p><ol style="padding-right:1.1rem;"><li>اكتبي موضوع العرض</li><li>Gamma يُنشئ المحتوى والتصميم</li><li>عدّلي كما تريدين</li><li>شاركيه برابط مباشر</li></ol></div>`,
+                video: { title: 'Gamma AI عروض تقديمية', url: 'https://www.youtube.com/results?search_query=gamma+app+presentation+arabic', sub: 'فيديو 5-8 دقائق' },
+                tool: { icon: '📊', name: 'Gamma AI', desc: 'أنشئي عرضاً تقديمياً بالذكاء الاصطناعي في دقائق', url: 'https://gamma.app', btn: 'افتحي Gamma' },
+                tasks: [
+                  { t: 'أنشئي عرضاً عن مبادرة تمكين 11', d: 'في Gamma: New ← Generate ← اكتبي "مبادرة تمكين 11 لتطوير الموظفات"' },
+                  { t: 'شاركي العرض برابط مع زميلة', d: 'Share ← Copy Link ← أرسليه على الواتساب' }
+                ],
+                quiz: [
+                  { q: 'ما الخطوة الأولى في Gamma لإنشاء عرض؟', o: [ 'تصميم الشرائح يدوياً', 'كتابة موضوع العرض ودع AI يُنشئ المحتوى والتصميم', 'رفع ملف PowerPoint', 'اختيار الألوان أولاً' ], a: 1 },
+                  { q: 'ما ميزة مشاركة Gamma عن إرسال ملف PowerPoint؟', o: [ 'لا فرق', 'رابط يفتح على أي جهاز بدون برامج إضافية ويمكن تحديثه فوراً', 'Gamma أسرع فقط', 'PowerPoint أفضل للمشاركة' ], a: 1 }
+                ]
+              }
+            ]
+          },
+          adv: {
+            name: 'متقدم — هوية بصرية موحدة للمدرسة',
+            lessons: [
+              {
+                title: 'بناء هوية بصرية للمدرسة في Canva',
+                content: `<div class="content-block"><h4>📖 Brand Kit — موحّدي تصاميم مدرستك</h4><p>Brand Kit في Canva يحفظ ألوان المدرسة وخطوطها وشعارها — كل موظفة تفتح Canva وتجد الهوية البصرية جاهزة.</p><ul><li>ألوان المدرسة الرسمية</li><li>الخط الرسمي</li><li>الشعار</li><li>قوالب جاهزة بالهوية</li></ul></div>`,
+                tool: { icon: '🎨', name: 'Canva Brand Kit', desc: 'أنشئي Brand Kit للمدرسة — يتطلب Canva Pro أو Education', url: 'https://www.canva.com/brand-kits/', btn: 'افتحي Brand Kit' },
+                tasks: [
+                  { t: 'حدّدي ألوان وخطوط المدرسة الرسمية', d: 'تحدثي مع المديرة وحدّدي: لونان رئيسيان + خط رسمي' },
+                  { t: 'أنشئي قالب إعلان موحّداً للفريق', d: 'تصميم يستخدمه الجميع للإعلانات المدرسية' }
+                ],
+                quiz: [
+                  { q: 'ما فائدة Brand Kit للمدرسة؟', o: [ 'للترفيه', 'توحيد الهوية البصرية وتوفير وقت التصميم لكل الفريق', 'لأن Canva يشترطه', 'لا فائدة حقيقية' ], a: 1 },
+                  { q: 'ما أهم عناصر الهوية البصرية للمدرسة؟', o: [ 'الألوان فقط', 'الشعار والألوان الرسمية والخط — ثلاثتها معاً تُشكّل الهوية', 'عدد الخطوط', 'نوع الصور المستخدمة' ], a: 1 }
+                ]
+              }
+            ]
+          }
+        }
+      }
+      ,
+      {
+        id: 'analysis', icon: '📈', name: 'تحليل إنجازات المدرسة بالذكاء الاصطناعي',
+        desc: 'استخدمي AI لتحليل التقارير الإدارية وإنجازات المدرسة واستخلاص رؤى لصانع القرار',
+        levels: {
+          beg: {
+            name: 'مبتدئ — قراءة التقارير الإدارية',
+            lessons: [
+              {
+                title: 'ما هي تقارير الإنجاز المدرسية؟',
+                content: `<div class="content-block"><h4>📖 التقارير التي تصنع الفرق</h4><p>تقارير الإنجاز المدرسية تشمل: نسب الحضور، معدلات الأداء، إنجازات الطالبات، نتائج المبادرات. تحليلها بـ AI يحوّلها من أرقام جامدة إلى قصة واضحة للإدارة.</p><ul><li>تقارير الحضور والغياب</li><li>نتائج التقييم الأكاديمي</li><li>تقارير المبادرات والفعاليات</li><li>تقارير التطوير المهني</li></ul></div>`,
+                video: { title: 'تحليل التقارير بالذكاء الاصطناعي عربي', url: 'https://www.youtube.com/results?search_query=تحليل+تقارير+ذكاء+اصطناعي+عربي', sub: 'فيديو 5-8 دقائق' },
+                tool: { icon: '🤖', name: 'ChatGPT', desc: 'الصقي نص أي تقرير مدرسي واطلبي تلخيصه وأهم نقاطه', url: 'https://chatgpt.com', btn: 'افتحي ChatGPT' },
+                tasks: [
+                  { t: 'اختاري تقريراً مدرسياً موجوداً', d: 'تقرير حضور أسبوعي أو نتائج أو أي وثيقة إدارية' },
+                  { t: 'الصقيه في ChatGPT واطلبي ملخصاً', d: 'اكتبي: "لخّصي هذا التقرير في 5 نقاط رئيسية لمديرة المدرسة"' }
+                ],
+                quiz: [
+                  { q: 'ما الفائدة من تحليل التقارير المدرسية بـ AI؟', o: [ 'الزخرفة فقط', 'تحويل الأرقام والبيانات الكبيرة إلى رؤى واضحة تساعد الإدارة في القرار', 'استبدال الموظفات', 'لا فائدة حقيقية' ], a: 1 },
+                  { q: 'ما أفضل طريقة لتحليل تقرير طويل بـ ChatGPT؟', o: [ 'إرسال كلمة "لخّص" فقط', 'إرسال التقرير مع توضيح: لمن الملخص وما القرار المطلوب', 'إرسال التقرير عدة مرات', 'لا يمكن لـ AI تحليل التقارير' ], a: 1 }
+                ]
+              },
+              {
+                title: 'استخراج الأنماط من بيانات المدرسة',
+                content: `<div class="content-block"><h4>📖 من الأرقام إلى الأنماط</h4><p>الأنماط هي ما يتكرر في البيانات — ارتفاع الغياب أيام معينة، تحسن الأداء بعد مبادرة ما، انخفاض المشاركة في فترات محددة. ChatGPT يكتشفها بسرعة.</p></div>`,
+                tool: { icon: '🤖', name: 'ChatGPT', desc: 'أرسلي بيانات شهر وقولي: ما الأنماط والتوجهات في هذه البيانات؟', url: 'https://chatgpt.com', btn: 'افتحي ChatGPT' },
+                tasks: [
+                  { t: 'أرسلي بيانات شهر كامل لـ ChatGPT', d: 'اكتبي: "حللي هذه البيانات واستخرجي الأنماط والتوجهات البارزة"' },
+                  { t: 'اطلبي تفسير كل نمط', d: 'قولي: "لماذا قد يحدث هذا النمط؟ وما توصيتك للتعامل معه؟"' }
+                ],
+                quiz: [
+                  { q: 'ما المقصود بـ "النمط" في تحليل البيانات المدرسية؟', o: [ 'تصميم جميل للتقرير', 'ما يتكرر في البيانات ويدل على ظاهرة تستحق الانتباه والتحليل', 'رقم عشوائي', 'متوسط البيانات فقط' ], a: 1 },
+                  { q: 'ماذا تفعلين بعد اكتشاف نمط سلبي في البيانات؟', o: [ 'تجاهله', 'توثيقه وتحليل أسبابه المحتملة وتقديم توصية للإدارة', 'حذف البيانات', 'انتظار نهاية العام' ], a: 1 }
+                ]
+              }
+            ]
+          },
+          mid: {
+            name: 'متوسط — بناء تقارير إنجاز ذكية',
+            lessons: [
+              {
+                title: 'تحويل بيانات المدرسة إلى تقرير احترافي',
+                content: `<div class="content-block"><h4>📖 التقرير الجيد يُقنع ويُغيّر</h4><p>التقرير الاحترافي لا يعرض الأرقام فحسب — بل يروي قصة: أين كنّا؟ أين أصبحنا؟ ما التالي؟ AI يساعدك في كتابة هذه القصة بسرعة.</p><ul><li>مقدمة: السياق والهدف</li><li>النتائج: الأرقام والمقارنات</li><li>التحليل: ما وراء الأرقام</li><li>التوصيات: الخطوات القادمة</li></ul></div>`,
+                video: { title: 'كتابة تقارير احترافية بـ AI', url: 'https://www.youtube.com/results?search_query=كتابة+تقرير+احترافي+chatgpt+عربي', sub: 'فيديو 8-10 دقائق' },
+                tool: { icon: '📝', name: 'Claude AI', desc: 'Claude متميز في كتابة التقارير الإدارية باللغة العربية', url: 'https://claude.ai', btn: 'افتحي Claude' },
+                tasks: [
+                  { t: 'اطلبي تقريراً إنجاز شهرياً للمدرسة', d: 'قولي: "اكتبي تقرير إنجاز شهري احترافي بناءً على هذه البيانات: [بياناتك]"' },
+                  { t: 'احفظي التقرير في Google Docs وعدّليه', d: 'افتحي docs.new والصقي التقرير وأضيفي لمستك الشخصية' }
+                ],
+                quiz: [
+                  { q: 'ما العناصر الأربعة الأساسية في تقرير الإنجاز الجيد؟', o: [ 'الأرقام فقط', 'المقدمة + النتائج + التحليل + التوصيات', 'الاسم والتاريخ فقط', 'المشكلات والأخطاء فقط' ], a: 1 },
+                  { q: 'لماذا Claude مناسب لكتابة التقارير العربية؟', o: [ 'لأنه الأرخص', 'لقوته في اللغة العربية وكتابة النصوص الرسمية الاحترافية', 'لأنه الأسرع فقط', 'لأن ChatGPT لا يعمل بالعربية' ], a: 1 }
+                ]
+              }
+            ]
+          },
+          adv: {
+            name: 'متقدم — نظام تقارير ذكي متكامل',
+            lessons: [
+              {
+                title: 'بناء نظام تقارير شهري آلي للمدرسة',
+                content: `<div class="content-block"><h4>📖 من التقرير اليدوي إلى النظام الذكي</h4><p>ستبنين نظاماً متكاملاً: بيانات الإنجاز تُدخَل في Sheets ← AI يحللها ← تقرير احترافي يُولَّد تلقائياً ← عرض تقديمي للإدارة في Gamma. توفير 80% من وقت إعداد التقارير.</p></div>`,
+                video: { title: 'أتمتة التقارير بالذكاء الاصطناعي', url: 'https://www.youtube.com/results?search_query=automate+reports+AI+arabic', sub: 'فيديو 10-15 دقيقة' },
+                tool: { icon: '📊', name: 'Gamma AI', desc: 'حوّلي تقرير AI إلى عرض تقديمي احترافي للإدارة في دقائق', url: 'https://gamma.app', btn: 'افتحي Gamma' },
+                tasks: [
+                  { t: 'أنشئي قالب تقرير شهري في Notion', d: 'قالب يُملأ بالبيانات شهرياً ثم يُرسَل لـ AI للتحليل' },
+                  { t: 'حوّلي التقرير إلى عرض في Gamma للإدارة', d: 'الصقي التقرير في Gamma واطلبي: "حوّلي هذا لعرض 5 شرائح للإدارة"' }
+                ],
+                quiz: [
+                  { q: 'ما الهدف من بناء نظام تقارير متكامل؟', o: [ 'جعل التقارير أجمل فقط', 'توفير الوقت وضمان جودة التقارير واتساقها شهرياً', 'استبدال المسؤولة عن التقارير', 'لأن الإدارة تطلبه' ], a: 1 },
+                  { q: 'ما قيمة تحويل التقرير النصي إلى عرض Gamma للإدارة؟', o: [ 'لا قيمة مضافة', 'تقديم المعلومات بشكل مرئي واضح يسهّل اتخاذ القرار ويوفر وقت الاجتماع', 'Gamma أسرع فقط', 'لأن الإدارة لا تقرأ التقارير النصية' ], a: 1 }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    ];
+
+    // ══ STATE ══// ══ STATE ══
+    const PASS = 'tamkeen2025';
+    let users = JSON.parse( localStorage.getItem( 't11u' ) || '[]' );
+    let me = null;
+    let curTrackId = null, curLevel = 'beg';
+    let curFilter = 'all';
+    let quizAnswers = {};
+
+    function save () { localStorage.setItem( 't11u', JSON.stringify( users ) ); }
+
+    // ══ LOGIN ══
+    function switchTab ( t )
+    {
+      document.getElementById( 'form-emp' ).style.display = t === 'emp' ? 'block' : 'none';
+      document.getElementById( 'form-adm' ).style.display = t === 'adm' ? 'block' : 'none';
+      document.getElementById( 'tb-emp' ).classList.toggle( 'on', t === 'emp' );
+      document.getElementById( 'tb-adm' ).classList.toggle( 'on', t === 'adm' );
+    }
+
+    function empLogin ()
+    {
+      const name = document.getElementById( 'f-name' ).value.trim();
+      const email = document.getElementById( 'f-email' ).value.trim();
+      const role = document.getElementById( 'f-role' ).value;
+      const err = document.getElementById( 'err-emp' );
+      const pend = document.getElementById( 'pend-msg' );
+      err.classList.remove( 'on' ); pend.style.display = 'none';
+      if ( !name || !email || !role ) { err.textContent = 'يرجى تعبئة جميع الحقول'; err.classList.add( 'on' ); return; }
+      if ( !email.includes( '@' ) ) { err.textContent = 'البريد الإلكتروني غير صحيح'; err.classList.add( 'on' ); return; }
+      let u = users.find( x => x.email === email );
+      if ( !u ) {
+        u = { name, email, role, status: 'pending', date: new Date().toLocaleDateString( 'ar-SA' ), progress: {}, scores: {} };
+        users.push( u ); save();
+        pend.style.display = 'block'; return;
+      }
+      if ( u.status === 'pending' ) { pend.style.display = 'block'; return; }
+      if ( u.status === 'rejected' ) { err.textContent = 'عذراً، لم يُقبَل طلبك. تواصلي مع الإدارة.'; err.classList.add( 'on' ); return; }
+      u.name = name; u.role = role; save();
+      goEmp( u );
+    }
+
+    function admLogin ()
+    {
+      const pass = document.getElementById( 'f-pass' ).value;
+      const err = document.getElementById( 'err-adm' );
+      if ( pass !== PASS ) { err.textContent = 'كلمة المرور غير صحيحة'; err.classList.add( 'on' ); return; }
+      err.classList.remove( 'on' );
+      showScreen( 's-admin' );
+      renderAdmin();
+    }
+
+    function goEmp ( u )
+    {
+      me = u;
+      document.getElementById( 'tb-uname' ).textContent = u.name.split( ' ' )[ 0 ];
+      document.getElementById( 'greet-title' ).textContent = 'أهلاً، ' + u.name.split( ' ' )[ 0 ] + ' 👋';
+      document.getElementById( 'prof-name' ).textContent = u.name;
+      document.getElementById( 'prof-role' ).textContent = u.role + ' · ' + u.email;
+      document.getElementById( 'prof-email' ).textContent = u.email;
+      document.getElementById( 'prof-date' ).textContent = u.date || '—';
+      showScreen( 's-emp' );
+      renderHomeTracksEl(); renderAllTracksEl(); updateStats(); renderCertArea(); renderBadges();
+    }
+
+    function logout ()
+    {
+      me = null; curTrackId = null;
+      showScreen( 's-login' );
+      document.getElementById( 'f-name' ).value = '';
+      document.getElementById( 'f-email' ).value = '';
+      document.getElementById( 'f-role' ).value = '';
+      document.getElementById( 'f-pass' ).value = '';
+      document.getElementById( 'pend-msg' ).style.display = 'none';
+      document.getElementById( 'err-emp' ).classList.remove( 'on' );
+      document.getElementById( 'err-adm' ).classList.remove( 'on' );
+    }
+
+    function showScreen ( id )
+    {
+      document.querySelectorAll( '.screen' ).forEach( s => { s.style.display = 'none'; s.classList.remove( 'active' ); } );
+      const el = document.getElementById( id );
+      el.classList.add( 'active' );
+      el.style.display = id === 's-login' ? 'flex' : 'block';
+    }
+
+    // ══ PAGES ══
+    function showPage ( id, btn )
+    {
+      document.querySelectorAll( '.app-page' ).forEach( p => p.classList.remove( 'on' ) );
+      document.querySelectorAll( '.bnav-item' ).forEach( b => b.classList.remove( 'on' ) );
+      document.getElementById( 'pg-' + id ).classList.add( 'on' );
+      if ( btn ) btn.classList.add( 'on' );
+      if ( id === 'cert' ) renderCertArea();
+    }
+
+    // ══ PROGRESS HELPERS ══
+    function getLessonKey ( tid, lvl, li ) { return tid + '_' + lvl + '_' + li; }
+    function isDone ( tid, lvl, li ) { return me && me.progress && me.progress[ getLessonKey( tid, lvl, li ) ]; }
+    function getScore ( tid, lvl, li ) { return me && me.scores ? me.scores[ getLessonKey( tid, lvl, li ) ] : undefined; }
+
+    function markDone ( tid, lvl, li )
+    {
+      if ( !me.progress ) me.progress = {};
+      me.progress[ getLessonKey( tid, lvl, li ) ] = true;
+      save(); updateStats(); renderHomeTracksEl(); renderAllTracksEl(); renderCertArea(); renderBadges();
+    }
+
+    function saveScore ( tid, lvl, li, pct )
+    {
+      if ( !me.scores ) me.scores = {};
+      me.scores[ getLessonKey( tid, lvl, li ) ] = pct;
+      save(); updateStats();
+    }
+
+    function getTrackProg ( tid )
+    {
+      if ( !me ) return 0;
+      let total = 0, done = 0;
+      const t = TRACKS.find( x => x.id === tid );
+      Object.values( t.levels ).forEach( lv => { lv.lessons.forEach( ( _, i ) => { total++; if ( isDone( tid, Object.keys( t.levels ).find( k => t.levels[ k ] === lv ), i ) ) done++; } ); } );
+      return total ? Math.round( ( done / total ) * 100 ) : 0;
+    }
+
+    function getTotalProg ()
+    {
+      if ( !me ) return 0;
+      let total = 0, done = 0;
+      TRACKS.forEach( t => Object.entries( t.levels ).forEach( ( [ lvl, lv ] ) => lv.lessons.forEach( ( _, i ) => { total++; if ( isDone( t.id, lvl, i ) ) done++; } ) ) );
+      return total ? Math.round( ( done / total ) * 100 ) : 0;
+    }
+
+    function updateStats ()
+    {
+      if ( !me ) return;
+      let done = 0, scoreSum = 0, scoreCount = 0, started = 0;
+      TRACKS.forEach( t =>
+      {
+        let tStarted = false;
+        Object.entries( t.levels ).forEach( ( [ lvl, lv ] ) => lv.lessons.forEach( ( _, i ) =>
+        {
+          const key = getLessonKey( t.id, lvl, i );
+          if ( me.progress && me.progress[ key ] ) { done++; tStarted = true; }
+          if ( me.scores && me.scores[ key ] !== undefined ) { scoreSum += me.scores[ key ]; scoreCount++; }
+        } ) );
+        if ( tStarted ) started++;
+      } );
+      const avg = scoreCount ? Math.round( scoreSum / scoreCount ) : 0;
+      const lvl = avg >= 80 ? 'متقدم 🚀' : avg >= 50 ? 'متوسط 📈' : 'مبتدئ 🌱';
+      document.getElementById( 'st-done' ).textContent = done;
+      document.getElementById( 'st-score' ).textContent = scoreCount ? avg + '%' : '—';
+      document.getElementById( 'st-tracks' ).textContent = started;
+      document.getElementById( 'st-level' ).textContent = lvl;
+      // ring
+      const pct = getTotalProg();
+      const r = 46, circ = 2 * Math.PI * r;
+      const offset = circ - ( pct / 100 ) * circ;
+      document.getElementById( 'ring-bar' ).style.strokeDashoffset = offset;
+      document.getElementById( 'ring-pct' ).textContent = pct + '%';
+    }
+
+    // ══ RENDER TRACKS ══
+    function trackCardHTML ( t, showAllLevels )
+    {
+      const prog = getTrackProg( t.id );
+      const lvls = Object.keys( t.levels );
+      const curLvl = lvls[ Math.min( Math.floor( prog / 100 * lvls.length ), lvls.length - 1 ) ];
+      const pillCls = curLvl === 'beg' ? 'beg' : curLvl === 'mid' ? 'mid' : 'adv';
+      const pillTxt = curLvl === 'beg' ? 'مبتدئ' : curLvl === 'mid' ? 'متوسط' : 'متقدم';
+      return `<div class="tcard" onclick="openTrack('${ t.id }')">
+    <div class="tcard-icon">${ t.icon }</div>
+    <div class="tcard-body">
+      <div class="tcard-name">${ t.name }</div>
+      <div class="tcard-desc">${ t.desc }</div>
+      <div class="tcard-footer">
+        <span class="tpill ${ prog === 100 ? 'done' : pillCls }">${ prog === 100 ? '✅ مكتمل' : pillTxt }</span>
+        <div class="tcard-prog-bar"><div class="tcard-prog-fill" style="width:${ prog }%"></div></div>
+        <span style="font-size:.7rem;color:var(--gray);font-weight:700;">${ prog }%</span>
+      </div>
+    </div>
+    <div class="tcard-arrow">←</div>
+  </div>`;
+    }
+
+    function renderHomeTracksEl () { document.getElementById( 'home-tracks' ).innerHTML = TRACKS.slice( 0, 3 ).map( t => trackCardHTML( t ) ).join( '' ); }
+    function renderAllTracksEl () { document.getElementById( 'all-tracks' ).innerHTML = TRACKS.map( t => trackCardHTML( t, true ) ).join( '' ); }
+
+    // ══ TRACK DETAIL ══
+    function openTrack ( tid )
+    {
+      curTrackId = tid; curLevel = 'beg';
+      const t = TRACKS.find( x => x.id === tid );
+      document.getElementById( 'tr-title' ).textContent = t.icon + ' ' + t.name;
+      document.getElementById( 'tr-desc' ).textContent = t.desc;
+      document.querySelectorAll( '.lpill' ).forEach( ( b, i ) => { const l = [ 'beg', 'mid', 'adv' ][ i ]; b.classList.toggle( 'on', l === curLevel ); } );
+      renderTrackBody();
+      showScreen( 's-track' );
+      window.scrollTo( 0, 0 );
+    }
+
+    function closeTrack ()
+    {
+      showScreen( 's-emp' );
+      renderHomeTracksEl(); renderAllTracksEl();
+    }
+
+    function setLevel ( lvl, btn )
+    {
+      curLevel = lvl;
+      document.querySelectorAll( '.lpill' ).forEach( b => b.classList.remove( 'on' ) );
+      btn.classList.add( 'on' );
+      renderTrackBody();
+    }
+
+    function renderTrackBody ()
+    {
+      const t = TRACKS.find( x => x.id === curTrackId );
+      const lv = t.levels[ curLevel ];
+      if ( !lv ) { document.getElementById( 'track-body' ).innerHTML = '<p style="padding:2rem;color:var(--gray);">هذا المستوى قيد التطوير</p>'; return; }
+      const html = `
+    <div class="sec-head">${ lv.name }</div>
+    <div class="lesson-wrap">${ lv.lessons.map( ( l, i ) => lessonHTML( t.id, curLevel, l, i ) ).join( '' ) }</div>
+  `;
+      document.getElementById( 'track-body' ).innerHTML = html;
+    }
+
+    function lessonHTML ( tid, lvl, l, i )
+    {
+      const done = isDone( tid, lvl, i );
+      return `<div class="lesson-card">
+    <div class="lesson-head" onclick="toggleLesson('lb-${ tid }-${ lvl }-${ i }')">
+      <div class="lesson-num ${ done ? 'done' : '' }">${ done ? '✓' : i + 1 }</div>
+      <div class="lesson-title">${ l.title }</div>
+      <div class="lesson-status">${ done ? '✅ مكتمل' : 'اضغطي للفتح' }</div>
+    </div>
+    <div class="lesson-body" id="lb-${ tid }-${ lvl }-${ i }">
+      ${ l.content || '' }
+      ${ l.video ? `<a href="${ l.video.url }" target="_blank" rel="noopener" class="video-link">
+        <span class="play">▶️</span>
+        <div class="video-link-text"><div class="video-link-title">${ l.video.title }</div><div class="video-link-sub">${ l.video.sub }</div></div>
+        <span class="video-link-arrow">←</span>
+      </a>`: '' }
+      ${ l.tool ? `<a href="${ l.tool.url }" target="_blank" rel="noopener" class="tool-link">
+        <span class="tool-icon">${ l.tool.icon }</span>
+        <div class="tool-text"><div class="tool-name">${ l.tool.name }</div><div class="tool-desc">${ l.tool.desc }</div></div>
+        <span class="tool-btn">${ l.tool.btn } ↗</span>
+      </a>`: '' }
+      ${ l.tasks ? `<div class="sec-head" style="margin-top:.9rem;">المهام التطبيقية</div>${ l.tasks.map( ( tk, ti ) => `
+        <div class="task-item">
+          <div class="task-chk ${ ( me && me.progress && me.progress[ tid + '_' + lvl + '_' + i + '_t' + ti ] ) ? 'done' : '' }" 
+               id="tchk-${ tid }-${ lvl }-${ i }-${ ti }" onclick="toggleTask('${ tid }','${ lvl }',${ i },${ ti })">
+            ${ ( me && me.progress && me.progress[ tid + '_' + lvl + '_' + i + '_t' + ti ] ) ? '✓' : '' }
+          </div>
+          <div class="task-text"><h5>${ tk.t }</h5><p>${ tk.d }</p></div>
+        </div>`).join( '' ) }` : '' }
+      ${ l.quiz ? renderQuiz( tid, lvl, i, l.quiz ) : '' }
+      <button class="complete-lesson-btn ${ isDone( tid, lvl, i ) ? 'ready' : '' }" 
+              id="clbtn-${ tid }-${ lvl }-${ i }"
+              onclick="completeLesson('${ tid }','${ lvl }',${ i })">
+        ${ isDone( tid, lvl, i ) ? '✅ مكتمل — انتقلي للتالي' : 'أكملت الدرس ✓' }
+      </button>
+    </div>
+  </div>`;
+    }
+
+    function toggleLesson ( id )
+    {
+      const el = document.getElementById( id );
+      el.classList.toggle( 'on' );
+    }
+
+    function toggleTask ( tid, lvl, li, ti )
+    {
+      if ( !me.progress ) me.progress = {};
+      const key = tid + '_' + lvl + '_' + li + '_t' + ti;
+      me.progress[ key ] = !me.progress[ key ];
+      save();
+      const el = document.getElementById( `tchk-${ tid }-${ lvl }-${ li }-${ ti }` );
+      el.classList.toggle( 'done', me.progress[ key ] );
+      el.textContent = me.progress[ key ] ? '✓' : '';
+      checkLessonReady( tid, lvl, li );
+    }
+
+    function checkLessonReady ( tid, lvl, li )
+    {
+      const t = TRACKS.find( x => x.id === tid );
+      const l = t.levels[ lvl ].lessons[ li ];
+      const tasks = l.tasks || [];
+      const allDone = tasks.length === 0 || tasks.every( ( _, ti ) => me && me.progress && me.progress[ tid + '_' + lvl + '_' + li + '_t' + ti ] );
+      const btn = document.getElementById( `clbtn-${ tid }-${ lvl }-${ li }` );
+      if ( btn && !isDone( tid, lvl, li ) ) btn.classList.toggle( 'ready', allDone );
+    }
+
+    function completeLesson ( tid, lvl, li )
+    {
+      markDone( tid, lvl, li );
+      const btn = document.getElementById( `clbtn-${ tid }-${ lvl }-${ li }` );
+      if ( btn ) { btn.textContent = '✅ مكتمل — انتقلي للتالي'; btn.classList.add( 'ready' ); }
+      const numEl = document.querySelector( `#lb-${ tid }-${ lvl }-${ li }` ).previousElementSibling.querySelector( '.lesson-num' );
+      if ( numEl ) { numEl.textContent = '✓'; numEl.classList.add( 'done' ); }
+    }
+
+    function renderQuiz ( tid, lvl, li, quiz )
+    {
+      return `<div class="sec-head" style="margin-top:.9rem;">تقويم الدرس</div>
+  <div class="quiz-wrap" id="qw-${ tid }-${ lvl }-${ li }">
+    ${ quiz.map( ( q, qi ) => `<div class="quiz-q">
+      <div class="q-text">${ qi + 1 }. ${ q.q }</div>
+      <div class="q-opts">
+        ${ q.o.map( ( o, oi ) => `<button class="q-opt" id="qo-${ tid }-${ lvl }-${ li }-${ qi }-${ oi }" onclick="pickOpt('${ tid }','${ lvl }',${ li },${ qi },${ oi },${ q.a })">${ o }</button>` ).join( '' ) }
+      </div>
+      <div class="q-fb" id="qfb-${ tid }-${ lvl }-${ li }-${ qi }"></div>
+    </div>`).join( '' ) }
+    <div class="quiz-result" id="qres-${ tid }-${ lvl }-${ li }">
+      <div class="result-score" id="qsc-${ tid }-${ lvl }-${ li }">0/${ quiz.length }</div>
+      <div class="result-msg" id="qmsg-${ tid }-${ lvl }-${ li }"></div>
+      <button class="result-next" onclick="completeLesson('${ tid }','${ lvl }',${ li })">انتقلي للمهام ← </button>
+    </div>
+  </div>`;
+    }
+
+    let quizState = {};
+    function pickOpt ( tid, lvl, li, qi, oi, correct )
+    {
+      const key = `${ tid }_${ lvl }_${ li }_${ qi }`;
+      if ( quizState[ key ] ) return; // already answered
+      quizState[ key ] = { chosen: oi, correct };
+      const fb = document.getElementById( `qfb-${ tid }-${ lvl }-${ li }-${ qi }` );
+      const t = TRACKS.find( x => x.id === tid );
+      const quiz = t.levels[ lvl ].lessons[ li ].quiz;
+      document.querySelectorAll( `[id^="qo-${ tid }-${ lvl }-${ li }-${ qi }-"]` ).forEach( el => el.style.pointerEvents = 'none' );
+      document.getElementById( `qo-${ tid }-${ lvl }-${ li }-${ qi }-${ correct }` ).classList.add( 'correct' );
+      if ( oi !== correct ) {
+        document.getElementById( `qo-${ tid }-${ lvl }-${ li }-${ qi }-${ oi }` ).classList.add( 'wrong' );
+        fb.textContent = '❌ الإجابة الصحيحة موضّحة باللون الأخضر'; fb.className = 'q-fb on no';
+      } else {
+        fb.textContent = '✅ إجابة صحيحة!'; fb.className = 'q-fb on ok';
+      }
+      // check if all answered
+      const allAnswered = quiz.every( ( _, i ) => quizState[ `${ tid }_${ lvl }_${ li }_${ i }` ] );
+      if ( allAnswered ) {
+        const correct2 = quiz.filter( ( _, i ) => quizState[ `${ tid }_${ lvl }_${ li }_${ i }` ]?.chosen === quizState[ `${ tid }_${ lvl }_${ li }_${ i }` ]?.correct ).length;
+        const pct = Math.round( ( correct2 / quiz.length ) * 100 );
+        saveScore( tid, lvl, li, pct );
+        const res = document.getElementById( `qres-${ tid }-${ lvl }-${ li }` );
+        document.getElementById( `qsc-${ tid }-${ lvl }-${ li }` ).textContent = correct2 + '/' + quiz.length;
+        const msgs = [ 'واصلي التعلم! 💪', 'جيد — راجعي الإجابات 📚', 'ممتاز! 🌟', 'رائع جداً! 🚀' ];
+        document.getElementById( `qmsg-${ tid }-${ lvl }-${ li }` ).textContent = msgs[ correct2 ] || msgs[ quiz.length ];
+        res.classList.add( 'on' );
+        checkLessonReady( tid, lvl, li );
+      }
+    }
+
+    // ══ CERT ══
+    function isTrackFullyDone ( tid, lvl )
+    {
+      const t = TRACKS.find( x => x.id === tid );
+      if ( !t || !t.levels[ lvl ] ) return false;
+      return t.levels[ lvl ].lessons.every( ( _, i ) => isDone( tid, lvl, i ) );
+    }
+
+    function getCompletedTracks ()
+    {
+      const done = [];
+      TRACKS.forEach( t => [ 'beg', 'mid', 'adv' ].forEach( lvl =>
+      {
+        if ( isTrackFullyDone( t.id, lvl ) ) {
+          const scores = t.levels[ lvl ].lessons.map( ( _, i ) => getScore( t.id, lvl, i ) || 0 );
+          const avg = scores.length ? Math.round( scores.reduce( ( a, b ) => a + b, 0 ) / scores.length ) : 0;
+          done.push( { tid: t.id, name: t.name, lvl, lvlAr: lvl === 'beg' ? 'مبتدئ' : lvl === 'mid' ? 'متوسط' : 'متقدم', score: avg } );
+        }
+      } ) );
+      return done;
+    }
+
+    function renderCertArea ()
+    {
+      const area = document.getElementById( 'cert-area' );
+      if ( !me ) { area.innerHTML = '<div class="cert-empty"><div class="big">📜</div><p>سجّلي دخولاً لعرض شهادتك</p></div>'; return; }
+      const completed = getCompletedTracks();
+      if ( !completed.length ) {
+        area.innerHTML = `<div class="cert-empty"><div class="big">📜</div>
+      <p style="font-weight:700;margin-bottom:.5rem;">أكملي مسارًا كاملاً للحصول على شهادتك</p>
+      <p style="font-size:.8rem;">يجب إكمال جميع الدروس والمهام والتقويم في مستوى واحد</p></div>`; return;
+      }
+      // show all completed certs
+      area.innerHTML = completed.map( ( c, idx ) =>
+      {
+        const stars = c.score >= 80 ? '⭐⭐⭐' : c.score >= 50 ? '⭐⭐' : '⭐';
+        return `
+    <div class="cert-wrap" style="margin-bottom:1rem;">
+      <div class="cert-label">مدرسة الابتدائية الحادية عشر · الخبر</div>
+      <div style="font-size:.75rem;color:var(--gray);margin-bottom:.3rem;">شهادة إتمام مسار</div>
+      <div class="cert-title">${ c.name }</div>
+      <div class="cert-track">المستوى: ${ c.lvlAr }</div>
+      <div style="font-size:.82rem;color:var(--gray);margin:.3rem 0;">تشهد بأن</div>
+      <div class="cert-name">${ me.name }</div>
+      <div style="font-size:.8rem;color:var(--gray);">قد أتمّت جميع متطلبات هذا المسار بنجاح</div>
+      <div class="cert-stars">${ stars }</div>
+      <div style="font-size:.8rem;color:var(--gray);">نتيجة التقويم: ${ c.score }%</div>
+      <div class="cert-sigs" style="justify-content:space-around;flex-wrap:wrap;gap:.5rem;">
+        <div class="cert-sig"><strong>عفاف عبدالرحمن الحويل</strong>مديرة المدرسة</div>
+        <div class="cert-sig"><strong>منال العمير</strong>الوكيلة المدرسية</div>
+        <div class="cert-sig"><strong>نورة المبارك</strong>المساعد الإداري</div>
+      </div>
+      <div class="cert-date">بتاريخ: ${ new Date().toLocaleDateString( 'ar-SA' ) }</div>
+    </div>
+    <button class="cert-btn" style="margin-bottom:1.5rem;" onclick="exportPDF('${ c.tid }','${ c.lvl }','${ c.name }','${ c.lvlAr }',${ c.score })">⬇️ تحميل شهادة ${ c.name }</button>
+    ${ renderFuturePlan( c ) }`;
+      } ).join( '' );
+    }
+
+    function renderFuturePlan ( c )
+    {
+      const score = c.score;
+      let plan = '';
+      if ( score >= 80 ) {
+        plan = `<div style="background:#d1fae5;border-radius:14px;padding:1.1rem;margin-bottom:1.2rem;border-right:4px solid #059669;">
+      <div style="font-size:.75rem;font-weight:800;color:#065f46;margin-bottom:.5rem;">🌟 خطتك المستقبلية — مستوى متقدم</div>
+      <div style="font-size:.85rem;color:#065f46;line-height:1.8;">
+        أداؤكِ ممتاز (${ score }%) — أنتِ مؤهّلة للمستوى التالي!<br>
+        ✅ انتقلي لمستوى <strong>متوسط أو متقدم</strong> في نفس المسار<br>
+        ✅ جرّبي <strong>مسارًا جديدًا</strong> لتوسيع مهاراتك<br>
+        ✅ شاركي زميلاتك ما تعلمتِه وكوني <strong>AI Champion</strong>
+      </div>
+    </div>`;
+      } else if ( score >= 50 ) {
+        plan = `<div style="background:#fef3c7;border-radius:14px;padding:1.1rem;margin-bottom:1.2rem;border-right:4px solid #d97706;">
+      <div style="font-size:.75rem;font-weight:800;color:#92400e;margin-bottom:.5rem;">📈 خطتك المستقبلية — تعزيز التعلم</div>
+      <div style="font-size:.85rem;color:#92400e;line-height:1.8;">
+        أداؤكِ جيد (${ score }%) — مع تعزيز بسيط ستصلين للتميّز!<br>
+        🔁 أعيدي مراجعة الدروس التي أجبتِ خطأ فيها<br>
+        📚 طبّقي الأدوات مرة أخرى في مهمة حقيقية<br>
+        💬 ناقشي ما تعلمتِه مع زميلة لتعزيز الفهم
+      </div>
+    </div>`;
+      } else {
+        plan = `<div style="background:#fee2e2;border-radius:14px;padding:1.1rem;margin-bottom:1.2rem;border-right:4px solid #ef4444;">
+      <div style="font-size:.75rem;font-weight:800;color:#991b1b;margin-bottom:.5rem;">💪 خطتك المستقبلية — إعادة التعلم</div>
+      <div style="font-size:.85rem;color:#991b1b;line-height:1.8;">
+        نتيجتك (${ score }%) تقول: المحتوى يحتاج مراجعة أعمق<br>
+        📺 أعيدي مشاهدة الفيديو التعليمي مرة أخرى<br>
+        🛠️ أعيدي تطبيق المهام العملية بتركيز أكبر<br>
+        🤝 استعيني بزميلة أو طلبي دعم مشرفتك
+      </div>
+    </div>`;
+      }
+      return plan;
+    }
+
+    function renderBadges ()
+    {
+      const w = document.getElementById( 'prof-badges' );
+      if ( !me ) { w.innerHTML = ''; return; }
+      let done = 0, scoreSum = 0, scoreCount = 0;
+      TRACKS.forEach( t => Object.entries( t.levels ).forEach( ( [ lvl, lv ] ) => lv.lessons.forEach( ( _, i ) =>
+      {
+        if ( isDone( t.id, lvl, i ) ) done++;
+        const s = getScore( t.id, lvl, i );
+        if ( s !== undefined ) { scoreSum += s; scoreCount++; }
+      } ) ) );
+      const avg = scoreCount ? scoreSum / scoreCount : 0;
+      let html = '';
+      if ( done >= 1 ) html += `<span style="background:var(--pp);color:var(--p);padding:.35rem .9rem;border-radius:100px;font-size:.8rem;font-weight:700;">🥉 AI Explorer</span>`;
+      if ( done >= 3 && avg >= 60 ) html += `<span style="background:#fef3c7;color:#92400e;padding:.35rem .9rem;border-radius:100px;font-size:.8rem;font-weight:700;">🥈 AI Champion</span>`;
+      if ( done >= 6 && avg >= 80 ) html += `<span style="background:#d1fae5;color:#065f46;padding:.35rem .9rem;border-radius:100px;font-size:.8rem;font-weight:700;">🥇 Innovation Leader</span>`;
+      w.innerHTML = html || `<span style="color:var(--gray);font-size:.82rem;">أكملي دروساً للحصول على شارات الإنجاز ✨</span>`;
+    }
+
+    // ══ PDF ══
+    async function exportPDF ( tid, lvl, trackName, lvlAr, score )
+    {
+      if ( !me ) return;
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF( { orientation: 'landscape', unit: 'mm', format: 'a4' } );
+      const W = 297, H = 210;
+      doc.setFillColor( 244, 240, 255 ); doc.rect( 0, 0, W, H, 'F' );
+      doc.setFillColor( 23, 15, 46 ); doc.rect( 0, 0, W, 16, 'F' );
+      doc.setFillColor( 23, 15, 46 ); doc.rect( 0, H - 16, W, 16, 'F' );
+      doc.setDrawColor( 109, 40, 217 ); doc.setLineWidth( 1.5 ); doc.rect( 6, 6, W - 12, H - 12 );
+      doc.setDrawColor( 196, 181, 253 ); doc.setLineWidth( .5 ); doc.rect( 9, 9, W - 18, H - 18 );
+      doc.setTextColor( 255, 255, 255 ); doc.setFontSize( 11 );
+      doc.text( 'Tamkeen 11 Initiative - Al-Ibtidaiyah 11 School, Al-Khobar', W / 2, 10, { align: 'center' } );
+      doc.setTextColor( 23, 15, 46 ); doc.setFontSize( 10 );
+      doc.text( 'Certificate of Achievement', W / 2, 32, { align: 'center' } );
+      doc.setFontSize( 20 ); doc.setTextColor( 109, 40, 217 ); doc.setFont( 'helvetica', 'bold' );
+      doc.text( 'Tamkeen 11', W / 2, 44, { align: 'center' } );
+      doc.setFontSize( 9 ); doc.setTextColor( 100, 100, 100 ); doc.setFont( 'helvetica', 'normal' );
+      doc.text( 'This is to certify that', W / 2, 58, { align: 'center' } );
+      doc.setFontSize( 18 ); doc.setTextColor( 23, 15, 46 ); doc.setFont( 'helvetica', 'bold' );
+      doc.text( me.name, W / 2, 70, { align: 'center' } );
+      doc.setDrawColor( 196, 181, 253 ); doc.setLineWidth( .7 ); doc.line( 80, 73, W - 80, 73 );
+      doc.setFontSize( 9 ); doc.setTextColor( 100, 100, 100 ); doc.setFont( 'helvetica', 'normal' );
+      doc.text( 'has successfully completed the requirements of the initiative', W / 2, 82, { align: 'center' } );
+      const best = { score: score || 0, track: trackName || '—', lvl: lvlAr === 'مبتدئ' ? 'Beginner' : lvlAr === 'متوسط' ? 'Intermediate' : 'Advanced' };
+      doc.setFontSize( 13 ); doc.setTextColor( 109, 40, 217 ); doc.setFont( 'helvetica', 'bold' );
+      doc.text( best.track || '—', W / 2, 93, { align: 'center' } );
+      doc.setFontSize( 10 ); doc.setTextColor( 100, 100, 100 ); doc.setFont( 'helvetica', 'normal' );
+      doc.text( 'Level: ' + ( best.lvl || '—' ) + '   |   Score: ' + best.score + '%', W / 2, 103, { align: 'center' } );
+      const stars = best.score >= 80 ? '★★★' : best.score >= 50 ? '★★' : '★';
+      doc.setFontSize( 18 ); doc.setTextColor( 109, 40, 217 ); doc.text( stars, W / 2, 114, { align: 'center' } );
+      doc.setDrawColor( 200, 200, 220 ); doc.setLineWidth( .4 );
+      doc.line( 40, 144, 100, 144 ); doc.line( W - 100, 144, W - 40, 144 );
+      doc.setFontSize( 9 ); doc.setTextColor( 60, 60, 80 ); doc.setFont( 'helvetica', 'bold' );
+      doc.text( 'Afaf Abdulrahman Al-Huwayl', 70, 150, { align: 'center' } );
+      doc.text( 'Manal Al-Umayr', W - 70, 150, { align: 'center' } );
+      doc.setFont( 'helvetica', 'normal' ); doc.setFontSize( 8 ); doc.setTextColor( 130, 130, 150 );
+      doc.text( 'School Principal', 70, 155, { align: 'center' } );
+      doc.text( 'Vice Principal', W - 70, 155, { align: 'center' } );
+      doc.text( 'Date: ' + new Date().toLocaleDateString( 'en-GB' ), W / 2, 166, { align: 'center' } );
+      doc.setTextColor( 255, 255, 255 ); doc.setFontSize( 8 );
+      doc.text( 'Tamkeen 11 - Al-Ibtidaiyah 11 School, Al-Khobar 2025', W / 2, H - 7, { align: 'center' } );
+      doc.save( 'Tamkeen11_Certificate_' + me.name + '.pdf' );
+    }
+
+    // ══ ADMIN ══
+    function adminFilter ( f, btn )
+    {
+      curFilter = f;
+      document.querySelectorAll( '.ftab' ).forEach( b => b.classList.remove( 'on' ) );
+      btn.classList.add( 'on' );
+      renderAdmin();
+    }
+
+    function renderAdmin ()
+    {
+      const search = ( document.getElementById( 'search-inp' )?.value || '' ).toLowerCase();
+      const list = users.filter( u =>
+      {
+        if ( curFilter !== 'all' && u.status !== curFilter ) return false;
+        if ( search && !u.name?.toLowerCase().includes( search ) && !u.email?.toLowerCase().includes( search ) ) return false;
+        return true;
+      } );
+      document.getElementById( 'a-total' ).textContent = users.length;
+      document.getElementById( 'a-pend' ).textContent = users.filter( u => u.status === 'pending' ).length;
+      document.getElementById( 'a-appr' ).textContent = users.filter( u => u.status === 'approved' ).length;
+      document.getElementById( 'a-rej' ).textContent = users.filter( u => u.status === 'rejected' ).length;
+      const emojis = { 'معلمة': '👩‍🏫', 'مساعد إداري': '💼', 'مرشدة طلابية': '💙', 'منسقة نشاط': '📋', 'أخرى': '👤' };
+      document.getElementById( 'admin-list' ).innerHTML = list.length ? list.map( ( u, _ ) =>
+      {
+        const si = users.indexOf( u );
+        const spCls = u.status === 'pending' ? 'sp-pend' : u.status === 'approved' ? 'sp-ok' : 'sp-rej';
+        const spTxt = u.status === 'pending' ? 'قيد المراجعة' : u.status === 'approved' ? 'مقبولة' : 'مرفوضة';
+        const actBtns = u.status === 'pending'
+          ? `<div class="act-btns"><button class="act-btn ab-ok" onclick="changeStatus(${ si },'approved')">✅ قبول</button><button class="act-btn ab-rej" onclick="changeStatus(${ si },'rejected')">❌ رفض</button></div>`
+          : `<div class="act-btns"><button class="act-btn ab-reset" onclick="changeStatus(${ si },'pending')">↩️ إعادة</button></div>`;
+        return `<div class="user-card">
+      <div class="user-avatar">${ emojis[ u.role ] || '👤' }</div>
+      <div class="user-info">
+        <div class="user-name">${ u.name || '—' }</div>
+        <div class="user-meta">${ u.email || '—' } · ${ u.role || '—' } · ${ u.date || '—' }</div>
+      </div>
+      <div class="user-actions"><span class="status-pill ${ spCls }">${ spTxt }</span>${ actBtns }</div>
+    </div>`;
+      } ).join( '' ) : `<div class="empty-state">لا توجد سجلات مطابقة</div>`;
+    }
+
+    function changeStatus ( i, status ) { users[ i ].status = status; save(); renderAdmin(); }
+
+    // seed demo
+    if ( !users.length ) {
+      users = [
+        { name: 'سارة الأحمد', email: 'sara@edu.sa', role: 'معلمة', status: 'pending', date: '10/05/1447', progress: {}, scores: {} },
+        { name: 'منيرة القحطاني', email: 'munira@edu.sa', role: 'مرشدة طلابية', status: 'approved', date: '09/05/1447', progress: {}, scores: {} },
+      ]; save();
+    }
+  </script>
 </body>
+
 </html>
